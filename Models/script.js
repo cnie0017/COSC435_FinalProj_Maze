@@ -201,12 +201,11 @@ Goose = function(){
 
   this.wingRight = new THREE.Mesh(wingGeom, this.greyMat);
   this.wingRight.position.x = 20;
-  this.wingRight.position.z = -50;
+  this.wingRight.position.z = -70;
   this.wingRight.position.y = 70;
-  this.wingRight.rotation.y = -Math.PI/2;
+  this.wingRight.rotation.y = -Math.PI/3;
   this.wingRight.rotation.x = (-Math.PI/3)/2;
-  //this.wingRight.rotation.z = -Math.PI/2;
-
+	
 
   this.wings.add(this.wingLeft);
   this.wings.add(this.wingRight);
