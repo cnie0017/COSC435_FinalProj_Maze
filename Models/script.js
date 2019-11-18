@@ -14,7 +14,7 @@ var scene,
 		container;
 
 //SCENE
-var floor, Goose1, Goose2;
+var floor, Goose1;
 
 //SCREEN VARIABLES
 
@@ -472,6 +472,159 @@ Coffee = function(){
   this.threegroup.add(this.sleeve);
 }
 
+Deer = function() {
+
+  this.rSegments = 4;
+  this.hSegments = 3;
+  this.cylRay = 120;
+  this.bodyGooseInitPositions = [];
+  this.vAngle = this.hAngle = 0;
+  this.normalSkin = {r:255/255, g:222/255, b:121/255};
+  //this.shySkin = {r:255/255, g:157/255, b:101/255};
+  this.color = {r:this.normalSkin.r, g:this.normalSkin.g, b:this.normalSkin.b};
+  this.side = "left";
+
+  this.shyAngles = {h:0, v:0};
+  this.behaviourInterval;
+  this.intervalRunning = false;
+
+  this.threegroup = new THREE.Group();
+
+  // materials
+  this.brownMat = new THREE.MeshLambertMaterial ({
+    color: 0xd2b48c,
+    shading:THREE.FlatShading
+  });
+  this.offWhiteMat = new THREE.MeshLambertMaterial ({
+    color: 0xb3aa94,
+    shading: THREE.FlatShading
+  });
+  this.blackMat = new THREE.MeshLambertMaterial ({
+    color: 0x000000,
+    shading: THREE.FlatShading
+  });
+
+   // var model = new THREE.Object3D();
+
+   this.threegroup.add( new THREE.Mesh(
+      new THREE.BoxGeometry(3.9,1.9,1.9),
+      this.brownMat
+   ));
+
+   var tail = new THREE.Mesh(
+     new THREE.BoxGeometry(0.5,1,0.5),
+     this.brownMat
+   );
+   tail.position.x = -1.9;
+   tail.position.y = 1.25;
+   tail.rotation.set(0,0,0.25);
+   this.threegroup.add(tail);
+
+   var leg1 = new THREE.Mesh(
+      new THREE.BoxGeometry(0.5,3,0.5),
+      this.brownMat
+   );
+   leg1.position.x = -1.7;
+   leg1.position.y = -1.5;
+   leg1.position.z = -.7;
+   this.threegroup.add(leg1);
+
+   var leg2 = leg1.clone();
+   leg2.position.z = -leg1.position.z;
+   this.threegroup.add(leg2);
+
+   var leg3 = leg1.clone();
+   leg3.position.x = -leg1.position.x;
+   leg3.position.z = -leg1.position.z;
+   this.threegroup.add(leg3);
+
+   var leg4 = leg1.clone();
+   leg4.position.x = -leg1.position.x;
+   this.threegroup.add(leg4);
+
+
+// TODO: hierarchical modeling for head/neck etc to move with arrow keys
+// ----------- HEAD PIECES -----------
+   var neck = new THREE.Mesh(
+     new THREE.BoxGeometry(0.8,1.5,0.8),
+     this.brownMat
+   );
+   neck.position.x = 1.8;
+   neck.position.y = 1.2;
+   neck.rotation.set(0,0,-0.4);
+   this.threegroup.add(neck);
+
+   var head = new THREE.Mesh(
+     new THREE.BoxGeometry(1.3,1.1,1.3),
+     this.brownMat
+   );
+   head.position.x = 2.2;
+   head.position.y = 2;
+   this.threegroup.add(head);
+
+   var eye1 = new THREE.Mesh(
+     new THREE.BoxGeometry(0.15,0.15,0.01),
+     this.blackMat
+   );
+   eye1.position.x = 2.3;
+   eye1.position.y = 2.15;
+   eye1.position.z = 0.65;
+   this.threegroup.add(eye1);
+
+   var eye2 = eye1.clone();
+   eye2.position.z = -eye1.position.z;
+   this.threegroup.add(eye2);
+
+   var snout = new THREE.Mesh(
+     new THREE.BoxGeometry(0.8,0.65,0.8),
+     this.brownMat
+   );
+   snout.position.x = 2.8;
+   snout.position.y = 1.8;
+   this.threegroup.add(snout);
+
+   var nose = new THREE.Mesh(
+     new THREE.BoxGeometry(0.3,0.65,0.8),
+     this.blackMat
+   );
+   nose.position.x = 3.35;
+   nose.position.y = 1.8;
+   this.threegroup.add(nose);
+
+   // TODO: possibly change to be a cylinder but with 3 faces (aka a triangular prism)
+   var ear1 = new THREE.Mesh(
+     new THREE.BoxGeometry(0.3,1,0.45),
+     this.brownMat
+   );
+   ear1.position.x = 1.5;
+   ear1.position.y = 2.65;
+   ear1.position.z = 0.5;
+   ear1.rotation.set(0.2,0,0.4);
+   this.threegroup.add(ear1);
+
+   var ear2 = ear1.clone();
+   ear2.position.z = -ear1.position.z;
+   ear2.rotation.set(-0.2,0,0.4);
+   this.threegroup.add(ear2);
+
+   // var antler1 = new THREE.Mesh(
+   //   new THREE.ConeGeometry(0.15,0.8,0.45),
+   //   this.offWhiteMat
+   // );
+   // antler1.position.x = 2;
+   // antler1.position.y = 2.8;
+   // antler1.position.z = 0.25;
+   // this.threegroup.add(antler1);
+   //
+   // var antler2 = antler1.clone();
+   // antler2.position.z = -antler2.position.z;
+   // this.threegroup.add(antler2);
+// ----------- END HEAD PIECES -----------
+
+   // Tip it forward a bit, so we're not looking at it edge-on.
+   // model.rotation.set(0.2,0,0);
+}
+
 function createFloor(){
   floor = new THREE.Mesh(new THREE.PlaneBufferGeometry(1000,1000), new THREE.MeshBasicMaterial({color: 0xa5f9aa}));
   floor.rotation.x = -Math.PI/2;
@@ -505,6 +658,14 @@ function createCoffee(){
   scene.add(Coffee.threegroup);
 }
 
+function createDeer(){
+  Deer = new Deer();
+  Deer.threegroup.position.x = 0;
+  Deer.threegroup.position.y = 100;
+  Deer.threegroup.scale.set(40,40,40);
+  scene.add(Deer.threegroup);
+}
+
 function loop(){
   var tempHA = (mousePos.x-windowHalfX)/200;
   var tempVA = (mousePos.y - windowHalfY)/200;
@@ -524,8 +685,9 @@ function render(){
 init();
 createLights();
 createFloor();
-createGoose();
+// createGoose();
 //createClock();
 //createCan();
 //createCoffee();
+createDeer();
 loop();
