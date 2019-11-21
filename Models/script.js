@@ -474,25 +474,11 @@ Coffee = function(){
 
 Deer = function() {
 
-  this.rSegments = 4;
-  this.hSegments = 3;
-  this.cylRay = 120;
-  this.bodyGooseInitPositions = [];
-  this.vAngle = this.hAngle = 0;
-  this.normalSkin = {r:255/255, g:222/255, b:121/255};
-  //this.shySkin = {r:255/255, g:157/255, b:101/255};
-  this.color = {r:this.normalSkin.r, g:this.normalSkin.g, b:this.normalSkin.b};
-  this.side = "left";
-
-  this.shyAngles = {h:0, v:0};
-  this.behaviourInterval;
-  this.intervalRunning = false;
-
   this.threegroup = new THREE.Group();
 
   // materials
-  this.brownMat = new THREE.MeshLambertMaterial ({
-    color: 0xd2b48c,
+  this.darkBrownMat = new THREE.MeshLambertMaterial ({
+    color: 0xa8551e,
     shading:THREE.FlatShading
   });
   this.offWhiteMat = new THREE.MeshLambertMaterial ({
@@ -504,16 +490,14 @@ Deer = function() {
     shading: THREE.FlatShading
   });
 
-   // var model = new THREE.Object3D();
-
    this.threegroup.add( new THREE.Mesh(
       new THREE.BoxGeometry(3.9,1.9,1.9),
-      this.brownMat
+      this.darkBrownMat
    ));
 
    var tail = new THREE.Mesh(
      new THREE.BoxGeometry(0.5,1,0.5),
-     this.brownMat
+     this.darkBrownMat
    );
    tail.position.x = -1.9;
    tail.position.y = 1.25;
@@ -522,7 +506,7 @@ Deer = function() {
 
    var leg1 = new THREE.Mesh(
       new THREE.BoxGeometry(0.5,3,0.5),
-      this.brownMat
+      this.darkBrownMat
    );
    leg1.position.x = -1.7;
    leg1.position.y = -1.5;
@@ -542,12 +526,34 @@ Deer = function() {
    leg4.position.x = -leg1.position.x;
    this.threegroup.add(leg4);
 
+   var hoof1 = new THREE.Mesh(
+      new THREE.BoxGeometry(0.5,0.3,0.5),
+      new THREE.MeshLambertMaterial({ color: 0x000000 })
+   );
+   hoof1.position.x = -1.7;
+   hoof1.position.y = -3.15;
+   hoof1.position.z = -0.7;
+   this.threegroup.add(hoof1);
 
-// TODO: hierarchical modeling for head/neck etc to move with arrow keys
+   var hoof2 = hoof1.clone();
+   hoof2.position.z = -hoof1.position.z;
+   this.threegroup.add(hoof2);
+
+   var hoof3 = hoof1.clone();
+   hoof3.position.x = -hoof1.position.x;
+   hoof3.position.z = -hoof1.position.z;
+   this.threegroup.add(hoof3);
+
+   var hoof4 = hoof1.clone();
+   hoof4.position.x = -hoof1.position.x;
+   this.threegroup.add(hoof4);
+
+
+// TODO: hierarchical modeling for head/neck etc to move with arrow keys?
 // ----------- HEAD PIECES -----------
    var neck = new THREE.Mesh(
      new THREE.BoxGeometry(0.8,1.5,0.8),
-     this.brownMat
+     this.darkBrownMat
    );
    neck.position.x = 1.8;
    neck.position.y = 1.2;
@@ -556,7 +562,7 @@ Deer = function() {
 
    var head = new THREE.Mesh(
      new THREE.BoxGeometry(1.3,1.1,1.3),
-     this.brownMat
+     this.darkBrownMat
    );
    head.position.x = 2.2;
    head.position.y = 2;
@@ -577,7 +583,7 @@ Deer = function() {
 
    var snout = new THREE.Mesh(
      new THREE.BoxGeometry(0.8,0.65,0.8),
-     this.brownMat
+     this.darkBrownMat
    );
    snout.position.x = 2.8;
    snout.position.y = 1.8;
@@ -594,7 +600,7 @@ Deer = function() {
    // TODO: possibly change to be a cylinder but with 3 faces (aka a triangular prism)
    var ear1 = new THREE.Mesh(
      new THREE.BoxGeometry(0.3,1,0.45),
-     this.brownMat
+     this.darkBrownMat
    );
    ear1.position.x = 1.5;
    ear1.position.y = 2.65;
@@ -620,9 +626,6 @@ Deer = function() {
    // antler2.position.z = -antler2.position.z;
    // this.threegroup.add(antler2);
 // ----------- END HEAD PIECES -----------
-
-   // Tip it forward a bit, so we're not looking at it edge-on.
-   // model.rotation.set(0.2,0,0);
 }
 
 function createFloor(){
