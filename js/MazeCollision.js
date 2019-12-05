@@ -12,7 +12,8 @@ var camera, // We need a camera
     controls, // Our Orbit Controller for camera magic.
     container, // Our HTML container for the program.
     rotationPoint;  // The point in which our camera will rotate around.
-var characterSize = 50;
+var characterSize = 25;
+var treeSize = 50;
 var outlineSize = characterSize * 0.05;
 // Track all objects and collisions.
 var objects = [];
@@ -28,7 +29,7 @@ var playerSpeed = 10;
 var bbox;
 var helper;
 //maze generation
-var size = 7;
+var size = 20;
 var maze, mazeMesh;
 var distance = 100,
    entranceXidx = 1,
@@ -37,12 +38,22 @@ var distance = 100,
    entranceX = -300+(size-1)*100,
    entranceZ = -200;
 
+ var moveForward = false;
+ var moveBackward = false;
+ var moveLeft = false;
+ var moveRight = false;
+
+ // Velocity vector for the player
+ var playerVelocity = new THREE.Vector3();
+
+ // How fast the player will move
+ var PLAYERSPEED = 800.0;
+
+ var clock;
+
 
 //tree
 var green = 0x44aa44;
-
-
-
 
 /**
  * Run initial setup function and loop through rendering.
@@ -55,8 +66,9 @@ animate();
  */
 function init() {
   // Build the container
-  container = document.createElement( 'div' );
-  document.body.appendChild( container );
+  // container = document.createElement( 'div' );
+
+  container = document.getElementById('world');
 
   // Create the scene.
   scene = new THREE.Scene();
@@ -99,8 +111,13 @@ function init() {
   // Move the camera away from the center of the scene.
   camera.position.z = -300;
   camera.position.y = 100;
-  box.add( camera );
+  camera.rotation.y = radians(90);
+  scene.add( camera );
 
+  // Flags to determine which direction the player is moving
+
+  clock = new THREE.Clock();
+  // listenForPlayerMovement();
 
   // Build the renderer
   renderer = new THREE.WebGLRenderer( { antialias: true } );
@@ -109,17 +126,16 @@ function init() {
   renderer.setSize( window.innerWidth, window.innerHeight );
   container.appendChild( element );
 
-  // Build the controls.
+  // // Build the controls.
   controls = new THREE.OrbitControls( camera, element );
   controls.enablePan = false;
   controls.enableZoom = true;
   // controls.autoRotate = true;
   controls.maxDistance = 1000; // Set our max zoom out distance (mouse scroll)
   controls.minDistance = 60; // Set our min zoom in distance (mouse scroll)
-  controls.target.copy( new THREE.Vector3( 0, 0, 0 ) );
+  // controls.target.copy( new THREE.Vector3( 0, 0, 0 ) );
+  controls.target.copy( box.threegroup.position);
 
-  // document.addEventListener( 'mousedown', onDocumentMouseDown, false );
-  // document.addEventListener('mousemove', handleMouseMove, false);
   document.onkeydown = handleKeyDown;
 
 }
@@ -131,23 +147,95 @@ function handleKeyDown(keyEvent){
 
   if (keyEvent.key == "ArrowRight") {
     // box.position.x -= playerSpeed;
-    movements.push(new THREE.Vector3(box.position.x - playerSpeed, box.position.y, box.position.z));
+    movements.push(new THREE.Vector3(box.threegroup.position.x - playerSpeed, box.threegroup.position.y, box.threegroup.position.z));
+    box.threegroup.rotation.y = radians(180);
+    // camera.rotation.y = radians(180);
+    moveRight = true;
   }
   else if (keyEvent.key == "ArrowLeft") {
-    // box.position.x += playerSpeed;
-    movements.push(new THREE.Vector3(box.position.x + playerSpeed, box.position.y, box.position.z));
+    // box.threegroup.position.x += playerSpeed;
+    movements.push(new THREE.Vector3(box.threegroup.position.x + playerSpeed, box.threegroup.position.y, box.threegroup.position.z));
+    box.threegroup.rotation.y = radians(0);
+    // camera.rotation.y = radians(0);
+    moveLeft = true;
   }
 
   if (keyEvent.key == "ArrowDown") {
-    // box.position.z -= playerSpeed;
-    movements.push(new THREE.Vector3(box.position.x, box.position.y, box.position.z - playerSpeed));
+    // box.threegroup.position.z -= playerSpeed;
+    movements.push(new THREE.Vector3(box.threegroup.position.x, box.threegroup.position.y, box.threegroup.position.z - playerSpeed));
+    box.threegroup.rotation.y = radians(90);
+    moveBackward = true;
   }
   else if (keyEvent.key == "ArrowUp") {
-    // box.position.z += playerSpeed;
-    movements.push(new THREE.Vector3(box.position.x, box.position.y, box.position.z  + playerSpeed));
+    // box.threegroup.position.z += playerSpeed;
+    movements.push(new THREE.Vector3(box.threegroup.position.x, box.threegroup.position.y, box.threegroup.position.z  + playerSpeed));
+
+    box.threegroup.rotation.y = radians(270);
+    moveForward = true;
   }
 
 }
+
+// function listenForPlayerMovement() {
+//
+//     // A key has been pressed
+//     var onKeyDown = function(event) {
+//
+//     switch (event.keyCode) {
+//
+//       case 38: // up
+//       case 87: // w
+//         moveForward = true;
+//         break;
+//
+//       case 37: // left
+//       case 65: // a
+//         moveLeft = true;
+//         break;
+//
+//       case 40: // down
+//       case 83: // s
+//         moveBackward = true;
+//         break;
+//
+//       case 39: // right
+//       case 68: // d
+//         moveRight = true;
+//         break;
+//     }
+//   };
+
+//   // A key has been released
+//     var onKeyUp = function(event) {
+//
+//     switch (event.keyCode) {
+//
+//       case 38: // up
+//       case 87: // w
+//         moveForward = false;
+//         break;
+//
+//       case 37: // left
+//       case 65: // a
+//         moveLeft = false;
+//         break;
+//
+//       case 40: // down
+//       case 83: // s
+//         moveBackward = false;
+//         break;
+//
+//       case 39: // right
+//       case 68: // d
+//         moveRight = false;
+//         break;
+//     }
+//   };
+//
+//   // Add event listeners for when movement keys are pressed and released
+//   document.addEventListener('keydown', onKeyDown, false);
+//   document.addEventListener('keyup', onKeyUp, false);
+// }
 
 /**
  * Event that fires upon mouse down.
@@ -184,8 +272,8 @@ function move( location, destination, speed = playerSpeed ) {
     var moveDistance = speed;
 
     // Translate over to the position.
-    var posX = location.position.x;
-    var posZ = location.position.z;
+    var posX = location.threegroup.position.x;
+    var posZ = location.threegroup.position.z;
     var newPosX = destination.x;
     var newPosZ = destination.z;
 
@@ -207,17 +295,17 @@ function move( location, destination, speed = playerSpeed ) {
       multiplierZ = -1;
     }
 
-    // Update the main position.
-    location.position.x = location.position.x + ( moveDistance * ( diffX / distance )) * multiplierX;
-    location.position.z = location.position.z + ( moveDistance * ( diffZ / distance )) * multiplierZ;
+    // Update the main threegroup.position.
+    location.threegroup.position.x = location.threegroup.position.x + ( moveDistance * ( diffX / distance )) * multiplierX;
+    location.threegroup.position.z = location.threegroup.position.z + ( moveDistance * ( diffZ / distance )) * multiplierZ;
 
-    // If the position is close we can call the movement complete.
-    if (( Math.floor( location.position.x ) <= Math.floor( newPosX ) + 1.5 &&
-          Math.floor( location.position.x ) >= Math.floor( newPosX ) - 1.5 ) &&
-        ( Math.floor( location.position.z ) <= Math.floor( newPosZ ) + 1.5 &&
-          Math.floor( location.position.z ) >= Math.floor( newPosZ ) - 1.5 )) {
-      location.position.x = Math.floor( location.position.x );
-      location.position.z = Math.floor( location.position.z );
+    // If the threegroup.position is close we can call the movement complete.
+    if (( Math.floor( location.threegroup.position.x ) <= Math.floor( newPosX ) + 1.5 &&
+          Math.floor( location.threegroup.position.x ) >= Math.floor( newPosX ) - 1.5 ) &&
+        ( Math.floor( location.threegroup.position.z ) <= Math.floor( newPosZ ) + 1.5 &&
+          Math.floor( location.threegroup.position.z ) >= Math.floor( newPosZ ) - 1.5 )) {
+      location.threegroup.position.x = Math.floor( location.threegroup.position.x );
+      location.threegroup.position.z = Math.floor( location.threegroup.position.z );
 
       // Reset any movements.
       stopMovement();
@@ -248,13 +336,6 @@ function update() {
 function render() {
   renderer.render( scene, camera );
 
-  renderer.render( scene, camera );
-
-  // Don't let the camera go too low.
-  if ( camera.position.y < 10 ) {
-    camera.position.y = 10;
-  }
-
   // If any movement was added, run it!
   if ( movements.length > 0 ) {
     move( box, movements[ 0 ] );
@@ -265,18 +346,52 @@ function render() {
     detectCollisions(box);
   }
 
-  controls.update();
+
+  // controls.update();
+
 }
 
 /**
  * Animate the scene.
  */
 function animate() {
-  requestAnimationFrame(animate);
-  update();
   render();
+  update();
+  requestAnimationFrame(animate);
+
+
+  var delta = clock.getDelta();
+  animatePlayer(delta);
   // box.updateMatrixWorld( true );
   // bbox.copy( box.geometry.boundingBox ).applyMatrix4( box.matrixWorld)
+}
+
+function animatePlayer(delta) {
+  // Gradual slowdown
+  playerVelocity.x -= playerVelocity.x * 10.0 * delta;
+  playerVelocity.z -= playerVelocity.z * 10.0 * delta;
+
+  if (moveForward) {
+    playerVelocity.z -= PLAYERSPEED * delta;
+  }
+  if (moveBackward) {
+    playerVelocity.z += PLAYERSPEED * delta;
+  }
+  if (moveLeft) {
+    playerVelocity.x -= PLAYERSPEED * delta;
+  }
+  if (moveRight) {
+    playerVelocity.x += PLAYERSPEED * delta;
+  }
+  if( !( moveForward || moveBackward || moveLeft ||moveRight)) {
+    // No movement key being pressed. Stop movememnt
+    playerVelocity.x = 0;
+    playerVelocity.z = 0;
+  }
+  // controls.getObject().translateX(playerVelocity.x * delta);
+  // controls.getObject().translateZ(playerVelocity.z * delta);
+  controls.object.translateX(playerVelocity.x * delta);
+  controls.object.translateZ(playerVelocity.z * delta);
 }
 
 
@@ -336,24 +451,18 @@ function createMaze() {
  * Create the main character.
  */
 function createCharacter() {
-  // var geometry = new THREE.CylinderGeometry( characterSize, characterSize, characterSize );
-  var geometry = new THREE.BoxBufferGeometry( characterSize, characterSize, characterSize );
-  // var geometry = new THREE.CylinderBufferGeometry( characterSize/2, characterSize/2, characterSize );
-  var material = new THREE.MeshPhongMaterial({ color: 0x7a6f50 });
-  box = new THREE.Mesh( geometry, material );
+  box = new Deer();
+  box.threegroup.scale.x = characterSize;
+  box.threegroup.scale.y = characterSize;
+  box.threegroup.scale.z = characterSize;
+  // box = new THREE.Mesh( geometry, material );
   //box is always placed right next to entrance
-  box.position.y = characterSize/2;
-  box.position.x = entranceX-100;
-  box.position.z = entranceZ;
-  // box.rotation.z = radians(90);
-  rotationPoint.add( box );
-  // rotationPoint.rotation.set(radians(-90));
-
-  // bbox = new THREE.Box3().setFromObject(box);
-  // helper = new THREE.Box3Helper( bbox, 0xffff00 );
-  // scene.add(helper);
-
-
+  box.threegroup.position.y = characterSize * 2; //TODO: feet are sticking through floor
+  box.threegroup.position.x = entranceX-100;
+  box.threegroup.position.z = entranceZ - characterSize/2;
+  rotationPoint.add( box.threegroup );
+  // box.threegroup.add( camera );
+  // rotationPoint.add(camera);
 }
 
 /**
@@ -367,7 +476,6 @@ function createFloor() {
   plane.position.y = 0;
   scene.add( plane );
   objects.push( plane );
-
 }
 
 
@@ -381,7 +489,7 @@ function createTree( posX, posZ, treeColor ) {
   var randomRotateY = Math.PI/( Math.floor(( Math.random() * 32) + 1 ));
 
   // Create the tree top.
-  var geometry = new THREE.DodecahedronGeometry( characterSize );
+  var geometry = new THREE.DodecahedronGeometry( treeSize );
   var material = new THREE.MeshPhongMaterial({ color: treeColor });
   var treeTop = new THREE.Mesh( geometry, material );
 
@@ -408,14 +516,18 @@ parameters =
 	visible: true,
 	material: "Phong",
   collisions: true,
+  controls: true,
 	reset: function() { resetSphere() }
 };
 
-var shapeColor = gui.addColor( parameters, 'color' ).name('Color (Diffuse)').listen();
+// var shapeColor = gui.addColor( parameters, 'color' ).name('Color (Diffuse)').listen();
 var collisionsDetected = gui.add(parameters, 'collisions').name('Collisions Enabled').listen();
-
-shapeColor.onChange(function(value) // onFinishChange
-{   box.material.color.setHex( value.replace("#", "0x") );   });
+// var toggleControls = gui.add(parameters, 'controls').name('OrbitControls Enabled').listen();
+// shapeColor.onChange(function(value) // onFinishChange
+// {   box.material.color.setHex( value.replace("#", "0x") );   });
 
 collisionsDetected.onChange(function(value)
 {   enableCollisions = !enableCollisions; });
+//
+// toggleControls.onChange(function(value)
+// {   toggleControls = !toggleControls; });

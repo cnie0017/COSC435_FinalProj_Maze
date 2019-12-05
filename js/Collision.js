@@ -45,12 +45,12 @@ function detectCollisions() {
 
 
   var bounds = {
-    xMin: box.position.x - box.geometry.parameters.width / 2,
-    xMax: box.position.x + box.geometry.parameters.width / 2,
-    yMin: box.position.y - box.geometry.parameters.height / 2,
-    yMax: box.position.y + box.geometry.parameters.height / 2,
-    zMin: box.position.z - box.geometry.parameters.width / 2,
-    zMax: box.position.z + box.geometry.parameters.width / 2,
+    xMin: box.threegroup.position.x - box.threegroup.scale.x / 2,
+    xMax: box.threegroup.position.x + box.threegroup.scale.x / 2,
+    yMin: box.threegroup.position.y - box.threegroup.scale.y / 2,
+    yMax: box.threegroup.position.y + box.threegroup.scale.y / 2,
+    zMin: box.threegroup.position.z - box.threegroup.scale.z / 2,
+    zMax: box.threegroup.position.z + box.threegroup.scale.z / 2,
   };
 
     //
@@ -91,9 +91,9 @@ function detectCollisions() {
 
           // Determine the X axis push.
           if (objectCenterX > playerCenterX) {
-            box.position.x -= playerSpeed;
+            box.threegroup.position.x -= playerSpeed;
           } else {
-            box.position.x += playerSpeed;
+            box.threegroup.position.x += playerSpeed;
           }
         }
         if ( bounds.zMin <= collisions[ index ].zMax && bounds.zMax >= collisions[ index ].zMin ) {
@@ -103,9 +103,9 @@ function detectCollisions() {
 
           // Determine the Z axis push.
           if (objectCenterZ > playerCenterZ) {
-          box.position.z -= playerSpeed;
+          box.threegroup.position.z -= playerSpeed;
           } else {
-            box.position.z += playerSpeed;
+            box.threegroup.position.z += playerSpeed;
           }
         }
       }
