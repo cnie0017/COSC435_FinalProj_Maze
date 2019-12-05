@@ -4,17 +4,17 @@ var scene,
     camera,
     controls,
     fieldOfView,
-  	aspectRatio,
-  	nearPlane,
-  	farPlane,
+    aspectRatio,
+    nearPlane,
+    farPlane,
     shadowLight,
     backLight,
     light,
     renderer,
-		container;
+    container;
 
 //SCENE
-var floor, Goose1;
+var floor, Goose;
 
 //SCREEN VARIABLES
 
@@ -119,25 +119,15 @@ function createLights() {
 
 Goose = function(){
 
-  this.rSegments = 4;
-  this.hSegments = 3;
-  this.cylRay = 120;
-  this.bodyGooseInitPositions = [];
-  this.vAngle = this.hAngle = 0;
-  this.normalSkin = {r:255/255, g:222/255, b:121/255};
-  //this.shySkin = {r:255/255, g:157/255, b:101/255};
-  this.color = {r:this.normalSkin.r, g:this.normalSkin.g, b:this.normalSkin.b};
-  this.side = "left";
-
-  this.shyAngles = {h:0, v:0};
-  this.behaviourInterval;
-  this.intervalRunning = false;
+   this.rSegments = 4;
+   this.hSegments = 3;
+   this.bodyGooseInitPositions = [];
 
   this.threegroup = new THREE.Group();
 
   // materials
   this.greyMat = new THREE.MeshLambertMaterial ({
-    color: 0xD3D3D3,
+    color: 0x696969,
     shading:THREE.FlatShading
   });
   this.whiteMat = new THREE.MeshLambertMaterial ({
@@ -148,15 +138,15 @@ Goose = function(){
     color: 0x000000,
     shading: THREE.FlatShading
   });
-  this.orangeMat = new THREE.MeshLambertMaterial ({
-    color: 0xff5535,
+  this.brownMat = new THREE.MeshLambertMaterial ({
+    color: 0x665846,
     shading: THREE.FlatShading
   });
 
   //BODY
 
   var bodyGeom = new THREE.BoxGeometry(100, 85, 100, this.rSegments, this.hSegments);
-  this.bodyGoose = new THREE.Mesh(bodyGeom, this.greyMat);
+  this.bodyGoose = new THREE.Mesh(bodyGeom, this.brownMat);
   this.bodyGoose.position.y = 65;
 
   this.bodyVerticesLength = (this.rSegments+1)*(this.hSegments);
@@ -167,7 +157,7 @@ Goose = function(){
 
   this.tail = new THREE.Group();
   var tailGeom = new THREE.CylinderGeometry(57, 57, 100, 3);
-  this.tailGoose = new THREE.Mesh(tailGeom, this.greyMat);
+  this.tailGoose = new THREE.Mesh(tailGeom, this.brownMat);
   this.tailGoose.position.y = 51;
   this.tailGoose.position.x = -50;
   this.tailGoose.rotation.x = Math.PI/2;
@@ -175,7 +165,7 @@ Goose = function(){
 
   this.frontBody = new THREE.Group();
   var frontBodyGeom = new THREE.CylinderGeometry(57, 57, 100, 3);
-  this.frontBodyGoose = new THREE.Mesh(frontBodyGeom, this.greyMat);
+  this.frontBodyGoose = new THREE.Mesh(frontBodyGeom, this.brownMat);
   this.frontBodyGoose.position.y = 79;
   this.frontBodyGoose.position.x = 50;
   this.frontBodyGoose.rotation.x = Math.PI/2;
@@ -190,22 +180,18 @@ Goose = function(){
 
   var wingGeom = new THREE.CylinderGeometry(70,70, 10, 3);
 
-  this.wingLeft = new THREE.Mesh(wingGeom, this.greyMat);
+  this.wingLeft = new THREE.Mesh(wingGeom, this.brownMat);
   this.wingLeft.position.y = 70;
   this.wingLeft.position.x = 20;
   this.wingLeft.position.z = 70;
   this.wingLeft.rotation.x = -100;
 
-
-  //this.wingLeft.rotation.y = Math.PI/2;
-
-  this.wingRight = new THREE.Mesh(wingGeom, this.greyMat);
+  this.wingRight = new THREE.Mesh(wingGeom, this.brownMat);
   this.wingRight.position.x = 20;
   this.wingRight.position.z = -70;
   this.wingRight.position.y = 70;
   this.wingRight.rotation.y = -Math.PI/3;
   this.wingRight.rotation.x = (-Math.PI/3)/2;
-	
 
   this.wings.add(this.wingLeft);
   this.wings.add(this.wingRight);
@@ -213,22 +199,22 @@ Goose = function(){
 
   //NECK AND HEAD
   var neckGeom = new THREE.BoxGeometry(50, 75, 50, this.rSegments, this.hSegments);
-  this.neckGoose = new THREE.Mesh(neckGeom, this.greyMat);
+  this.neckGoose = new THREE.Mesh(neckGeom, this.blackMat);
   this.neckGoose.position.y = 145;
   this.neckGoose.position.x = 73;
 
   var headGeom = new THREE.BoxGeometry(80, 60, 60, this.rSegments, this.hSegments);
-  this.headGoose = new THREE.Mesh(headGeom, this.greyMat);
+  this.headGoose = new THREE.Mesh(headGeom, this.blackMat);
   this.headGoose.position.y = 200;
   this.headGoose.position.x = 80;
 
-    this.threegroup.add(this.neckGoose);
-    this.threegroup.add(this.headGoose);
+  this.threegroup.add(this.neckGoose);
+  this.threegroup.add(this.headGoose);
 
   //BEAK
   this.face = new THREE.Group();
   var beakGeom = new THREE.CylinderGeometry(25, 25, 50, 3);
-  this.beakGoose = new THREE.Mesh(beakGeom, this.blackMat);
+  this.beakGoose = new THREE.Mesh(beakGeom, this.greyMat);
   this.beakGoose.position.y = 185;
   this.beakGoose.position.x = 120;
   this.beakGoose.rotation.x = Math.PI/2;
@@ -237,12 +223,12 @@ Goose = function(){
   // // EYES
   var eyeGeom = new THREE.BoxGeometry(10,20,5);
 
-  this.leftEye = new THREE.Mesh(eyeGeom, this.blackMat);
+  this.leftEye = new THREE.Mesh(eyeGeom, this.whiteMat);
   this.leftEye.position.x = 100;
   this.leftEye.position.y = 200;
   this.leftEye.position.z = 30;
 
-  this.rightEye = new THREE.Mesh(eyeGeom, this.blackMat);
+  this.rightEye = new THREE.Mesh(eyeGeom, this.whiteMat);
   this.rightEye.position.x = 100;
   this.rightEye.position.y = 200;
   this.rightEye.position.z = -30;
@@ -250,18 +236,35 @@ Goose = function(){
   this.face.add(this.beakGoose);
   this.face.add(this.leftEye);
   this.face.add(this.rightEye);
+
+  //NECK STRIPE
+  var stripeGeom = new THREE.BoxGeometry(50,20,1);
+
+  this.leftStripe = new THREE.Mesh(stripeGeom, this.whiteMat);
+  this.leftStripe.position.x = 73;
+  this.leftStripe.position.y = 170;
+  this.leftStripe.position.z = 25;
+
+  this.rightStripe = new THREE.Mesh(stripeGeom, this.whiteMat);
+  this.rightStripe.position.x = 73;
+  this.rightStripe.position.y = 170;
+  this.rightStripe.position.z = -25;
+
+  this.face.add(this.leftStripe);
+  this.face.add(this.rightStripe);
   this.threegroup.add(this.face);
+
 
   //LEGS
   this.legs = new THREE.Group();
   var legGeom = new THREE.BoxGeometry(40, 40, 20);
 
-  this.leg1 = new THREE.Mesh(legGeom, this.greyMat);
+  this.leg1 = new THREE.Mesh(legGeom, this.brownMat);
   this.leg1.position.y = 10;
   this.leg1.position.x = 10;
   this.leg1.position.z = 20;
 
-  this.leg2 = new THREE.Mesh(legGeom, this.greyMat);
+  this.leg2 = new THREE.Mesh(legGeom, this.brownMat);
   this.leg2.position.y = 10;
   this.leg2.position.x = 10;
   this.leg2.position.z = -20;
@@ -295,20 +298,6 @@ Goose = function(){
 }
 
 Clock = function(){
-
-  this.rSegments = 4;
-  this.hSegments = 3;
-  this.cylRay = 120;
-  this.bodyGooseInitPositions = [];
-  this.vAngle = this.hAngle = 0;
-  this.normalSkin = {r:255/255, g:222/255, b:121/255};
-  //this.shySkin = {r:255/255, g:157/255, b:101/255};
-  this.color = {r:this.normalSkin.r, g:this.normalSkin.g, b:this.normalSkin.b};
-  this.side = "left";
-
-  this.shyAngles = {h:0, v:0};
-  this.behaviourInterval;
-  this.intervalRunning = false;
 
   this.threegroup = new THREE.Group();
 
@@ -359,20 +348,6 @@ Clock = function(){
 
 Can = function(){
 
-  this.rSegments = 4;
-  this.hSegments = 3;
-  this.cylRay = 120;
-  this.bodyGooseInitPositions = [];
-  this.vAngle = this.hAngle = 0;
-  this.normalSkin = {r:255/255, g:222/255, b:121/255};
-  //this.shySkin = {r:255/255, g:157/255, b:101/255};
-  this.color = {r:this.normalSkin.r, g:this.normalSkin.g, b:this.normalSkin.b};
-  this.side = "left";
-
-  this.shyAngles = {h:0, v:0};
-  this.behaviourInterval;
-  this.intervalRunning = false;
-
   var baseTexture = THREE.ImageUtils.loadTexture("keystonelabel.jpg");
 
   this.threegroup = new THREE.Group();
@@ -422,20 +397,6 @@ Can = function(){
 
 Coffee = function(){
 
-  this.rSegments = 4;
-  this.hSegments = 3;
-  this.cylRay = 120;
-  this.bodyGooseInitPositions = [];
-  this.vAngle = this.hAngle = 0;
-  this.normalSkin = {r:255/255, g:222/255, b:121/255};
-  //this.shySkin = {r:255/255, g:157/255, b:101/255};
-  this.color = {r:this.normalSkin.r, g:this.normalSkin.g, b:this.normalSkin.b};
-  this.side = "left";
-
-  this.shyAngles = {h:0, v:0};
-  this.behaviourInterval;
-  this.intervalRunning = false;
-
   this.threegroup = new THREE.Group();
 
   // materials
@@ -473,25 +434,11 @@ Coffee = function(){
 
 Deer = function() {
 
-  this.rSegments = 4;
-  this.hSegments = 3;
-  this.cylRay = 120;
-  this.bodyGooseInitPositions = [];
-  this.vAngle = this.hAngle = 0;
-  this.normalSkin = {r:255/255, g:222/255, b:121/255};
-  //this.shySkin = {r:255/255, g:157/255, b:101/255};
-  this.color = {r:this.normalSkin.r, g:this.normalSkin.g, b:this.normalSkin.b};
-  this.side = "left";
-
-  this.shyAngles = {h:0, v:0};
-  this.behaviourInterval;
-  this.intervalRunning = false;
-
   this.threegroup = new THREE.Group();
 
   // materials
-  this.brownMat = new THREE.MeshLambertMaterial ({
-    color: 0xd2b48c,
+  this.darkBrownMat = new THREE.MeshLambertMaterial ({
+    color: 0xa8551e,
     shading:THREE.FlatShading
   });
   this.offWhiteMat = new THREE.MeshLambertMaterial ({
@@ -503,16 +450,14 @@ Deer = function() {
     shading: THREE.FlatShading
   });
 
-   // var model = new THREE.Object3D();
-
    this.threegroup.add( new THREE.Mesh(
       new THREE.BoxGeometry(3.9,1.9,1.9),
-      this.brownMat
+      this.darkBrownMat
    ));
 
    var tail = new THREE.Mesh(
      new THREE.BoxGeometry(0.5,1,0.5),
-     this.brownMat
+     this.darkBrownMat
    );
    tail.position.x = -1.9;
    tail.position.y = 1.25;
@@ -521,7 +466,7 @@ Deer = function() {
 
    var leg1 = new THREE.Mesh(
       new THREE.BoxGeometry(0.5,3,0.5),
-      this.brownMat
+      this.darkBrownMat
    );
    leg1.position.x = -1.7;
    leg1.position.y = -1.5;
@@ -541,12 +486,34 @@ Deer = function() {
    leg4.position.x = -leg1.position.x;
    this.threegroup.add(leg4);
 
+   var hoof1 = new THREE.Mesh(
+      new THREE.BoxGeometry(0.5,0.3,0.5),
+      new THREE.MeshLambertMaterial({ color: 0x000000 })
+   );
+   hoof1.position.x = -1.7;
+   hoof1.position.y = -3.15;
+   hoof1.position.z = -0.7;
+   this.threegroup.add(hoof1);
 
-// TODO: hierarchical modeling for head/neck etc to move with arrow keys
+   var hoof2 = hoof1.clone();
+   hoof2.position.z = -hoof1.position.z;
+   this.threegroup.add(hoof2);
+
+   var hoof3 = hoof1.clone();
+   hoof3.position.x = -hoof1.position.x;
+   hoof3.position.z = -hoof1.position.z;
+   this.threegroup.add(hoof3);
+
+   var hoof4 = hoof1.clone();
+   hoof4.position.x = -hoof1.position.x;
+   this.threegroup.add(hoof4);
+
+
+// TODO: hierarchical modeling for head/neck etc to move with arrow keys?
 // ----------- HEAD PIECES -----------
    var neck = new THREE.Mesh(
      new THREE.BoxGeometry(0.8,1.5,0.8),
-     this.brownMat
+     this.darkBrownMat
    );
    neck.position.x = 1.8;
    neck.position.y = 1.2;
@@ -555,7 +522,7 @@ Deer = function() {
 
    var head = new THREE.Mesh(
      new THREE.BoxGeometry(1.3,1.1,1.3),
-     this.brownMat
+     this.darkBrownMat
    );
    head.position.x = 2.2;
    head.position.y = 2;
@@ -576,7 +543,7 @@ Deer = function() {
 
    var snout = new THREE.Mesh(
      new THREE.BoxGeometry(0.8,0.65,0.8),
-     this.brownMat
+     this.darkBrownMat
    );
    snout.position.x = 2.8;
    snout.position.y = 1.8;
@@ -593,7 +560,7 @@ Deer = function() {
    // TODO: possibly change to be a cylinder but with 3 faces (aka a triangular prism)
    var ear1 = new THREE.Mesh(
      new THREE.BoxGeometry(0.3,1,0.45),
-     this.brownMat
+     this.darkBrownMat
    );
    ear1.position.x = 1.5;
    ear1.position.y = 2.65;
@@ -619,9 +586,6 @@ Deer = function() {
    // antler2.position.z = -antler2.position.z;
    // this.threegroup.add(antler2);
 // ----------- END HEAD PIECES -----------
-
-   // Tip it forward a bit, so we're not looking at it edge-on.
-   // model.rotation.set(0.2,0,0);
 }
 
 function createFloor(){
@@ -633,9 +597,9 @@ function createFloor(){
 }
 
 function createGoose(){
-  Goose1 = new Goose();
-  Goose1.threegroup.position.x = 0;
-  scene.add(Goose1.threegroup);
+  Goose = new Goose();
+  Goose.threegroup.position.x = 0;
+  scene.add(Goose.threegroup);
 }
 
 
@@ -684,9 +648,9 @@ function render(){
 init();
 createLights();
 createFloor();
-// createGoose();
+//createGoose();
 //createClock();
 //createCan();
 //createCoffee();
-createDeer();
+//createDeer();
 loop();
