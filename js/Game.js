@@ -436,14 +436,10 @@ function createCharacter() {
   box.threegroup.scale.z = characterSize;
   // box = new THREE.Mesh( geometry, material );
   //box is always placed right next to entrance
-
-  box.threegroup.position.y = 80;//characterSize * 2; //TODO: feet are sticking through floor
-  box.threegroup.position.x = 0;//entranceX-100;
-  box.threegroup.position.z = 0;//entranceZ - characterSize/2;
-
-  box.threegroup.position.y = characterSize * 3.25; //TODO: feet are sticking through floor
+  box.threegroup.position.y = characterSize * 3.21; //TODO: feet are sticking through floor
   box.threegroup.position.x = entranceX-100;
   box.threegroup.position.z = entranceZ - characterSize/2;
+
   rotationPoint.add( box.threegroup );
   // box.threegroup.add( camera );
   // rotationPoint.add(camera);
