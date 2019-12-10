@@ -602,12 +602,12 @@ function render(){
   renderer.render(scene, camera);
 }
 
-init();
-createLights();
-createFloor();
+// init();
+// createLights();
+// createFloor();
 // createGoose();
 // createClock();
 // createCan();
 // createCoffee();
-createDeer();
-loop();
+// createDeer();
+// loop();
