@@ -29,7 +29,7 @@ var playerSpeed = 10;
 var bbox;
 var helper;
 //maze generation
-var size = 20;
+var size = 11;
 var maze, mazeMesh;
 var distance = 100,
    entranceXidx = 1,
@@ -137,6 +137,10 @@ function init() {
   controls.target.copy( box.threegroup.position);
 
   document.onkeydown = handleKeyDown;
+
+
+  var axis = new THREE.AxesHelper(3000);
+  scene.add(axis);
 
 }
 
@@ -420,31 +424,6 @@ function CreateMazeMesh(maze) {
 function createMaze() {
    maze = generateMaze(size);
    mazeMesh = CreateMazeMesh(maze);
-   //original one for testing
-    // for (var x = 300; x < 500; x = x + 160) {
-    //   for (var z = 300; z < 700; z = z + 100) {
-    //     createTree(x, z);
-    //   }
-    // }
-    //
-    // createTree(460, 700);
-    // createTree(460, 800);
-    // createTree(400, 800);
-    // createTree(300, 800);
-    //
-    // for (var z = 600; z < 900; z = z + 200) {
-    //   for (var x = 200; x > -100; x = x - 100) {
-    //     createTree(x, z);
-    //   }
-    // }
-    // createTree(300, 300);
-    // createTree(300, 400;
-    // createTree(300, 500);
-    // createTree(300, 600);
-    // createTree(500, 300);
-    // createTree(500, 400);
-    // createTree(500, 500);
-    // createTree(500, 600);
 }
 
 /**
@@ -457,9 +436,9 @@ function createCharacter() {
   box.threegroup.scale.z = characterSize;
   // box = new THREE.Mesh( geometry, material );
   //box is always placed right next to entrance
-  box.threegroup.position.y = characterSize * 2; //TODO: feet are sticking through floor
-  box.threegroup.position.x = entranceX-100;
-  box.threegroup.position.z = entranceZ - characterSize/2;
+  box.threegroup.position.y = 80;//characterSize * 2; //TODO: feet are sticking through floor
+  box.threegroup.position.x = 0;//entranceX-100;
+  box.threegroup.position.z = 0;//entranceZ - characterSize/2;
   rotationPoint.add( box.threegroup );
   // box.threegroup.add( camera );
   // rotationPoint.add(camera);
