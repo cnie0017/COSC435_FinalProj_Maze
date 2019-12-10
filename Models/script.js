@@ -580,11 +580,11 @@ function createCoffee(){
 }
 
 function createDeer(){
-  Deer = new Deer();
-  Deer.threegroup.position.x = 0;
-  Deer.threegroup.position.y = 100;
-  Deer.threegroup.scale.set(40,40,40);
-  scene.add(Deer.threegroup);
+  deer = new Deer();
+  deer.threegroup.position.x = 0;
+  deer.threegroup.position.y = 100;
+  deer.threegroup.scale.set(40,40,40);
+  scene.add(deer.threegroup);
 }
 
 function loop(){
