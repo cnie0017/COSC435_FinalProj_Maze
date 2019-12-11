@@ -479,13 +479,8 @@ function placePowerUp(powerup){
 
     console.log(maze[cx][cz]);
     if (!maze[cx][cz]){
-      // clock = new Clock();
-      // powerup.threegroup.scale.x = 0.5;
-      // powerup.threegroup.scale.y = 0.5;
-      // powerup.threegroup.scale.z = 0.5;
-      // powerup.threegroup.position.y = 50;
-      powerup.threegroup.position.x = -300+cx*distance//(entranceX + distance) - cx * distance;
-      powerup.threegroup.position.z = -300+cz*distance//entranceZ + cz * distance;
+      powerup.threegroup.position.x = -300+cx*distance;
+      powerup.threegroup.position.z = -300+cz*distance;
 
       maze[cx][cz] = true;
 
@@ -493,18 +488,6 @@ function placePowerUp(powerup){
       placed = true;
     }
   }
-
-  // clock = new Clock();
-  // clock.threegroup.scale.x = 0.5;
-  // clock.threegroup.scale.y = 0.5;
-  // clock.threegroup.scale.z = 0.5;
-  // // box = new THREE.Mesh( geometry, material );
-  // //box is always placed right next to entrance
-  // clock.threegroup.position.y = 50; //TODO: feet are sticking through floor
-  // clock.threegroup.position.x = entranceX - 100;
-  // clock.threegroup.position.z = -225;
-  //
-  // rotationPoint.add( clock.threegroup );
 }
 
 /**
