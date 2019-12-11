@@ -97,6 +97,7 @@ function init() {
   createCharacter();
   createFloor();
   createMaze();
+  placePowerUps();
 
   enableCollisions = true;
 
@@ -128,13 +129,21 @@ function init() {
 
   // // Build the controls.
   controls = new THREE.OrbitControls( camera, element );
-  controls.enablePan = false;
+  controls.enablePan = true;
+  controls.screenSpacePanning = true;
   controls.enableZoom = true;
   // controls.autoRotate = true;
   controls.maxDistance = 1000; // Set our max zoom out distance (mouse scroll)
   controls.minDistance = 60; // Set our min zoom in distance (mouse scroll)
   // controls.target.copy( new THREE.Vector3( 0, 0, 0 ) );
   controls.target.copy( box.threegroup.position);
+
+  controls.keys = {
+	LEFT: 37, //left arrow
+	UP: 38, // up arrow
+	RIGHT: 39, // right arrow
+	BOTTOM: 40 // down arrow
+  }
 
   document.onkeydown = handleKeyDown;
 
@@ -154,28 +163,28 @@ function handleKeyDown(keyEvent){
     movements.push(new THREE.Vector3(box.threegroup.position.x - playerSpeed, box.threegroup.position.y, box.threegroup.position.z));
     box.threegroup.rotation.y = radians(180);
     // camera.rotation.y = radians(180);
-    moveRight = true;
+    // moveRight = true;
   }
   else if (keyEvent.key == "ArrowLeft") {
     // box.threegroup.position.x += playerSpeed;
     movements.push(new THREE.Vector3(box.threegroup.position.x + playerSpeed, box.threegroup.position.y, box.threegroup.position.z));
     box.threegroup.rotation.y = radians(0);
     // camera.rotation.y = radians(0);
-    moveLeft = true;
+    // moveLeft = true;
   }
 
   if (keyEvent.key == "ArrowDown") {
     // box.threegroup.position.z -= playerSpeed;
     movements.push(new THREE.Vector3(box.threegroup.position.x, box.threegroup.position.y, box.threegroup.position.z - playerSpeed));
     box.threegroup.rotation.y = radians(90);
-    moveBackward = true;
+    // moveBackward = true;
   }
   else if (keyEvent.key == "ArrowUp") {
     // box.threegroup.position.z += playerSpeed;
     movements.push(new THREE.Vector3(box.threegroup.position.x, box.threegroup.position.y, box.threegroup.position.z  + playerSpeed));
 
     box.threegroup.rotation.y = radians(270);
-    moveForward = true;
+    // moveForward = true;
   }
 
 }
@@ -409,6 +418,7 @@ function CreateMazeMesh(maze) {
 				if (mazeObj) {
                if (i == entranceXidx && j==entranceZidx){//entrance
                   createTree(entranceX,entranceZ,0x2194ce);
+                  maze[i][j] = true;
                }
                else if (i == exitXidx && j == randExitZidx){//exit
                   createTree(-300+j*distance,-300+i*distance,0xead516);
@@ -423,7 +433,78 @@ function CreateMazeMesh(maze) {
 
 function createMaze() {
    maze = generateMaze(size);
+   console.log(maze);
+   console.log(entranceX);
    mazeMesh = CreateMazeMesh(maze);
+}
+
+function placePowerUps(){
+  // set scale and y position
+
+  // TODO: possibly change scale/y in models so that this is not necessary
+
+  let goose = new Goose();
+  goose.threegroup.scale.set(0.3,0.3,0.3);
+  goose.threegroup.position.y = 15;
+  placePowerUp(goose);
+
+  let clock = new Clock();
+  clock.threegroup.scale.set(0.5,0.5,0.5);
+  clock.threegroup.position.y = 50;
+  placePowerUp(clock);
+
+  //can
+  let can = new Can();
+  can.threegroup.scale.set(0.3,0.3,0.3);
+  placePowerUp(can);
+
+  //coffee
+  let coffee = new Coffee();
+  coffee.threegroup.scale.set(0.3,0.3,0.3);
+  placePowerUp(coffee);
+
+  //student
+  let student = new Student();
+  student.threegroup.scale.set(0.3,0.3,0.3);
+  placePowerUp(student);
+
+}
+
+function placePowerUp(powerup){
+  // try with clock
+  let placed = false;
+  while (!placed){
+    let cx = Math.floor(Math.random() * size);
+    let cz = Math.floor(Math.random() * size);
+
+    console.log(maze[cx][cz]);
+    if (!maze[cx][cz]){
+      // clock = new Clock();
+      // powerup.threegroup.scale.x = 0.5;
+      // powerup.threegroup.scale.y = 0.5;
+      // powerup.threegroup.scale.z = 0.5;
+      // powerup.threegroup.position.y = 50;
+      powerup.threegroup.position.x = -300+cx*distance//(entranceX + distance) - cx * distance;
+      powerup.threegroup.position.z = -300+cz*distance//entranceZ + cz * distance;
+
+      maze[cx][cz] = true;
+
+      rotationPoint.add( powerup.threegroup );
+      placed = true;
+    }
+  }
+
+  // clock = new Clock();
+  // clock.threegroup.scale.x = 0.5;
+  // clock.threegroup.scale.y = 0.5;
+  // clock.threegroup.scale.z = 0.5;
+  // // box = new THREE.Mesh( geometry, material );
+  // //box is always placed right next to entrance
+  // clock.threegroup.position.y = 50; //TODO: feet are sticking through floor
+  // clock.threegroup.position.x = entranceX - 100;
+  // clock.threegroup.position.z = -225;
+  //
+  // rotationPoint.add( clock.threegroup );
 }
 
 /**
@@ -436,7 +517,7 @@ function createCharacter() {
   box.threegroup.scale.z = characterSize;
   // box = new THREE.Mesh( geometry, material );
   //box is always placed right next to entrance
-  box.threegroup.position.y = characterSize * 3.21; //TODO: feet are sticking through floor
+  box.threegroup.position.y = characterSize * 2.5; //TODO: feet are sticking through floor
   box.threegroup.position.x = entranceX-100;
   box.threegroup.position.z = entranceZ - characterSize/2;
 
