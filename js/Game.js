@@ -434,7 +434,7 @@ function CreateMazeMesh(maze) {
 function createMaze() {
    maze = generateMaze(size);
    console.log(maze);
-   console.log(entranceX);
+   // console.log(entranceX);
    mazeMesh = CreateMazeMesh(maze);
 }
 
@@ -471,18 +471,19 @@ function placePowerUps(){
 }
 
 function placePowerUp(powerup){
-  // try with clock
   let placed = false;
   while (!placed){
-    let cx = Math.floor(Math.random() * size);
-    let cz = Math.floor(Math.random() * size);
+    let r1 = Math.floor(Math.random() * size);
+    let r2 = Math.floor(Math.random() * size);
 
-    console.log(maze[cx][cz]);
-    if (!maze[cx][cz]){
-      powerup.threegroup.position.x = -300+cx*distance;
-      powerup.threegroup.position.z = -300+cz*distance;
 
-      maze[cx][cz] = true;
+    if (!maze[r1][r2]){
+      console.log(maze[r1][r2]);
+      console.log(r1,r2);
+      powerup.threegroup.position.x = -300+r2*distance;
+      powerup.threegroup.position.z = -300+r1*distance;
+
+      maze[r1][r2] = true;
 
       rotationPoint.add( powerup.threegroup );
       placed = true;
