@@ -166,12 +166,12 @@ Goose = function(){
   this.threegroup = new THREE.Group();
 
   //BODY
-  let bodyGeom = new THREE.BoxGeometry(100, 85, 100);
+  let bodyGeom = new THREE.BoxBufferGeometry(100, 85, 100);
   this.bodyGoose = new THREE.Mesh(bodyGeom, brownMat);
   this.bodyGoose.position.y = 65;
 
   this.tail = new THREE.Group();
-  let tailGeom = new THREE.CylinderGeometry(57, 57, 100, 3);
+  let tailGeom = new THREE.CylinderBufferGeometry(57, 57, 100, 3);
   this.tailGoose = new THREE.Mesh(tailGeom, brownMat);
   this.tailGoose.position.y = 51;
   this.tailGoose.position.x = -50;
@@ -179,7 +179,7 @@ Goose = function(){
   this.tailGoose.rotation.y = Math.PI/3;
 
   this.frontBody = new THREE.Group();
-  let frontBodyGeom = new THREE.CylinderGeometry(57, 57, 100, 3);
+  let frontBodyGeom = new THREE.CylinderBufferGeometry(57, 57, 100, 3);
   this.frontBodyGoose = new THREE.Mesh(frontBodyGeom, brownMat);
   this.frontBodyGoose.position.y = 79;
   this.frontBodyGoose.position.x = 50;
@@ -193,7 +193,7 @@ Goose = function(){
   //WINGS
   this.wings = new THREE.Group();
 
-  let wingGeom = new THREE.CylinderGeometry(70,70, 10, 3);
+  let wingGeom = new THREE.CylinderBufferGeometry(70,70, 10, 3);
 
   this.wingLeft = new THREE.Mesh(wingGeom, brownMat);
   this.wingLeft.position.y = 60;
@@ -209,12 +209,12 @@ Goose = function(){
   this.threegroup.add(this.wings);
 
   //NECK AND HEAD
-  let neckGeom = new THREE.BoxGeometry(50, 75, 50);
+  let neckGeom = new THREE.BoxBufferGeometry(50, 75, 50);
   this.neckGoose = new THREE.Mesh(neckGeom, blackMat);
   this.neckGoose.position.y = 145;
   this.neckGoose.position.x = 73;
 
-  let headGeom = new THREE.BoxGeometry(80, 60, 60);
+  let headGeom = new THREE.BoxBufferGeometry(80, 60, 60);
   this.headGoose = new THREE.Mesh(headGeom, blackMat);
   this.headGoose.position.y = 200;
   this.headGoose.position.x = 80;
@@ -224,7 +224,7 @@ Goose = function(){
 
   //BEAK
   this.face = new THREE.Group();
-  let beakGeom = new THREE.CylinderGeometry(25, 25, 50, 3);
+  let beakGeom = new THREE.CylinderBufferGeometry(25, 25, 50, 3);
   this.beakGoose = new THREE.Mesh(beakGeom, greyMat);
   this.beakGoose.position.y = 185;
   this.beakGoose.position.x = 120;
@@ -232,7 +232,7 @@ Goose = function(){
   this.beakGoose.rotation.y = ((4 * Math.PI)/4);
 
   // // EYES
-  let eyeGeom = new THREE.BoxGeometry(10,20,5);
+  let eyeGeom = new THREE.BoxBufferGeometry(10,20,5);
 
   this.leftEye = new THREE.Mesh(eyeGeom, whiteMat);
   this.leftEye.position.x = 100;
@@ -249,7 +249,7 @@ Goose = function(){
   this.face.add(this.rightEye);
 
   //NECK STRIPE
-  let stripeGeom = new THREE.BoxGeometry(50,20,1);
+  let stripeGeom = new THREE.BoxBufferGeometry(50,20,1);
 
   this.leftStripe = new THREE.Mesh(stripeGeom, whiteMat);
   this.leftStripe.position.x = 73;
@@ -269,7 +269,7 @@ Goose = function(){
   //LEGS
   this.rightLeg = new THREE.Group();
   this.leftLeg = new THREE.Group();
-  let legGeom = new THREE.BoxGeometry(40, 90, 20);
+  let legGeom = new THREE.BoxBufferGeometry(40, 90, 20);
 
   this.leg1 = new THREE.Mesh(legGeom, brownMat);
   this.leg1.position.y = 20;
@@ -281,7 +281,7 @@ Goose = function(){
   this.leg2.position.x = 10;
   this.leg2.position.z = -20;
 
-  let footGeom = new THREE.BoxGeometry(70, 20, 30);
+  let footGeom = new THREE.BoxBufferGeometry(70, 20, 30);
 
   this.foot1 = new THREE.Mesh(footGeom, blackMat);
   this.foot1.position.y = -20;
@@ -315,9 +315,9 @@ Clock = function(){
   this.threegroup = new THREE.Group();
 
   this.base = new THREE.Group();
-  let baseGeom = new THREE.CylinderGeometry(100, 100, 10, 32);
+  let baseGeom = new THREE.CylinderBufferGeometry(100, 100, 10, 32);
   this.base1 = new THREE.Mesh(baseGeom, lightBlueMat);
-  let faceGeom = new THREE.CylinderGeometry(90, 90, 1, 32);
+  let faceGeom = new THREE.CylinderBufferGeometry(90, 90, 1, 32);
   this.face = new THREE.Mesh(faceGeom, whiteMat);
   this.face.position.y = 5;
 
@@ -326,13 +326,13 @@ Clock = function(){
   this.threegroup.add(this.base);
 
   this.hands = new THREE.Group();
-  let bigHandGeom = new THREE.BoxGeometry(10, 1, 80);
+  let bigHandGeom = new THREE.BoxBufferGeometry(10, 1, 80);
   this.bigHand = new THREE.Mesh(bigHandGeom, blackMat);
   this.bigHand.position.y = 6;
   this.bigHand.position.x = 15;
   this.bigHand.position.z = -25;
   this.bigHand.rotation.y = 100;
-  let smallHandGeom = new THREE.BoxGeometry(10, 1, 50);
+  let smallHandGeom = new THREE.BoxBufferGeometry(10, 1, 50);
   this.smallHand = new THREE.Mesh(smallHandGeom, blackMat);
   this.smallHand.position.y = 6;
   this.smallHand.position.x = -12;
@@ -352,18 +352,18 @@ Can = function(){
   this.threegroup = new THREE.Group();
 
   this.base = new THREE.Group();
-  let baseGeom = new THREE.CylinderGeometry(50, 50, 120, 32);
+  let baseGeom = new THREE.CylinderBufferGeometry(50, 50, 120, 32);
   this.middleBase = new THREE.Mesh(baseGeom, blueMat);
   this.middleBase.position.y = 100;
 
-  let bottomBaseGeom = new THREE.CylinderGeometry(50, 40, 20, 32);
+  let bottomBaseGeom = new THREE.CylinderBufferGeometry(50, 40, 20, 32);
   this.bottomBase = new THREE.Mesh(bottomBaseGeom, blueMat);
   this.bottomBase.position.y = 30;
-  let topBaseGeom = new THREE.CylinderGeometry(40, 50, 20, 32);
+  let topBaseGeom = new THREE.CylinderBufferGeometry(40, 50, 20, 32);
   this.topBase = new THREE.Mesh(topBaseGeom, blueMat);
   this.topBase.position.y = 170;
 
-  let topGeom = new THREE.CylinderGeometry(38, 38, 1, 32);
+  let topGeom = new THREE.CylinderBufferGeometry(38, 38, 1, 32);
   this.top = new THREE.Mesh(topGeom, lightGreyMat);
   this.top.position.y = 180;
 
@@ -382,19 +382,19 @@ Coffee = function(){
   this.threegroup = new THREE.Group();
 
   this.cup = new THREE.Group();
-  let cupGeom = new THREE.CylinderGeometry(50, 40, 120, 32);
+  let cupGeom = new THREE.CylinderBufferGeometry(50, 40, 120, 32);
   this.cup = new THREE.Mesh(cupGeom, whiteMat);
   this.cup.position.y = 60;
   this.threegroup.add(this.cup);
 
   this.lid = new THREE.Group();
-  let lidGeom = new THREE.CylinderGeometry(45, 55, 15, 32);
+  let lidGeom = new THREE.CylinderBufferGeometry(45, 55, 15, 32);
   this.lid = new THREE.Mesh(lidGeom, blackMat);
   this.lid.position.y = 120;
   this.threegroup.add(this.lid);
 
   this.sleeve = new THREE.Group();
-  let sleeveGeom = new THREE.CylinderGeometry(50, 45, 50, 32);
+  let sleeveGeom = new THREE.CylinderBufferGeometry(50, 45, 50, 32);
   this.sleeve = new THREE.Mesh(sleeveGeom, lightBrownMat);
   this.sleeve.position.y = 60;
   this.threegroup.add(this.sleeve);
@@ -409,12 +409,12 @@ Deer = function() {
   this.tailgroup = new THREE.Group();
 
    this.threegroup.add( new THREE.Mesh(
-      new THREE.BoxGeometry(3.9,1.9,1.9),
+      new THREE.BoxBufferGeometry(3.9,1.9,1.9),
       darkBrownMat
    ));
 
    let tail = new THREE.Mesh(
-     new THREE.BoxGeometry(0.5,1,0.5),
+     new THREE.BoxBufferGeometry(0.5,1,0.5),
      darkBrownMat
    );
    tail.position.x = -1.9;
@@ -423,7 +423,7 @@ Deer = function() {
    this.tailgroup.add(tail);
 
    let leg1 = new THREE.Mesh(
-      new THREE.BoxGeometry(0.5,3,0.5),
+      new THREE.BoxBufferGeometry(0.5,3,0.5),
       darkBrownMat
    );
    leg1.position.x = -1.7;
@@ -445,7 +445,7 @@ Deer = function() {
    this.leggroup2.add(leg4);
 
    let hoof1 = new THREE.Mesh(
-      new THREE.BoxGeometry(0.5,0.3,0.5),
+      new THREE.BoxBufferGeometry(0.5,0.3,0.5),
       blackMat
    );
    hoof1.position.x = -1.7;
@@ -470,7 +470,7 @@ Deer = function() {
 // TODO: hierarchical modeling for head/neck etc to move with arrow keys?
 // ----------- HEAD PIECES -----------
    let neck = new THREE.Mesh(
-     new THREE.BoxGeometry(0.8,1.5,0.8),
+     new THREE.BoxBufferGeometry(0.8,1.5,0.8),
      darkBrownMat
    );
    neck.position.x = 1.8;
@@ -479,7 +479,7 @@ Deer = function() {
    this.threegroup.add(neck);
 
    let head = new THREE.Mesh(
-     new THREE.BoxGeometry(1.3,1.1,1.3),
+     new THREE.BoxBufferGeometry(1.3,1.1,1.3),
      darkBrownMat
    );
    head.position.x = 2.2;
@@ -487,7 +487,7 @@ Deer = function() {
    this.threegroup.add(head);
 
    let eye1 = new THREE.Mesh(
-     new THREE.BoxGeometry(0.15,0.15,0.01),
+     new THREE.BoxBufferGeometry(0.15,0.15,0.01),
      blackMat
    );
    eye1.position.x = 2.3;
@@ -500,7 +500,7 @@ Deer = function() {
    this.threegroup.add(eye2);
 
    let snout = new THREE.Mesh(
-     new THREE.BoxGeometry(0.8,0.65,0.8),
+     new THREE.BoxBufferGeometry(0.8,0.65,0.8),
      darkBrownMat
    );
    snout.position.x = 2.8;
@@ -508,7 +508,7 @@ Deer = function() {
    this.threegroup.add(snout);
 
    let nose = new THREE.Mesh(
-     new THREE.BoxGeometry(0.3,0.65,0.8),
+     new THREE.BoxBufferGeometry(0.3,0.65,0.8),
      blackMat
    );
    nose.position.x = 3.35;
@@ -517,7 +517,7 @@ Deer = function() {
 
    // TODO: possibly change to be a cylinder but with 3 faces (aka a triangular prism)
    let ear1 = new THREE.Mesh(
-     new THREE.BoxGeometry(0.3,1,0.45),
+     new THREE.BoxBufferGeometry(0.3,1,0.45),
      darkBrownMat
    );
    ear1.position.x = 1.5;
@@ -536,7 +536,7 @@ Deer = function() {
    this.threegroup.add(this.leggroup2);
 
    let antler1 = new THREE.Mesh(
-     new THREE.ConeGeometry(0.15,0.8,0.45),
+     new THREE.ConeBufferGeometry(0.15,0.8,0.45),
      offWhiteMat
    );
    antler1.position.x = 2;
@@ -553,14 +553,14 @@ Deer = function() {
 Student = function() {
   this.threegroup = new THREE.Group();
 
-  let bodyGeom = new THREE.BoxGeometry(160,130,100);
+  let bodyGeom = new THREE.BoxBufferGeometry(160,130,100);
   this.body = new THREE.Mesh( bodyGeom, maroonMat );
   this.body.position.y = 170;
   this.threegroup.add(this.body);
 
   this.arms = new THREE.Group();
 
-  let armGeom = new THREE.BoxGeometry(40,90,40);
+  let armGeom = new THREE.BoxBufferGeometry(40,90,40);
   this.armL = new THREE.Mesh( armGeom, maroonMat );
   this.armL.position.x = -90;
   this.armL.position.y = 170;
@@ -570,7 +570,7 @@ Student = function() {
   this.armR.position.x = -this.armL.position.x;
   this.arms.add(this.armR);
 
-  let handGeom = new THREE.BoxGeometry(40,20,40);
+  let handGeom = new THREE.BoxBufferGeometry(40,20,40);
   this.handL = new THREE.Mesh( handGeom, lightBrownMat );
   this.handL.position.x = -90;
   this.handL.position.y = 115;
@@ -582,12 +582,12 @@ Student = function() {
 
   this.threegroup.add(this.arms);
 
-  let pantsGeom = new THREE.BoxGeometry(160,70,100);
+  let pantsGeom = new THREE.BoxBufferGeometry(160,70,100);
   this.pants = new THREE.Mesh( pantsGeom, greyMat );
   this.pants.position.y = 70;
   this.threegroup.add(this.pants);
 
-  let legGeom = new THREE.BoxGeometry(70,70,100);
+  let legGeom = new THREE.BoxBufferGeometry(70,70,100);
   this.legL = new THREE.Mesh( legGeom, greyMat);
   this.legL.position.x = -45;
   this.legL.position.y = 20;
@@ -599,11 +599,11 @@ Student = function() {
 
   this.head = new THREE.Group();
 
-  let faceGeom = new THREE.BoxGeometry(170,80,110);
+  let faceGeom = new THREE.BoxBufferGeometry(170,80,110);
   this.face = new THREE.Mesh( faceGeom, lightBrownMat );
   this.head.add(this.face);
 
-  let eyeGeom = new THREE.BoxGeometry(20,25,1);
+  let eyeGeom = new THREE.BoxBufferGeometry(20,25,1);
   this.eyeL = new THREE.Mesh( eyeGeom, blackMat );
   this.eyeL.position.x = -35;
   this.eyeL.position.y = 10;
@@ -614,18 +614,18 @@ Student = function() {
   this.eyeR.position.x = -this.eyeL.position.x;
   this.head.add(this.eyeR);
 
-  let mouthGeom = new THREE.BoxGeometry(30,5,1);
+  let mouthGeom = new THREE.BoxBufferGeometry(30,5,1);
   this.mouth = new THREE.Mesh( mouthGeom, blackMat );
   this.mouth.position.y = -15;
   this.mouth.position.z = 55;
   this.head.add(this.mouth);
 
-  let hatGeom = new THREE.BoxGeometry(170,60,110);
+  let hatGeom = new THREE.BoxBufferGeometry(170,60,110);
   this.hat = new THREE.Mesh( hatGeom, maroonMat );
   this.hat.position.y = 80;
   this.head.add(this.hat);
 
-  let brimGeom = new THREE.BoxGeometry(170,20,160);
+  let brimGeom = new THREE.BoxBufferGeometry(170,20,160);
   this.brim = new THREE.Mesh( brimGeom, maroonMat );
   this.brim.position.y = 50;
   this.brim.position.z = 25;
@@ -704,6 +704,6 @@ function render(){
 // // createClock();
 // // createCan();
 // // createCoffee();
-// // createDeer();
-// createStudent();
+// createDeer();
+// // createStudent();
 // loop();
