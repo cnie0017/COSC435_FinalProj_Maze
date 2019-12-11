@@ -353,7 +353,7 @@ Clock = function(){
 
 Can = function(){
 
-  let baseTexture = THREE.ImageUtils.loadTexture("keystonelabel.jpg");
+  let baseTexture = THREE.ImageUtils.loadTexture("images/keystonelabel.jpg");
 
   this.threegroup = new THREE.Group();
 
