@@ -159,6 +159,10 @@ var maroonMat = new THREE.MeshLambertMaterial ({
   color: 0x8f1b1b,
   shading:THREE.FlatShading
 });
+var signMat = new THREE.MeshLambertMaterial ({
+  color: 0xb37152,
+  shading:THREE.FlatShading
+});
 
 //Goose
 Goose = function(){
@@ -197,7 +201,6 @@ Goose = function(){
 
   this.wingLeft = new THREE.Mesh(wingGeom, brownMat);
   this.wingLeft.position.y = 60;
-  this.wingLeft.position.x = 10;
   this.wingLeft.position.z = 60;
 
   this.wingRight = this.wingLeft.clone();
@@ -343,6 +346,9 @@ Clock = function(){
   this.hands.add(this.smallHand);
   this.threegroup.add(this.hands);
 
+  this.threegroup.position.y = 70;
+  this.threegroup.rotation.x = Math.PI/3 ;
+
 }
 
 Can = function(){
@@ -375,6 +381,8 @@ Can = function(){
   this.base.add(this.top);
   this.threegroup.add(this.base);
 
+  this.threegroup.rotation.x = Math.PI / 16 ;
+
 }
 
 Coffee = function(){
@@ -398,6 +406,8 @@ Coffee = function(){
   this.sleeve = new THREE.Mesh(sleeveGeom, lightBrownMat);
   this.sleeve.position.y = 60;
   this.threegroup.add(this.sleeve);
+
+  this.threegroup.rotation.x = Math.PI / 16 ;
 }
 
 Deer = function() {
@@ -548,6 +558,9 @@ Deer = function() {
    antler2.position.z = -antler2.position.z;
    this.threegroup.add(antler2);
 // ----------- END HEAD PIECES -----------
+
+  this.threegroup.position.y = 100;
+  this.threegroup.scale.set(40,40,40);
 }
 
 Student = function() {
@@ -582,9 +595,9 @@ Student = function() {
 
   this.threegroup.add(this.arms);
 
-  let pantsGeom = new THREE.BoxBufferGeometry(160,70,100);
+  let pantsGeom = new THREE.BoxBufferGeometry(160,50,100);
   this.pants = new THREE.Mesh( pantsGeom, greyMat );
-  this.pants.position.y = 70;
+  this.pants.position.y = 80;
   this.threegroup.add(this.pants);
 
   let legGeom = new THREE.BoxBufferGeometry(70,70,100);
@@ -635,6 +648,21 @@ Student = function() {
   this.threegroup.add(this.head);
 }
 
+Sign = function() {
+  this.threegroup = new THREE.Group();
+
+  let signGeom = new THREE.BoxBufferGeometry(200,150,20);
+  this.sign = new THREE.Mesh( signGeom, signMat );
+  this.sign.position.y = 150;
+  this.threegroup.add(this.sign);
+
+  let postGeom = new THREE.BoxBufferGeometry(20,200,20);
+  this.post = new THREE.Mesh( postGeom, signMat );
+  this.threegroup.add(this.post);
+
+  this.threegroup.position.y = 75;
+}
+
 function createFloor(){
   floor = new THREE.Mesh(new THREE.PlaneBufferGeometry(1000,1000), new THREE.MeshBasicMaterial({color: 0xa5f9aa}));
   floor.rotation.x = -Math.PI/2;
@@ -646,40 +674,37 @@ function createFloor(){
 
 function createGoose(){
   Goose = new Goose();
-  Goose.threegroup.position.x = 0;
   scene.add(Goose.threegroup);
 }
 
 function createClock(){
   Clock = new Clock();
-  Clock.threegroup.position.y = 70;
-  Clock.threegroup.rotation.x = Math.PI/3 ;
   scene.add(Clock.threegroup);
 }
 
 function createCan(){
   Can = new Can();
-  Can.threegroup.rotation.x = Math.PI / 16 ;
   scene.add(Can.threegroup);
 }
 
 function createCoffee(){
   Coffee = new Coffee();
-  Coffee.threegroup.rotation.x = Math.PI / 16 ;
   scene.add(Coffee.threegroup);
 }
 
 function createDeer(){
   deer = new Deer();
-  deer.threegroup.position.x = 0;
-  deer.threegroup.position.y = 100;
-  deer.threegroup.scale.set(40,40,40);
   scene.add(deer.threegroup);
 }
 
 function createStudent(){
   student = new Student();
   scene.add(student.threegroup);
+}
+
+function createSign(){
+  sign = new Sign();
+  scene.add( sign.threegroup );
 }
 
 function loop(){
@@ -704,6 +729,7 @@ function render(){
 // // createClock();
 // // createCan();
 // // createCoffee();
-// createDeer();
+// // createDeer();
 // // createStudent();
+// // createSign();
 // loop();
