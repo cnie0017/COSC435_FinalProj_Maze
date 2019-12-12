@@ -34,7 +34,8 @@ var maze, mazeMesh;
 var distance = 100,
    entranceXidx = 1,
    entranceZidx = size-1;
-   exitXidx = size-1,
+   exitXidx = size-2, //fixed exit
+   exitZidx = 0,
    entranceX = -300+(size-1)*100,
    entranceZ = -200;
 
@@ -54,6 +55,8 @@ var distance = 100,
 
 //tree
 var green = 0x44aa44;
+var yellow = 0xead516;
+var blue = 0x2194ce;
 
 /**
  * Run initial setup function and loop through rendering.
@@ -61,13 +64,12 @@ var green = 0x44aa44;
 init();
 animate();
 
-/**
- * Initializer function.
- */
-function init() {
+
+
+
+function createScene(){
   // Build the container
   // container = document.createElement( 'div' );
-
   container = document.getElementById('world');
 
   // Create the scene.
@@ -75,6 +77,71 @@ function init() {
   scene.background = new THREE.Color( 0xccddff );
   scene.fog = new THREE.Fog( 0xccddff, 3000, 5000 );
 
+  // Create a rotation point.
+  rotationPoint = new THREE.Object3D();
+  rotationPoint.position.set( 0, 0, 0 );
+  scene.add( rotationPoint );
+
+
+  enableCollisions = true;
+
+  // Create the camera.
+  camera = new THREE.PerspectiveCamera(
+     50, // Angle
+     window.innerWidth / window.innerHeight, // Aspect Ratio.
+     1, // Near view.
+     20000 // Far view.
+  );
+
+  // Move the camera away from the center of the scene.
+  camera.position.z = -300;
+  camera.position.y = 100;
+  camera.rotation.y = radians(90);
+  scene.add( camera );
+
+
+
+  createCharacter();
+  createFloor();
+  createMaze();
+  placePowerUps();
+
+  // Flags to determine which direction the player is moving
+  clock = new THREE.Clock();
+  // listenForPlayerMovement();
+
+  // Build the renderer
+  renderer = new THREE.WebGLRenderer( { antialias: true } );
+
+  var element = renderer.domElement;
+  renderer.setSize( window.innerWidth, window.innerHeight );
+  container.appendChild( element );
+
+  // Build the controls.
+  controls = new THREE.OrbitControls( camera, element );
+  controls.enablePan = true;
+  controls.screenSpacePanning = true;
+  controls.enableZoom = true;
+  // controls.autoRotate = true;
+  controls.maxDistance = 1000; // Set our max zoom out distance (mouse scroll)
+  controls.minDistance = 60; // Set our min zoom in distance (mouse scroll)
+  // controls.target.copy( new THREE.Vector3( 0, 0, 0 ) );
+  controls.target.copy( box.threegroup.position);
+
+  controls.keys = {
+      LEFT: 37, //left arrow
+      UP: 38, // up arrow
+      RIGHT: 39, // right arrow
+      BOTTOM: 40 // down arrow
+  };
+
+  document.onkeydown = handleKeyDown;
+
+  var axis = new THREE.AxesHelper(3000);
+  scene.add(axis);
+}
+
+function createLights(){
   // Ambient lights.
   var ambient = new THREE.AmbientLight( 0xffffff );
   scene.add( ambient );
@@ -87,70 +154,15 @@ function init() {
   // Add hemisphere lighting.
   var hemisphereLight = new THREE.HemisphereLight( 0xdddddd, 0x000000, 0.5 );
   scene.add( hemisphereLight );
+}
 
 
-  // // Create a rotation point.
-  rotationPoint = new THREE.Object3D();
-  rotationPoint.position.set( 0, 0, 0 );
-  scene.add( rotationPoint );
-
-  createCharacter();
-  createFloor();
-  createMaze();
-  placePowerUps();
-
-  enableCollisions = true;
-
-  // Create the camera.
-  camera = new THREE.PerspectiveCamera(
-    50, // Angle
-    window.innerWidth / window.innerHeight, // Aspect Ratio.
-    1, // Near view.
-    20000 // Far view.
-  );
-
-  // Move the camera away from the center of the scene.
-  camera.position.z = -300;
-  camera.position.y = 100;
-  camera.rotation.y = radians(90);
-  scene.add( camera );
-
-  // Flags to determine which direction the player is moving
-
-  clock = new THREE.Clock();
-  // listenForPlayerMovement();
-
-  // Build the renderer
-  renderer = new THREE.WebGLRenderer( { antialias: true } );
-
-  var element = renderer.domElement;
-  renderer.setSize( window.innerWidth, window.innerHeight );
-  container.appendChild( element );
-
-  // // Build the controls.
-  controls = new THREE.OrbitControls( camera, element );
-  controls.enablePan = true;
-  controls.screenSpacePanning = true;
-  controls.enableZoom = true;
-  // controls.autoRotate = true;
-  controls.maxDistance = 1000; // Set our max zoom out distance (mouse scroll)
-  controls.minDistance = 60; // Set our min zoom in distance (mouse scroll)
-  // controls.target.copy( new THREE.Vector3( 0, 0, 0 ) );
-  controls.target.copy( box.threegroup.position);
-
-  controls.keys = {
-	LEFT: 37, //left arrow
-	UP: 38, // up arrow
-	RIGHT: 39, // right arrow
-	BOTTOM: 40 // down arrow
-  }
-
-  document.onkeydown = handleKeyDown;
-
-
-  var axis = new THREE.AxesHelper(3000);
-  scene.add(axis);
-
+/**
+ * Initializer function.
+ */
+function init() {
+  createScene();
+  createLights();
 }
 
 
@@ -340,7 +352,11 @@ function radians( degrees ) {
  * Updates to apply to the scene while running.
  */
 function update() {
-  camera.updateProjectionMatrix();
+  if(game.levelSwitch){
+    game.goToLevel(game.targetLevel);
+    //game.levelSwitch = false;
+  }
+ camera.updateProjectionMatrix();
 }
 
 /**
@@ -416,25 +432,25 @@ function animatePlayer(delta) {
 
 
 function CreateMazeMesh(maze) {
-	 console.log("size is",size);
-    //to be changed later
-	 var randExitZidx = Math.floor(Math.random()*size);
-	 for (var i = 0; i < maze.dimension; i++) {
-		  for (var j = 0; j < maze.dimension; j++) {
-			   var mazeObj = maze[i][j];
-				if (mazeObj) {
-               if (i == entranceXidx && j==entranceZidx){//entrance
-                  createTree(entranceX,entranceZ,0x2194ce);
-                  maze[i+1][j] = true;
-               }
-               else if (i == exitXidx && j == randExitZidx){//exit
-                  createTree(-300+j*distance,-300+i*distance,0xead516);
-               }
-               else{
-                  createTree(-300+j*distance,-300+i*distance,green);
-               }
-            }
+  console.log("size is",size);
+  //to be changed later
+	for (var i = 0; i < maze.dimension; i++) {
+		for (var j = 0; j < maze.dimension; j++) {
+			var mazeObj = maze[i][j];
+			if (mazeObj) {
+        if (i == entranceXidx && j==entranceZidx){//entrance
+          createTree(entranceX,entranceZ,blue);
+          maze[i+1][j] = true;
         }
+        else if (i == exitXidx && j == exitZidx){//exit
+          //exit location = (-300+exitZidx*distance, -300+exitXidx*distance)
+          createTree(-300+j*distance,-300+i*distance,yellow);
+        }
+        else{
+          createTree(-300+j*distance,-300+i*distance,green);
+        }
+      }
+    }
    }
 }
 

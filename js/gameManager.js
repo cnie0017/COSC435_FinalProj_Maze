@@ -1,0 +1,42 @@
+//An object to stores the information of the current game
+
+var game = { //default
+
+   level:0,
+   paused: false,
+   started: false,
+   levelSwitch:false,
+   targetLevel:0,
+   timeleft:100,
+
+   update: function(){
+      document.getElementById("timeleft").innerHTML = ("Timer " + this.timeleft);
+   },
+
+   pause:function(){
+      this.paused = !this.paused;
+      if(this.paused){
+         document.getElementById("pause").innerHTML = ("PAUSED");
+      }else{
+         document.getElementById("pause").innerHTML = ("");
+      }
+   },
+
+   goToLevel:function(n){
+      if(!this.levelSwitch){
+         this.levelSwitch = true;
+         this.targetLevel = n;
+      } else{
+         this.levelSwitch = false;
+         if(this.level>2){//default: 3 levels in total
+            //show ending page
+         }else{
+         }
+      }
+   }
+}   
+
+   // exitLoc = (-300+exitZidx*distance, -300+exitXidx*distance)
+   // if (deer collide with exitLoc){
+      //game.levelSwitch = true;
+   //}
