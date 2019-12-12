@@ -779,9 +779,9 @@ function render(){
   renderer.render(scene, camera);
 }
 
- init();
- createLights();
- createFloor();
+ //init();
+ //createLights();
+ //createFloor();
  //createGoose();
  //createClock();
  //createCan();
@@ -789,4 +789,4 @@ function render(){
  //createDeer();
  //createStudent();
  //createSign();
- loop();
+ //loop();
