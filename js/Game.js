@@ -29,7 +29,7 @@ var playerSpeed = 10;
 var bbox;
 var helper;
 //maze generation
-var size = 21;
+var size = 11;
 var maze, mazeMesh;
 var distance = 100,
    entranceXidx = 1,
@@ -359,6 +359,13 @@ function render() {
     detectCollisions(box);
   }
 
+  // if ( snowEnabled ){
+  //   console.log('enabled');
+  //   engine = new ParticleEngine();
+  //   engine.setValues( Examples.snow );
+  //   engine.initialize();
+  // }
+
 
   // controls.update();
 
@@ -418,7 +425,7 @@ function CreateMazeMesh(maze) {
 				if (mazeObj) {
                if (i == entranceXidx && j==entranceZidx){//entrance
                   createTree(entranceX,entranceZ,0x2194ce);
-                  maze[i][j] = true;
+                  maze[i+1][j] = true;
                }
                else if (i == exitXidx && j == randExitZidx){//exit
                   createTree(-300+j*distance,-300+i*distance,0xead516);
@@ -445,22 +452,25 @@ function placePowerUps(){
 
   let goose = new Goose();
   goose.threegroup.scale.set(0.3,0.3,0.3);
-  goose.threegroup.position.y = 15;
+  goose.threegroup.position.y = 10;
   placePowerUp(goose);
 
-  let clock = new Clock();
-  clock.threegroup.scale.set(0.5,0.5,0.5);
-  clock.threegroup.position.y = 50;
-  placePowerUp(clock);
+  let pclock = new Clock();
+  pclock.threegroup.scale.set(0.4,0.4,0.4);
+  pclock.threegroup.position.y = 50;
+  // calculateCollisionPoints( pclock );
+  placePowerUp(pclock);
 
   //can
   let can = new Can();
   can.threegroup.scale.set(0.3,0.3,0.3);
+  can.threegroup.position.y = 10;
   placePowerUp(can);
 
   //coffee
   let coffee = new Coffee();
   coffee.threegroup.scale.set(0.3,0.3,0.3);
+  coffee.threegroup.position.y = 10;
   placePowerUp(coffee);
 
   //student
@@ -561,6 +571,7 @@ parameters =
 	visible: true,
 	material: "Phong",
   collisions: true,
+  snow: true,
   controls: true,
 	reset: function() { resetSphere() }
 };
@@ -570,9 +581,16 @@ var collisionsDetected = gui.add(parameters, 'collisions').name('Collisions Enab
 // var toggleControls = gui.add(parameters, 'controls').name('OrbitControls Enabled').listen();
 // shapeColor.onChange(function(value) // onFinishChange
 // {   box.material.color.setHex( value.replace("#", "0x") );   });
+var snowEnabled = gui.add(parameters, 'snow').name('Snow Enabled').listen();
 
 collisionsDetected.onChange(function(value)
 {   enableCollisions = !enableCollisions; });
+
+snowEnabled.onChange(function(value)
+{   snowEnabled = !snowEnabled; });
+
+
+// TODO: add particle effects
 //
 // toggleControls.onChange(function(value)
 // {   toggleControls = !toggleControls; });
