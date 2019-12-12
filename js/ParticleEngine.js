@@ -142,7 +142,7 @@ Particle.prototype.update = function(dt)
 
 var Type = Object.freeze({ "CUBE":1, "SPHERE":2 });
 
-function ParticleEngine()
+ParticleEngine = function()
 {
 	/////////////////////////
 	// PARTICLE PROPERTIES //
