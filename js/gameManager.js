@@ -2,11 +2,11 @@
 
 var game = { //default
 
-   level:0,
+   level:new Level(1),
    paused: false,
    started: false,
    levelSwitch:false,
-   targetLevel:0,
+   //targetLevel:0,
    timeleft:100,
 
    update: function(){
@@ -23,16 +23,14 @@ var game = { //default
    },
 
    goToLevel:function(n){
-      if(!this.levelSwitch){
-         this.levelSwitch = true;
-         this.targetLevel = n;
-      } else{
-         this.levelSwitch = false;
-         if(this.level>2){//default: 3 levels in total
-            //show ending page
-         }else{
-         }
+      if (this.level > 2){//default: 3 levels in total
+         //game ends, show ending page
       }
+      else{
+         //this.targetLevel = n
+      }
+      this.levelSwitch = false;
+      this.level = new Level(n);
    }
 }   
 

@@ -354,7 +354,7 @@ function radians( degrees ) {
 function update() {
   if(game.levelSwitch){
     game.goToLevel(game.targetLevel);
-    //game.levelSwitch = false;
+    
   }
  camera.updateProjectionMatrix();
 }
@@ -430,14 +430,13 @@ function animatePlayer(delta) {
   controls.object.translateZ(playerVelocity.z * delta);
 }
 
-
 function CreateMazeMesh(maze) {
   console.log("size is",size);
   //to be changed later
-	for (var i = 0; i < maze.dimension; i++) {
-		for (var j = 0; j < maze.dimension; j++) {
-			var mazeObj = maze[i][j];
-			if (mazeObj) {
+    for (var i = 0; i < maze.dimension; i++) {
+        for (var j = 0; j < maze.dimension; j++) {
+            var mazeObj = maze[i][j];
+            if (mazeObj) {
         if (i == entranceXidx && j==entranceZidx){//entrance
           createTree(entranceX,entranceZ,blue);
           maze[i+1][j] = true;
@@ -453,6 +452,7 @@ function CreateMazeMesh(maze) {
     }
    }
 }
+
 
 function createMaze() {
    maze = generateMaze(size);

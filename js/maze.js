@@ -41,3 +41,26 @@ function generateMaze(dimension) {
     return field;
 
 }
+
+function CreateMazeMesh(maze) {
+    console.log("size is",size);
+    //to be changed later
+      for (var i = 0; i < maze.dimension; i++) {
+          for (var j = 0; j < maze.dimension; j++) {
+              var mazeObj = maze[i][j];
+              if (mazeObj) {
+          if (i == entranceXidx && j==entranceZidx){//entrance
+            createTree(entranceX,entranceZ,blue);
+            maze[i+1][j] = true;
+          }
+          else if (i == exitXidx && j == exitZidx){//exit
+            //exit location = (-300+exitZidx*distance, -300+exitXidx*distance)
+            createTree(-300+j*distance,-300+i*distance,yellow);
+          }
+          else{
+            createTree(-300+j*distance,-300+i*distance,green);
+          }
+        }
+      }
+     }
+  }
