@@ -1,17 +1,19 @@
 //http://www.bryanjones.us/article/basic-threejs-game-tutorial-part-5-collision-detection
 
 var collisions = [];
+var isPowerUpMesh = [];
 
 /**
  * Calculates collision detection parameters.
  */
-function calculateCollisionPoints( mesh, scale, type = 'collision' ) {
+function calculateCollisionPoints( mesh, scale, isPowerUp = false, type = 'collision' ) {
   // Compute the bounding box after scale, translation, etc.
 
   var bbox = new THREE.Box3().setFromObject(mesh);
 
   var bounds = {
     type: type,
+    isPowerUp: isPowerUp,
     xMin: bbox.min.x,
     xMax: bbox.max.x,
     yMin: bbox.min.y,
@@ -22,6 +24,7 @@ function calculateCollisionPoints( mesh, scale, type = 'collision' ) {
 
 
   collisions.push( bounds );
+  isPowerUpMesh.push(isPowerUp);
 }
 
 /**
@@ -72,8 +75,15 @@ function detectCollisions() {
 
   // Run through each object and detect if there is a collision.
   for ( var index = 0; index < collisions.length; index ++ ) {
-
-    if (collisions[ index ].type == 'collision' ) {
+    if (collisions[ index ].type == 'powerup' ) {
+      if ( ( bounds.xMin <= collisions[ index ].xMax && bounds.xMax >= collisions[ index ].xMin ) &&
+         ( bounds.yMin <= collisions[ index ].yMax && bounds.yMax >= collisions[ index ].yMin) &&
+         ( bounds.zMin <= collisions[ index ].zMax && bounds.zMax >= collisions[ index ].zMin) ) {
+            console.log("Hit a powerup!");
+            //do powerup things
+      }
+    }
+    else if (collisions[ index ].type == 'collision' ) {
 
       if ( ( bounds.xMin <= collisions[ index ].xMax && bounds.xMax >= collisions[ index ].xMin ) &&
          ( bounds.yMin <= collisions[ index ].yMax && bounds.yMax >= collisions[ index ].yMin) &&
@@ -83,6 +93,7 @@ function detectCollisions() {
 
         // Move the object in the clear. Detect the best direction to move.
         //TODO: stop jiggling/vibrating effect when
+
         if ( bounds.xMin <= collisions[ index ].xMax && bounds.xMax >= collisions[ index ].xMin ) {
           // Determine center then push out accordingly.
           var objectCenterX = ((collisions[ index ].xMax - collisions[ index ].xMin) / 2) + collisions[ index ].xMin;

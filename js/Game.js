@@ -354,7 +354,7 @@ function radians( degrees ) {
 function update() {
   if(game.levelSwitch){
     game.goToLevel(game.targetLevel);
-    
+
   }
  camera.updateProjectionMatrix();
 }
@@ -515,6 +515,7 @@ function placePowerUp(powerup){
       placed = true;
     }
   }
+  calculateCollisionPoints(powerup.threegroup, powerup.threegroup.scale, true, "powerup");
 }
 
 /**
@@ -594,7 +595,7 @@ parameters =
 
 // var shapeColor = gui.addColor( parameters, 'color' ).name('Color (Diffuse)').listen();
 var collisionsDetected = gui.add(parameters, 'collisions').name('Collisions Enabled').listen();
-// var toggleControls = gui.add(parameters, 'controls').name('OrbitControls Enabled').listen();
+var toggleControls = gui.add(parameters, 'controls').name('OrbitControls Enabled').listen();
 // shapeColor.onChange(function(value) // onFinishChange
 // {   box.material.color.setHex( value.replace("#", "0x") );   });
 var snowEnabled = gui.add(parameters, 'snow').name('Snow Enabled').listen();

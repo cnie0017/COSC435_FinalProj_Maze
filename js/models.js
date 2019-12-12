@@ -325,6 +325,7 @@ Goose = function(){
 	// 	}
 	// } );
 
+
 }
 
 Clock = function(){
@@ -695,22 +696,24 @@ function createFloor(){
 }
 
 function createGoose(){
-  Goose = new Goose();
+  goose = new Goose();
   scene.add(Goose.threegroup);
+  calculateCollisionPoints(goose);
 }
 
 function createClock(){
-  Clock = new Clock();
+  clock = new Clock();
   scene.add(Clock.threegroup);
+  calculateCollisionPoints(clock);
 }
 
 function createCan(){
-  Can = new Can();
+  can = new Can();
   scene.add(Can.threegroup);
 }
 
 function createCoffee(){
-  Coffee = new Coffee();
+  coffee = new Coffee();
   scene.add(Coffee.threegroup);
 }
 
