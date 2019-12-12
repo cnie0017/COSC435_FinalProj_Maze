@@ -11,10 +11,11 @@ var scene,
     backLight,
     light,
     renderer,
-    container;
+    container,
+    clock;
 
 //SCENE
-var floor;
+var floor, globalSpeedRate = 1;
 
 //SCREEN VARIABLES
 
@@ -62,6 +63,7 @@ function init(){
 	document.addEventListener('touchmove',handleTouchMove, false);
 
   controls = new THREE.OrbitControls( camera, renderer.domElement);
+  clock = new THREE.Clock();
 
 }
 
@@ -166,6 +168,18 @@ var signMat = new THREE.MeshLambertMaterial ({
 
 //Goose
 Goose = function(){
+
+  this.legAmplitude = Math.PI / 4.5;
+  this.legAngle = 0;
+  this.legSpeed = .05;
+  this.rightLegVector = new THREE.Vector3( 0, 0, 1 );
+  this.leftLegVector = new THREE.Vector3( 0, 0, 1 );
+
+  this.wingAmplitude = Math.PI / 8;
+  this.wingAngle = 0;
+  this.wingSpeed = 0.1;
+
+  this.runningCycle = 0;
 
   this.threegroup = new THREE.Group();
 
@@ -315,6 +329,8 @@ Goose = function(){
 
 Clock = function(){
 
+  this.clockRotVector = new THREE.Vector3( 0, 0, 1);
+
   this.threegroup = new THREE.Group();
 
   this.base = new THREE.Group();
@@ -353,6 +369,8 @@ Clock = function(){
 
 Can = function(){
 
+  this.canRotVector = new THREE.Vector3( 0, 1, -.2);
+
   let baseTexture = THREE.ImageUtils.loadTexture("images/keystonelabel.jpg");
 
   this.threegroup = new THREE.Group();
@@ -387,6 +405,8 @@ Can = function(){
 
 Coffee = function(){
 
+  this.coffeeRotVector = new THREE.Vector3( 0, 1, -.2);
+
   this.threegroup = new THREE.Group();
 
   this.cup = new THREE.Group();
@@ -411,6 +431,8 @@ Coffee = function(){
 }
 
 Deer = function() {
+
+  this.runningCycle = 0;
 
   this.threegroup = new THREE.Group();
 
@@ -707,11 +729,46 @@ function createSign(){
   scene.add( sign.threegroup );
 }
 
+//animations
+Goose.prototype.walk = function() {
+
+  this.wingAngle += this.wingSpeed/globalSpeedRate;
+
+  this.wingLeft.rotation.x = Math.PI / 4 + Math.cos(this.wingAngle) * this.wingAmplitude;
+  this.wingRight.rotation.x = -Math.PI / 4 - Math.cos(this.wingAngle) * this.wingAmplitude;
+
+  this.runningCycle += delta * globalSpeedRate * 3;
+  this.runningCycle = this.runningCycle % (Math.PI*2);
+  var t = this.runningCycle;
+
+  this.rightLeg.rotation.z = Math.sin(t)*Math.PI/6;
+  this.leftLeg.rotation.z = -Math.sin(t)*Math.PI/6;
+
+}
+
+Clock.prototype.spin = function(){
+  Clock.threegroup.rotateOnAxis(this.clockRotVector,Math.PI/96);
+}
+
+Can.prototype.spin = function(){
+  Can.threegroup.rotateOnAxis(this.canRotVector, Math.PI/96);
+}
+
+Coffee.prototype.spin = function(){
+  Coffee.threegroup.rotateOnAxis(this.coffeeRotVector, Math.PI/96);
+}
+
 function loop(){
   var tempHA = (mousePos.x-windowHalfX)/200;
   var tempVA = (mousePos.y - windowHalfY)/200;
   var userHAngle = Math.min(Math.max(tempHA, -Math.PI/3), Math.PI/3);
   var userVAngle = Math.min(Math.max(tempVA, -Math.PI/3), Math.PI/3);
+
+  delta = clock.getDelta();
+  //Goose.walk();
+  //Clock.spin();
+  //Can.spin();
+  //Coffee.spin();
 
   render();
   requestAnimationFrame(loop);
@@ -722,14 +779,14 @@ function render(){
   renderer.render(scene, camera);
 }
 
-// init();
-// createLights();
-// createFloor();
-// // createGoose();
-// // createClock();
-// // createCan();
-// // createCoffee();
-// // createDeer();
-// // createStudent();
-// // createSign();
-// loop();
+ init();
+ createLights();
+ createFloor();
+ //createGoose();
+ //createClock();
+ //createCan();
+ //createCoffee();
+ //createDeer();
+ //createStudent();
+ //createSign();
+ loop();
