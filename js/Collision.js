@@ -1,7 +1,8 @@
 //http://www.bryanjones.us/article/basic-threejs-game-tutorial-part-5-collision-detection
 
+var clz = {};
 var collisions = [];
-var isPowerUpMesh = [];
+// var isPowerUpMesh = [];
 
 /**
  * Calculates collision detection parameters.
@@ -22,30 +23,14 @@ function calculateCollisionPoints( mesh, scale, isPowerUp = false, type = 'colli
     zMax: bbox.max.z,
   };
 
-
   collisions.push( bounds );
-  isPowerUpMesh.push(isPowerUp);
+  // isPowerUpMesh.push(isPowerUp);
 }
 
 /**
  * Collision detection for every solid object.
  */
 function detectCollisions() {
-  // Get the user's current collision area.
-
-  // console.log(box.geometry.parameters.width);
-  //
-  // box.geometry.computeBoundingBox();
-  // // box.geometry.boundingBox.min = (new THREE.Vector3(0, 0, 0));
-  // var bbox = box.geometry.boundingBox.clone();
-  // var helper = new THREE.Box3Helper( bbox, 0xffff00 );
-  // scene.add(helper);
-  // console.log(bbox);
-  //
-  // bbox = new THREE.Box3().setFromObject(box);
-  // helper = new THREE.Box3Helper( bbox, 0xffff00 );
-  // scene.add(helper);
-
 
   var bounds = {
     xMin: box.threegroup.position.x - box.threegroup.scale.x / 2,
@@ -56,31 +41,20 @@ function detectCollisions() {
     zMax: box.threegroup.position.z + box.threegroup.scale.z / 2,
   };
 
-    //
-    // //Testing out this for bounding box
-    // var bounds = {
-    //   xMin: bbox.min.x,
-    //   xMax: bbox.max.x,
-    //   yMin: bbox.min.y,
-    //   yMax: bbox.max.y,
-    //   zMin: bbox.min.z,
-    //   zMax: bbox.max.z
-    // };
-
-  // console.log(bounds.xMin);
-
-
-  // box.geometry.computeBoundingBox();
-
-
   // Run through each object and detect if there is a collision.
   for ( var index = 0; index < collisions.length; index ++ ) {
-    if (collisions[ index ].type == 'powerup' ) {
+    if (collisions[ index ].type != 'collision' ) {
       if ( ( bounds.xMin <= collisions[ index ].xMax && bounds.xMax >= collisions[ index ].xMin ) &&
          ( bounds.yMin <= collisions[ index ].yMax && bounds.yMax >= collisions[ index ].yMin) &&
          ( bounds.zMin <= collisions[ index ].zMax && bounds.zMax >= collisions[ index ].zMin) ) {
             console.log("Hit a powerup!");
             //do powerup things
+            // clock coffee goose can student
+            if (collisions[ index ].type == 'clock'){ clockPower(); collisions[ index ] = {}; }
+            if (collisions[ index ].type == 'coffee'){ coffeePower(); collisions[ index ] = {}; }
+            if (collisions[ index ].type == 'goose'){ goosePower(); collisions[ index ] = {}; }
+            if (collisions[ index ].type == 'can'){ canPower(); collisions[ index ] = {}; }
+            if (collisions[ index ].type == 'student'){ studentPower(); collisions[ index ] = {}; }
       }
     }
     else if (collisions[ index ].type == 'collision' ) {
