@@ -25,11 +25,11 @@ var mouse = new THREE.Vector2();
 
 // Store movements.
 var movements = [];
-var playerSpeed = 10;
+var playerSpeed = 15;
 var bbox;
 var helper;
 //maze generation
-var size = 7;
+var size = 11;
 var maze, mazeMesh;
 var distance = 100,
    entranceXidx = 1,
@@ -51,6 +51,10 @@ var distance = 100,
  var PLAYERSPEED = 800.0;
 
  var clock;
+
+ var particleGroup, emitter;
+ var snowEnabled = false;
+ var leavesEnabled = false;
 
 
 //tree
@@ -98,7 +102,7 @@ function createScene(){
   camera.position.y = 300;
   camera.position.x = 400;
   // camera.rotation.x = radians(45);
-  console.log(camera.rotation.x);
+  // console.log(camera.rotation.x);
   scene.add( camera );
 
 
@@ -131,17 +135,17 @@ function createScene(){
   // controls.target.copy( new THREE.Vector3( 0, 0, 0 ) );
   controls.target.copy( box.threegroup.position );
 
-  // controls.keys = {
-  //     LEFT: 37, //left arrow
-  //     UP: 38, // up arrow
-  //     RIGHT: 39, // right arrow
-  //     BOTTOM: 40 // down arrow
-  // };
+  controls.keys = {
+      LEFT: 37, //left arrow
+      UP: 38, // up arrow
+      RIGHT: 39, // right arrow
+      BOTTOM: 40 // down arrow
+  };
 
   document.onkeydown = handleKeyDown;
 
-  var axis = new THREE.AxesHelper(3000);
-  scene.add(axis);
+  // var axis = new THREE.AxesHelper(3000);
+  // scene.add(axis);
 }
 
 function createLights(){
@@ -166,6 +170,7 @@ function createLights(){
 function init() {
   createScene();
   createLights();
+  // initParticles();
 }
 
 var keys = {
@@ -195,25 +200,19 @@ function handleKeyDown(keyEvent){
   if (keyEvent.key == "ArrowRight") {
     if (!reverse & !stunned){ keys.right.call(); }
     else if (reverse){ keys.left.call(); }
-    // camera.rotation.y = radians(180);
-    // moveRight = true;
   }
   else if (keyEvent.key == "ArrowLeft") {
     if (!reverse & !stunned){ keys.left.call(); }
     else if (reverse){ keys.right.call(); }
-    // camera.rotation.y = radians(0);
-    // moveLeft = true;
   }
 
   if (keyEvent.key == "ArrowDown") {
     if (!reverse & !stunned){ keys.down.call(); }
     else if (reverse){ keys.up.call(); }
-    // moveBackward = true;
   }
   else if (keyEvent.key == "ArrowUp") {
     if (!reverse & !stunned){ keys.up.call(); }
     else if (reverse){ keys.down.call(); }
-    // moveForward = true;
   }
 
 }
@@ -381,6 +380,7 @@ function update() {
  */
 function render() {
   renderer.render( scene, camera );
+  // console.log(particleGroup);
 
   // If any movement was added, run it!
   if ( movements.length > 0 ) {
@@ -391,6 +391,12 @@ function render() {
   if ( collisions.length > 0 && enableCollisions) {
     detectCollisions(box);
   }
+
+  if (particleGroup){
+    if (snowEnabled || leavesEnabled){
+      particleGroup.tick(clock.getDelta())
+    }
+  };
 
   // if ( snowEnabled ){
   //   console.log('enabled');
@@ -408,6 +414,7 @@ function render() {
  * Animate the scene.
  */
 function animate() {
+  // console.log(delta);
   render();
   update();
   requestAnimationFrame(animate);
@@ -480,6 +487,8 @@ function createMaze() {
 }
 
 var pclock, coffee, goose, can, student;
+// TODO: modify so that iterations of powerups can be placed
+// perhaps create an array or dictionary of the powerups and pass in index to calculateCollisionPoints
 
 function placePowerUps(){
   // POWER UPS
@@ -568,19 +577,19 @@ function canPower(){
   // reverse keys temporarily
   can.threegroup.position.set(0,-1000,0);
   reverse = true;
-  // controls.keys = {
-  //     LEFT: 39, //right arrow
-  //     UP: 40, // down arrow
-  //     RIGHT: 37, // left arrow
-  //     BOTTOM: 38 // up arrow
-  // };
+  controls.keys = {
+      LEFT: 39, //right arrow
+      UP: 40, // down arrow
+      RIGHT: 37, // left arrow
+      BOTTOM: 38 // up arrow
+  };
   setTimeout(function(){ reverse = false;
-  //     controls.keys = {
-  //     LEFT: 37, //left arrow
-  //     UP: 38, // up arrow
-  //     RIGHT: 39, // right arrow
-  //     BOTTOM: 40 // down arrow
-  // };
+      controls.keys = {
+      LEFT: 37, //left arrow
+      UP: 38, // up arrow
+      RIGHT: 39, // right arrow
+      BOTTOM: 40 // down arrow
+  };
   }, 5000);
 }
 
@@ -666,7 +675,8 @@ parameters =
 	visible: true,
 	material: "Phong",
   collisions: true,
-  snow: true,
+  snow: false,
+  leaves: false,
   controls: true,
 	reset: function() { resetSphere() }
 };
@@ -676,13 +686,25 @@ var collisionsDetected = gui.add(parameters, 'collisions').name('Collisions Enab
 var toggleControls = gui.add(parameters, 'controls').name('OrbitControls Enabled').listen();
 // shapeColor.onChange(function(value) // onFinishChange
 // {   box.material.color.setHex( value.replace("#", "0x") );   });
-var snowEnabled = gui.add(parameters, 'snow').name('Snow Enabled').listen();
+var snow = gui.add(parameters, 'snow').name('Snow Enabled').listen();
+var leaves = gui.add(parameters, 'leaves').name('Leaves Enabled').listen();
 
 collisionsDetected.onChange(function(value)
 {   enableCollisions = !enableCollisions; });
 
-snowEnabled.onChange(function(value)
-{   snowEnabled = !snowEnabled; });
+snow.onChange(function(value)
+{
+  snowEnabled = !snowEnabled;
+  console.log(snowEnabled);
+  initParticles('snow');
+ });
+
+leaves.onChange(function(value)
+{
+  leavesEnabled = !leavesEnabled;
+  console.log(leavesEnabled);
+  initParticles('leaves');
+})
 
 
 // TODO: add particle effects
