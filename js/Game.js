@@ -124,7 +124,7 @@ function createScene(){
   controls = new THREE.OrbitControls( camera, element );
   controls.enablePan = true;
   controls.screenSpacePanning = true;
-  controls.enableZoom = false;
+  controls.enableZoom = true;
   // controls.autoRotate = true;
   controls.maxDistance = 1000; // Set our max zoom out distance (mouse scroll)
   controls.minDistance = 60; // Set our min zoom in distance (mouse scroll)
