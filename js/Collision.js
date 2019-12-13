@@ -43,19 +43,13 @@ function detectCollisions() {
 
   // Run through each object and detect if there is a collision.
   for ( var index = 0; index < collisions.length; index ++ ) {
-    if (collisions[ index ].type != 'collision' ) {
+    if (collisions[index].type == 'exit') {
       if ( ( bounds.xMin <= collisions[ index ].xMax && bounds.xMax >= collisions[ index ].xMin ) &&
          ( bounds.yMin <= collisions[ index ].yMax && bounds.yMax >= collisions[ index ].yMin) &&
          ( bounds.zMin <= collisions[ index ].zMax && bounds.zMax >= collisions[ index ].zMin) ) {
-            console.log("Hit a powerup!");
-            //do powerup things
-            // clock coffee goose can student
-            if (collisions[ index ].type == 'clock'){ clockPower(); collisions[ index ] = {}; }
-            if (collisions[ index ].type == 'coffee'){ coffeePower(); collisions[ index ] = {}; }
-            if (collisions[ index ].type == 'goose'){ goosePower(); collisions[ index ] = {}; }
-            if (collisions[ index ].type == 'can'){ canPower(); collisions[ index ] = {}; }
-            if (collisions[ index ].type == 'student'){ studentPower(); collisions[ index ] = {}; }
-      }
+           console.log("Level up!");
+           game.levelSwitch = true;
+         }
     }
     else if (collisions[ index ].type == 'collision' ) {
 
@@ -93,6 +87,20 @@ function detectCollisions() {
             box.threegroup.position.z += playerSpeed;
           }
         }
+      }
+    }
+    else {
+        if ( ( bounds.xMin <= collisions[ index ].xMax && bounds.xMax >= collisions[ index ].xMin ) &&
+           ( bounds.yMin <= collisions[ index ].yMax && bounds.yMax >= collisions[ index ].yMin) &&
+           ( bounds.zMin <= collisions[ index ].zMax && bounds.zMax >= collisions[ index ].zMin) ) {
+              console.log("Hit a powerup!");
+              //do powerup things
+              // clock coffee goose can student
+              if (collisions[ index ].type == 'clock'){ clockPower(); collisions[ index ] = {}; }
+              if (collisions[ index ].type == 'coffee'){ coffeePower(); collisions[ index ] = {}; }
+              if (collisions[ index ].type == 'goose'){ goosePower(); collisions[ index ] = {}; }
+              if (collisions[ index ].type == 'can'){ canPower(); collisions[ index ] = {}; }
+              if (collisions[ index ].type == 'student'){ studentPower(); collisions[ index ] = {}; }
       }
     }
   }

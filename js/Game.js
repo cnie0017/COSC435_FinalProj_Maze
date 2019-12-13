@@ -29,7 +29,8 @@ var playerSpeed = 15;
 var bbox;
 var helper;
 //maze generation
-var size = 11;
+
+var size = game.level.maze.size;
 var maze, mazeMesh;
 var distance = 100,
    entranceXidx = 1,
@@ -468,7 +469,7 @@ function CreateMazeMesh(maze) {
            }
            else if (i == exitXidx && j == exitZidx){//exit
              //exit location = (-300+exitZidx*distance, -300+exitXidx*distance)
-             createTree(-300+j*distance,-300+i*distance,yellow);
+             createTree(-300+j*distance, -300+i*distance, yellow, "exit");
            }
            else{
              createTree(-300+j*distance,-300+i*distance,green);
@@ -480,10 +481,8 @@ function CreateMazeMesh(maze) {
 
 
 function createMaze() {
-   maze = generateMaze(size);
-   console.log(maze);
-   // console.log(entranceX);
-   mazeMesh = CreateMazeMesh(maze);
+  maze = game.level.maze;
+  mazeMesh = CreateMazeMesh(maze);
 }
 
 var pclock, coffee, goose, can, student;
@@ -641,7 +640,7 @@ function createFloor() {
 /**
  * Create a happy little tree.
  */
-function createTree( posX, posZ, treeColor ) {
+function createTree( posX, posZ, treeColor, type = "tree" ) {
   // Set some random values so our trees look different.
   // var randomScale = ( Math.random() * 3 ) + 0.8;
   var randomScale = 1; //I don't want the scale to be random right now
@@ -657,8 +656,13 @@ function createTree( posX, posZ, treeColor ) {
   treeTop.rotation.y = randomRotateY;
   scene.add( treeTop );
 
-  calculateCollisionPoints( treeTop );
 
+  if (type == "tree") {
+    calculateCollisionPoints( treeTop );
+  }
+  else if (type == "exit") {
+    calculateCollisionPoints(treeTop, treeTop.scale, false, "exit" );
+  }
 }
 
 gui = new dat.GUI();
