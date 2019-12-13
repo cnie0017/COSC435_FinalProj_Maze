@@ -29,7 +29,7 @@ var playerSpeed = 10;
 var bbox;
 var helper;
 //maze generation
-var size = 11;
+var size = 7;
 var maze, mazeMesh;
 var distance = 100,
    entranceXidx = 1,
@@ -431,26 +431,27 @@ function animatePlayer(delta) {
 }
 
 function CreateMazeMesh(maze) {
-  console.log("size is",size);
-  //to be changed later
-    for (var i = 0; i < maze.dimension; i++) {
-        for (var j = 0; j < maze.dimension; j++) {
-            var mazeObj = maze[i][j];
-            if (mazeObj) {
-        if (i == entranceXidx && j==entranceZidx){//entrance
-          createTree(entranceX,entranceZ,blue);
-          maze[i+1][j] = true;
-        }
-        else if (i == exitXidx && j == exitZidx){//exit
-          //exit location = (-300+exitZidx*distance, -300+exitXidx*distance)
-          createTree(-300+j*distance,-300+i*distance,yellow);
-        }
-        else{
-          createTree(-300+j*distance,-300+i*distance,green);
+	 console.log("size is",size);
+    //to be changed later
+	 // var randExitZidx = Math.floor(Math.random()*size);
+	 for (var i = 0; i < maze.size; i++) {
+		  for (var j = 0; j < maze.size; j++) {
+			  var mazeObj = maze[i][j];
+				if (mazeObj) {
+           if (i == entranceXidx && j==entranceZidx){//entrance
+              createTree(entranceX,entranceZ,blue);
+              maze[i][j-1] = true;
+           }
+           else if (i == exitXidx && j == exitZidx){//exit
+             //exit location = (-300+exitZidx*distance, -300+exitXidx*distance)
+             createTree(-300+j*distance,-300+i*distance,yellow);
+           }
+           else{
+             createTree(-300+j*distance,-300+i*distance,green);
+           }
         }
       }
     }
-   }
 }
 
 
@@ -461,42 +462,44 @@ function createMaze() {
    mazeMesh = CreateMazeMesh(maze);
 }
 
+var pclock, coffee, goose, can, student;
+
 function placePowerUps(){
-  // set scale and y position
+  // POWER UPS
 
-  // TODO: possibly change scale/y in models so that this is not necessary
-
-  let goose = new Goose();
-  goose.threegroup.scale.set(0.3,0.3,0.3);
-  goose.threegroup.position.y = 10;
-  placePowerUp(goose);
-
-  let pclock = new Clock();
+  //clock
+  pclock = new Clock();
   pclock.threegroup.scale.set(0.4,0.4,0.4);
-  pclock.threegroup.position.y = 50;
-  // calculateCollisionPoints( pclock );
-  placePowerUp(pclock);
-
-  //can
-  let can = new Can();
-  can.threegroup.scale.set(0.3,0.3,0.3);
-  can.threegroup.position.y = 10;
-  placePowerUp(can);
+  placePowerUp(pclock, "clock");
 
   //coffee
-  let coffee = new Coffee();
+  coffee = new Coffee();
   coffee.threegroup.scale.set(0.3,0.3,0.3);
   coffee.threegroup.position.y = 10;
-  placePowerUp(coffee);
+  placePowerUp(coffee, "coffee");
+
+  // POWER DOWNS
+
+  //goose
+  goose = new Goose();
+  goose.threegroup.scale.set(0.3,0.3,0.3);
+  goose.threegroup.position.y = 10;
+  placePowerUp(goose, "goose");
+
+  //can
+  can = new Can();
+  can.threegroup.scale.set(0.3,0.3,0.3);
+  can.threegroup.position.y = 10;
+  placePowerUp(can, "can");
 
   //student
-  let student = new Student();
+  student = new Student();
   student.threegroup.scale.set(0.3,0.3,0.3);
-  placePowerUp(student);
+  placePowerUp(student, "student");
 
 }
 
-function placePowerUp(powerup){
+function placePowerUp(powerup, type){
   let placed = false;
   while (!placed){
     let r1 = Math.floor(Math.random() * size);
@@ -504,8 +507,8 @@ function placePowerUp(powerup){
 
 
     if (!maze[r1][r2]){
-      console.log(maze[r1][r2]);
-      console.log(r1,r2);
+      // console.log(maze[r1][r2]);
+      // console.log(r1,r2);
       powerup.threegroup.position.x = -300+r2*distance;
       powerup.threegroup.position.z = -300+r1*distance;
 
@@ -515,8 +518,44 @@ function placePowerUp(powerup){
       placed = true;
     }
   }
-  calculateCollisionPoints(powerup.threegroup, powerup.threegroup.scale, true, "powerup");
+  calculateCollisionPoints(powerup.threegroup, powerup.threegroup.scale, true, type);
 }
+
+// TODO: object pool or dispose of objects rather than changing position
+
+var stunned, reverse;
+// powerup actions
+function clockPower(){
+  // give extra time
+  pclock.threegroup.position.set(0,-1000,0);
+}
+
+function coffeePower(){
+  // increase character speed
+  playerSpeed += 10;
+  setTimeout(function(){ playerSpeed -=10; }, 5000);
+  coffee.threegroup.position.set(0,-1000,0);
+}
+
+// powerdown actions
+function goosePower(){
+  // stun character
+  goose.threegroup.position.set(0,-1000,0);
+}
+
+function canPower(){
+  // reverse keys temporarily
+  reverse = true;
+  setTimeout(function(){ reverse = false; }, 5000);
+  can.threegroup.position.set(0,-1000,0);
+}
+
+function studentPower(){
+  // randomly relocate character OR send back to start
+  student.threegroup.position.set(0,-1000,0);
+}
+
+
 
 /**
  * Create the main character.
