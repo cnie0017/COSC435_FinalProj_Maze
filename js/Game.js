@@ -30,7 +30,8 @@ var bbox;
 var helper;
 //maze generation
 
-var size = game.level.maze.size;
+var size = 11;
+// var size = game.level.maze.size;
 var maze, mazeMesh;
 var distance = 100,
    entranceXidx = 1,

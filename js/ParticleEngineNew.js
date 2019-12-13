@@ -17,7 +17,7 @@ function initParticles(style='snow') {
         },
         position: {
             value: new THREE.Vector3(0, 400, 0),
-            spread: new THREE.Vector3( 5000, 500, 5000 )
+            spread: new THREE.Vector3( 5000, 650, 5000 )
         },
 
         acceleration: {
@@ -38,7 +38,7 @@ function initParticles(style='snow') {
             value: 10
         },
 
-        particleCount: 2000,
+        particleCount: 3000,
         activeMultiplier: 1
       });
     }
@@ -56,7 +56,7 @@ function initParticles(style='snow') {
         },
         position: {
             value: new THREE.Vector3(0, 400, 0),
-            spread: new THREE.Vector3( 5000, 500, 5000 )
+            spread: new THREE.Vector3( 5000, 650, 5000 )
         },
 
         acceleration: {
