@@ -94,9 +94,11 @@ function createScene(){
   );
 
   // Move the camera away from the center of the scene.
-  camera.position.z = -300;
-  camera.position.y = 100;
-  camera.rotation.y = radians(90);
+  camera.position.z = -600;
+  camera.position.y = 300;
+  camera.position.x = 400;
+  // camera.rotation.x = radians(45);
+  console.log(camera.rotation.x);
   scene.add( camera );
 
 
@@ -105,6 +107,7 @@ function createScene(){
   createFloor();
   createMaze();
   placePowerUps();
+
 
   // Flags to determine which direction the player is moving
   clock = new THREE.Clock();
@@ -121,19 +124,19 @@ function createScene(){
   controls = new THREE.OrbitControls( camera, element );
   controls.enablePan = true;
   controls.screenSpacePanning = true;
-  controls.enableZoom = true;
+  controls.enableZoom = false;
   // controls.autoRotate = true;
   controls.maxDistance = 1000; // Set our max zoom out distance (mouse scroll)
   controls.minDistance = 60; // Set our min zoom in distance (mouse scroll)
   // controls.target.copy( new THREE.Vector3( 0, 0, 0 ) );
-  controls.target.copy( box.threegroup.position);
+  controls.target.copy( box.threegroup.position );
 
-  controls.keys = {
-      LEFT: 37, //left arrow
-      UP: 38, // up arrow
-      RIGHT: 39, // right arrow
-      BOTTOM: 40 // down arrow
-  };
+  // controls.keys = {
+  //     LEFT: 37, //left arrow
+  //     UP: 38, // up arrow
+  //     RIGHT: 39, // right arrow
+  //     BOTTOM: 40 // down arrow
+  // };
 
   document.onkeydown = handleKeyDown;
 
@@ -165,37 +168,51 @@ function init() {
   createLights();
 }
 
+var keys = {
+  right: function(){
+    movements.push(new THREE.Vector3(box.threegroup.position.x - playerSpeed, box.threegroup.position.y, box.threegroup.position.z));
+    box.threegroup.rotation.y = radians(180);
+  },
+  left: function(){
+    movements.push(new THREE.Vector3(box.threegroup.position.x + playerSpeed, box.threegroup.position.y, box.threegroup.position.z));
+    box.threegroup.rotation.y = radians(0);
+  },
+  down: function(){
+    movements.push(new THREE.Vector3(box.threegroup.position.x, box.threegroup.position.y, box.threegroup.position.z - playerSpeed));
+    box.threegroup.rotation.y = radians(90);
+  },
+  up: function(){
+    movements.push(new THREE.Vector3(box.threegroup.position.x, box.threegroup.position.y, box.threegroup.position.z  + playerSpeed));
+    box.threegroup.rotation.y = radians(270);
+  }
+}
+
 
 function handleKeyDown(keyEvent){
 //https://javascript.info/keyboard-events
 
 
   if (keyEvent.key == "ArrowRight") {
-    // box.position.x -= playerSpeed;
-    movements.push(new THREE.Vector3(box.threegroup.position.x - playerSpeed, box.threegroup.position.y, box.threegroup.position.z));
-    box.threegroup.rotation.y = radians(180);
+    if (!reverse & !stunned){ keys.right.call(); }
+    else if (reverse){ keys.left.call(); }
     // camera.rotation.y = radians(180);
     // moveRight = true;
   }
   else if (keyEvent.key == "ArrowLeft") {
-    // box.threegroup.position.x += playerSpeed;
-    movements.push(new THREE.Vector3(box.threegroup.position.x + playerSpeed, box.threegroup.position.y, box.threegroup.position.z));
-    box.threegroup.rotation.y = radians(0);
+    if (!reverse & !stunned){ keys.left.call(); }
+    else if (reverse){ keys.right.call(); }
     // camera.rotation.y = radians(0);
     // moveLeft = true;
   }
 
   if (keyEvent.key == "ArrowDown") {
-    // box.threegroup.position.z -= playerSpeed;
-    movements.push(new THREE.Vector3(box.threegroup.position.x, box.threegroup.position.y, box.threegroup.position.z - playerSpeed));
-    box.threegroup.rotation.y = radians(90);
+    if (!reverse & !stunned){ keys.down.call(); }
+    else if (reverse){ keys.up.call(); }
     // moveBackward = true;
   }
   else if (keyEvent.key == "ArrowUp") {
-    // box.threegroup.position.z += playerSpeed;
-    movements.push(new THREE.Vector3(box.threegroup.position.x, box.threegroup.position.y, box.threegroup.position.z  + playerSpeed));
-
-    box.threegroup.rotation.y = radians(270);
+    if (!reverse & !stunned){ keys.up.call(); }
+    else if (reverse){ keys.down.call(); }
     // moveForward = true;
   }
 
@@ -469,7 +486,8 @@ function placePowerUps(){
 
   //clock
   pclock = new Clock();
-  pclock.threegroup.scale.set(0.4,0.4,0.4);
+  pclock.threegroup.scale.set(0.35,0.35,0.35);
+  pclock.threegroup.position.y = 40;
   placePowerUp(pclock, "clock");
 
   //coffee
@@ -541,18 +559,39 @@ function coffeePower(){
 function goosePower(){
   // stun character
   goose.threegroup.position.set(0,-1000,0);
+  stunned = true;
+  controls.enablePan = false;
+  setTimeout(function(){ stunned = false; controls.enablePan = true; }, 5000);
 }
 
 function canPower(){
   // reverse keys temporarily
-  reverse = true;
-  setTimeout(function(){ reverse = false; }, 5000);
   can.threegroup.position.set(0,-1000,0);
+  reverse = true;
+  // controls.keys = {
+  //     LEFT: 39, //right arrow
+  //     UP: 40, // down arrow
+  //     RIGHT: 37, // left arrow
+  //     BOTTOM: 38 // up arrow
+  // };
+  setTimeout(function(){ reverse = false;
+  //     controls.keys = {
+  //     LEFT: 37, //left arrow
+  //     UP: 38, // up arrow
+  //     RIGHT: 39, // right arrow
+  //     BOTTOM: 40 // down arrow
+  // };
+  }, 5000);
 }
 
 function studentPower(){
   // randomly relocate character OR send back to start
   student.threegroup.position.set(0,-1000,0);
+  box.threegroup.position.y = characterSize * 2.5; //TODO: feet are sticking through floor
+  box.threegroup.position.x = entranceX-100;
+  box.threegroup.position.z = entranceZ - characterSize/2;
+
+  controls.target.copy( box.threegroup.position );
 }
 
 
