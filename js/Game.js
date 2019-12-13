@@ -29,7 +29,7 @@ var playerSpeed = 10;
 var bbox;
 var helper;
 //maze generation
-var size = 7;
+var size = game.level.maze.size;
 var maze, mazeMesh;
 var distance = 100,
    entranceXidx = 1,
@@ -473,10 +473,8 @@ function CreateMazeMesh(maze) {
 
 
 function createMaze() {
-   maze = generateMaze(size);
-   console.log(maze);
-   // console.log(entranceX);
-   mazeMesh = CreateMazeMesh(maze);
+  maze = game.level.maze;
+  mazeMesh = CreateMazeMesh(maze);
 }
 
 var pclock, coffee, goose, can, student;
