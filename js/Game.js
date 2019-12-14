@@ -101,7 +101,7 @@ function createScene(){
 
   // Move the camera away from the center of the scene.
   camera.position.z = -600;
-  camera.position.y = 300;
+  camera.position.y = 400;
   camera.position.x = 400;
   // camera.rotation.x = radians(45);
   // console.log(camera.rotation.x);
@@ -113,7 +113,6 @@ function createScene(){
   createFloor();
   createMaze();
   placePowerUps();
-
 
   // Flags to determine which direction the player is moving
   clock = new THREE.Clock();
@@ -494,7 +493,7 @@ var pclock, coffee, goose, can, student;
 // perhaps create an array or dictionary of the powerups and pass in index to calculateCollisionPoints
 
 
-function placePowerUps(iterations){
+function placePowerUps(iterations=1){
   // POWER UPS
   for (let i = 0; i < iterations; i++){
     //clock
