@@ -105,14 +105,14 @@ function createScene(){
   camera.position.x = 400;
   // camera.rotation.x = radians(45);
   // console.log(camera.rotation.x);
-  scene.add( camera );
+  // scene.add( camera );
 
 
 
   createCharacter();
   createFloor();
   createMaze();
-  placePowerUps(2);
+  placePowerUps();
 
 
   // Flags to determine which direction the player is moving
@@ -128,21 +128,15 @@ function createScene(){
 
   // Build the controls.
   controls = new THREE.OrbitControls( camera, element );
-  controls.enablePan = true;
-  controls.screenSpacePanning = true;
-  controls.enableZoom = true;
+  controls.enablePan = false;
+  controls.screenSpacePanning = false;
+  controls.enableZoom = false;
   // controls.autoRotate = true;
   controls.maxDistance = 1000; // Set our max zoom out distance (mouse scroll)
   controls.minDistance = 60; // Set our min zoom in distance (mouse scroll)
   // controls.target.copy( new THREE.Vector3( 0, 0, 0 ) );
   controls.target.copy( box.threegroup.position );
-
-  controls.keys = {
-      LEFT: 37, //left arrow
-      UP: 38, // up arrow
-      RIGHT: 39, // right arrow
-      BOTTOM: 40 // down arrow
-  };
+  controls.update();
 
   document.onkeydown = handleKeyDown;
 
@@ -177,20 +171,29 @@ function init() {
 
 var keys = {
   right: function(){
+    camera.position.x - playerSpeed;
     movements.push(new THREE.Vector3(box.threegroup.position.x - playerSpeed, box.threegroup.position.y, box.threegroup.position.z));
     box.threegroup.rotation.y = radians(180);
+    controls.target.copy(box.threegroup.position);
+    controls.update();
   },
   left: function(){
     movements.push(new THREE.Vector3(box.threegroup.position.x + playerSpeed, box.threegroup.position.y, box.threegroup.position.z));
     box.threegroup.rotation.y = radians(0);
+    controls.target.copy(box.threegroup.position);
+    controls.update();
   },
   down: function(){
     movements.push(new THREE.Vector3(box.threegroup.position.x, box.threegroup.position.y, box.threegroup.position.z - playerSpeed));
     box.threegroup.rotation.y = radians(90);
+    controls.target.copy(box.threegroup.position);
+    controls.update();
   },
   up: function(){
     movements.push(new THREE.Vector3(box.threegroup.position.x, box.threegroup.position.y, box.threegroup.position.z  + playerSpeed));
     box.threegroup.rotation.y = radians(270);
+    controls.target.copy(box.threegroup.position);
+    controls.update();
   }
 }
 
@@ -578,19 +581,19 @@ function canPower(obj){
   // reverse keys temporarily
   obj.threegroup.position.set(0,-1000,0);
   reverse = true;
-  controls.keys = {
-      LEFT: 39, //right arrow
-      UP: 40, // down arrow
-      RIGHT: 37, // left arrow
-      BOTTOM: 38 // up arrow
-  };
+  // controls.keys = {
+  //     LEFT: 39, //right arrow
+  //     UP: 40, // down arrow
+  //     RIGHT: 37, // left arrow
+  //     BOTTOM: 38 // up arrow
+  // };
   setTimeout(function(){ reverse = false;
-      controls.keys = {
-      LEFT: 37, //left arrow
-      UP: 38, // up arrow
-      RIGHT: 39, // right arrow
-      BOTTOM: 40 // down arrow
-  };
+  //     controls.keys = {
+  //     LEFT: 37, //left arrow
+  //     UP: 38, // up arrow
+  //     RIGHT: 39, // right arrow
+  //     BOTTOM: 40 // down arrow
+  // };
   }, 5000);
 }
 
@@ -602,6 +605,7 @@ function studentPower(obj){
   box.threegroup.position.z = entranceZ - characterSize/2;
 
   controls.target.copy( box.threegroup.position );
+  controls.update();
 }
 
 
