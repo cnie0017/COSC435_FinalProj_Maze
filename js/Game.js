@@ -54,10 +54,12 @@ var distance = 100,
 
  var clock;
 
+ // particle effects
  var particleGroup, emitter;
  var snowEnabled = false;
  var leavesEnabled = false;
 
+ var powerUps = [];
 
 //tree
 var green = 0x44aa44;
@@ -479,7 +481,7 @@ function createMaze() {
   mazeMesh = CreateMazeMesh(maze);
 }
 
-var pclock, coffee, goose, can, student;
+// var pclock, coffee, goose, can, student;
 // TODO: modify so that iterations of powerups can be placed
 // perhaps create an array or dictionary of the powerups and pass in index to calculateCollisionPoints
 
@@ -488,34 +490,39 @@ function placePowerUps(iterations=1){
   // POWER UPS
   for (let i = 0; i < iterations; i++){
     //clock
-    pclock = new Clock();
+    let pclock = new Clock();
     pclock.threegroup.scale.set(0.35,0.35,0.35);
     pclock.threegroup.position.y = 40;
+    powerUps.push(pclock);
     placePowerUp(pclock, "clock");
 
     //coffee
-    coffee = new Coffee();
+    let coffee = new Coffee();
     coffee.threegroup.scale.set(0.4,0.4,0.4);
     coffee.threegroup.position.y = 10;
+    powerUps.push(coffee);
     placePowerUp(coffee, "coffee");
 
     // POWER DOWNS
 
     //goose
-    goose = new Goose();
+    let goose = new Goose();
     goose.threegroup.scale.set(0.3,0.3,0.3);
     goose.threegroup.position.y = 10;
+    powerUps.push(goose);
     placePowerUp(goose, "goose");
 
     //can
-    can = new Can();
+    let can = new Can();
     can.threegroup.scale.set(0.4,0.4,0.4);
     can.threegroup.position.y = 10;
+    powerUps.push(can);
     placePowerUp(can, "can");
 
     //student
-    student = new Student();
+    let student = new Student();
     student.threegroup.scale.set(0.3,0.3,0.3);
+    powerUps.push(student);
     placePowerUp(student, "student");
   }
 }
