@@ -30,7 +30,7 @@ var bbox;
 var helper;
 //maze generation
 
-// var size = 11;
+// var size = 13;
 var size = game.level.maze.size;
 var maze, mazeMesh;
 var distance = 100,
@@ -101,7 +101,7 @@ function createScene(){
 
   // Move the camera away from the center of the scene.
   camera.position.z = -600;
-  camera.position.y = 400;
+  camera.position.y = 500;
   camera.position.x = 400;
   // camera.rotation.x = radians(45);
   // console.log(camera.rotation.x);
@@ -165,6 +165,7 @@ function createLights(){
 function init() {
   createScene();
   createLights();
+  setTimer(40);
   // initParticles();
 }
 
@@ -402,16 +403,6 @@ function render() {
     }
   };
 
-  // if ( snowEnabled ){
-  //   console.log('enabled');
-  //   engine = new ParticleEngine();
-  //   engine.setValues( Examples.snow );
-  //   engine.initialize();
-  // }
-
-
-  // controls.update();
-
 }
 
 /**
@@ -504,7 +495,7 @@ function placePowerUps(iterations=1){
 
     //coffee
     coffee = new Coffee();
-    coffee.threegroup.scale.set(0.3,0.3,0.3);
+    coffee.threegroup.scale.set(0.4,0.4,0.4);
     coffee.threegroup.position.y = 10;
     placePowerUp(coffee, "coffee");
 
@@ -518,7 +509,7 @@ function placePowerUps(iterations=1){
 
     //can
     can = new Can();
-    can.threegroup.scale.set(0.3,0.3,0.3);
+    can.threegroup.scale.set(0.4,0.4,0.4);
     can.threegroup.position.y = 10;
     placePowerUp(can, "can");
 
@@ -558,6 +549,8 @@ var stunned, reverse;
 function clockPower(obj){
   // give extra time
   obj.threegroup.position.set(0,-1000,0);
+  timer.pause();
+  setTimeout(function(){ timer.start(); }, 5000);
 }
 
 function coffeePower(obj){
