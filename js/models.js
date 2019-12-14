@@ -165,6 +165,16 @@ var signMat = new THREE.MeshLambertMaterial ({
   color: 0xb37152,
   shading:THREE.FlatShading
 });
+var starMat = new THREE.MeshLambertMaterial ({
+  color: 0xffff99,
+  shading:THREE.FlatShading
+});
+var bubbleMat = new THREE.MeshLambertMaterial ({
+  color: 0x7df9ff,
+  shading: THREE.FlatShading,
+  opacity: THREE.opacity = .5,
+  transparency: THREE.transparency = false
+});
 
 //Goose
 Goose = function(){
@@ -432,6 +442,10 @@ Coffee = function(){
 }
 
 Deer = function() {
+	
+  this.status = "normal";
+
+  this.stunRotVector = new THREE.Vector3( 0, 1, 0);
 
   this.runningCycle = 0;
 
@@ -439,6 +453,8 @@ Deer = function() {
 
   this.leggroup1 = new THREE.Group();
   this.leggroup2 = new THREE.Group();
+  this.leggroup3 = new THREE.Group();
+  this.leggroup4 = new THREE.Group();
   this.tailgroup = new THREE.Group();
 
    this.threegroup.add( new THREE.Mesh(
@@ -471,11 +487,11 @@ Deer = function() {
    let leg3 = leg1.clone();
    leg3.position.x = -leg1.position.x;
    leg3.position.z = -leg1.position.z;
-   this.leggroup1.add(leg3);
+   this.leggroup3.add(leg3);
 
    let leg4 = leg1.clone();
    leg4.position.x = -leg1.position.x;
-   this.leggroup2.add(leg4);
+   this.leggroup4.add(leg4);
 
    let hoof1 = new THREE.Mesh(
       new THREE.BoxBufferGeometry(0.5,0.3,0.5),
@@ -493,15 +509,17 @@ Deer = function() {
    let hoof3 = hoof1.clone();
    hoof3.position.x = -hoof1.position.x;
    hoof3.position.z = -hoof1.position.z;
-   this.leggroup1.add(hoof3);
+   this.leggroup3.add(hoof3);
 
    let hoof4 = hoof1.clone();
    hoof4.position.x = -hoof1.position.x;
-   this.leggroup2.add(hoof4);
+   this.leggroup4.add(hoof4);
 
 
 // TODO: hierarchical modeling for head/neck etc to move with arrow keys?
 // ----------- HEAD PIECES -----------
+  this.headgroup = new THREE.Group();
+	
    let neck = new THREE.Mesh(
      new THREE.BoxBufferGeometry(0.8,1.5,0.8),
      darkBrownMat
@@ -509,7 +527,7 @@ Deer = function() {
    neck.position.x = 1.8;
    neck.position.y = 1.2;
    neck.rotation.set(0,0,-0.4);
-   this.threegroup.add(neck);
+   this.headgroup.add(neck);
 
    let head = new THREE.Mesh(
      new THREE.BoxBufferGeometry(1.3,1.1,1.3),
@@ -517,7 +535,7 @@ Deer = function() {
    );
    head.position.x = 2.2;
    head.position.y = 2;
-   this.threegroup.add(head);
+   this.headgroup.add(head);
 
    let eye1 = new THREE.Mesh(
      new THREE.BoxBufferGeometry(0.15,0.15,0.01),
@@ -526,11 +544,11 @@ Deer = function() {
    eye1.position.x = 2.3;
    eye1.position.y = 2.15;
    eye1.position.z = 0.65;
-   this.threegroup.add(eye1);
+   this.headgroup.add(eye1);
 
    let eye2 = eye1.clone();
    eye2.position.z = -eye1.position.z;
-   this.threegroup.add(eye2);
+   this.headgroup.add(eye2);
 
    let snout = new THREE.Mesh(
      new THREE.BoxBufferGeometry(0.8,0.65,0.8),
@@ -538,7 +556,7 @@ Deer = function() {
    );
    snout.position.x = 2.8;
    snout.position.y = 1.8;
-   this.threegroup.add(snout);
+   this.headgroup.add(snout);
 
    let nose = new THREE.Mesh(
      new THREE.BoxBufferGeometry(0.3,0.65,0.8),
@@ -546,7 +564,7 @@ Deer = function() {
    );
    nose.position.x = 3.35;
    nose.position.y = 1.8;
-   this.threegroup.add(nose);
+   this.headgroup.add(nose);
 
    // TODO: possibly change to be a cylinder but with 3 faces (aka a triangular prism)
    let ear1 = new THREE.Mesh(
@@ -557,16 +575,18 @@ Deer = function() {
    ear1.position.y = 2.65;
    ear1.position.z = 0.5;
    ear1.rotation.set(0.2,0,0.4);
-   this.threegroup.add(ear1);
+   this.headgroup.add(ear1);
 
    let ear2 = ear1.clone();
    ear2.position.z = -ear1.position.z;
    ear2.rotation.set(-0.2,0,0.4);
-   this.threegroup.add(ear2);
+   this.headgroup.add(ear2);
 
    this.threegroup.add(this.tailgroup);
    this.threegroup.add(this.leggroup1);
    this.threegroup.add(this.leggroup2);
+   this.threegroup.add(this.leggroup3);
+   this.threegroup.add(this.leggroup4);
 
    let antler1 = new THREE.Mesh(
      new THREE.ConeBufferGeometry(0.15,0.8,0.45),
@@ -575,18 +595,69 @@ Deer = function() {
    antler1.position.x = 2;
    antler1.position.y = 2.8;
    antler1.position.z = 0.25;
-   this.threegroup.add(antler1);
+   this.headgroup.add(antler1);
 
    let antler2 = antler1.clone();
    antler2.position.z = -antler2.position.z;
-   this.threegroup.add(antler2);
+   this.headgroup.add(antler2);
+	
+   this.threegroup.add(this.headgroup);
 // ----------- END HEAD PIECES -----------
+// ---------- STUNNED STARS --------------
+  if(this.status == "stunned"){
+
+    this.stunStars = new THREE.Group();
+
+    let star1 = new THREE.Mesh(
+      new THREE.OctahedronBufferGeometry( .2, 0 ),
+      starMat
+    );
+    let star1Half = star1.clone();
+    star1.position.y = 3.5;
+    star1Half.position.y = 3.5;
+    star1.position.x = .5;
+    star1Half.position.x = .5;
+
+    star1Half.rotation.y = 1;
+    star1Half.rotation.x = 1;
+
+    this.stunStars.add(star1);
+    this.stunStars.add(star1Half);
+
+    let star2 = this.stunStars.clone();
+    star2.position.x = -.5;
+    star2.position.z = -.5;
+
+    let star3 = this.stunStars.clone();
+    star3.position.x = -.5;
+    star3.position.z = .5;
+
+    let star4 = this.stunStars.clone();
+    star4.position.x = -1;
+
+    this.stunStars.add(star2);
+    this.stunStars.add(star3);
+    this.stunStars.add(star4);
+
+    this.threegroup.add(this.stunStars);
+  }
+  if(this.status == "drunk"){
+    Bubbles = new Bubbles();
+    Bubbles.threegroup.position.y = 225;
+    Bubbles.threegroup.position.x = 80;
+    scene.add( Bubbles.threegroup );
+  }
 
   this.threegroup.position.y = 100;
   this.threegroup.scale.set(40,40,40);
 }
 
 Student = function() {
+	
+  this.armAngle = 0;
+  this.armSpeed = 0.05;
+  this.runningCycle = 0;
+	
   this.threegroup = new THREE.Group();
 
   let bodyGeom = new THREE.BoxBufferGeometry(160,130,100);
@@ -594,36 +665,38 @@ Student = function() {
   this.body.position.y = 170;
   this.threegroup.add(this.body);
 
-  this.arms = new THREE.Group();
+  this.arm1 = new THREE.Group();
+  this.arm2 = new THREE.Group();
 
   let armGeom = new THREE.BoxBufferGeometry(40,90,40);
   this.armL = new THREE.Mesh( armGeom, maroonMat );
   this.armL.position.x = -90;
-  this.armL.position.y = 170;
-  this.arms.add(this.armL);
+  //this.armL.position.y = 170;
+  this.arm1.add(this.armL);
 
   this.armR = this.armL.clone();
   this.armR.position.x = -this.armL.position.x;
-  this.arms.add(this.armR);
+  this.arm2.add(this.armR);
 
   let handGeom = new THREE.BoxBufferGeometry(40,20,40);
   this.handL = new THREE.Mesh( handGeom, lightBrownMat );
   this.handL.position.x = -90;
-  this.handL.position.y = 115;
-  this.arms.add(this.handL);
+  //this.handL.position.y = 115;
+  this.arm1.add(this.handL);
 
   this.handR = this.handL.clone();
   this.handR.position.x = -this.handL.position.x;
-  this.arms.add(this.handR);
+  this.arm2.add(this.handR);
 
-  this.threegroup.add(this.arms);
+  this.threegroup.add(this.arm1);
+  this.threegroup.add(this.arm2);
 
   let pantsGeom = new THREE.BoxBufferGeometry(160,50,100);
   this.pants = new THREE.Mesh( pantsGeom, greyMat );
   this.pants.position.y = 80;
   this.threegroup.add(this.pants);
 
-  let legGeom = new THREE.BoxBufferGeometry(70,70,100);
+  let legGeom = new THREE.BoxBufferGeometry(70,100,80);
   this.legL = new THREE.Mesh( legGeom, greyMat);
   this.legL.position.x = -45;
   this.legL.position.y = 20;
@@ -686,6 +759,50 @@ Sign = function() {
   this.threegroup.position.y = 75;
 }
 
+Bubbles = function(){
+
+  this.runningCycle = 0;
+
+  this.threegroup = new THREE.Group();
+  this.bubblegroup1 = new THREE.Group();
+  this.bubblegroup2 = new THREE.Group();
+  this.bubblegroup3 = new THREE.Group();
+
+  let bubble1 = new THREE.Mesh(
+    new THREE.SphereBufferGeometry( 10 ),
+    bubbleMat
+  );
+
+  bubble1.position.y = 25;
+  this.bubblegroup1.add(bubble1);
+
+  let bubble2 = this.bubblegroup1.clone();
+  bubble2.position.x = -20;
+  bubble2.position.z = -20;
+
+  let bubble3 = this.bubblegroup1.clone();
+  bubble3.position.x = -20;
+  bubble3.position.z = 20;
+
+  let bubble4 = this.bubblegroup1.clone();
+  bubble4.position.x = 20;
+  bubble4.position.z = 20;
+
+  let bubble5 = this.bubblegroup1.clone();
+  bubble5.position.x = 20;
+  bubble5.position.z = -20;
+
+  this.bubblegroup2.add(bubble2);
+  this.bubblegroup3.add(bubble3);
+  this.bubblegroup2.add(bubble4);
+  this.bubblegroup3.add(bubble5);
+
+  this.threegroup.add(this.bubblegroup1);
+  this.threegroup.add(this.bubblegroup2);
+  this.threegroup.add(this.bubblegroup3);
+
+}
+
 function createFloor(){
   floor = new THREE.Mesh(new THREE.PlaneBufferGeometry(1000,1000), new THREE.MeshBasicMaterial({color: 0xa5f9aa}));
   floor.rotation.x = -Math.PI/2;
@@ -696,43 +813,87 @@ function createFloor(){
 }
 
 function createGoose(){
-  goose = new Goose();
+  Goose = new Goose();
   scene.add(Goose.threegroup);
   calculateCollisionPoints(goose);
 }
 
 function createClock(){
-  clock = new Clock();
+  Clock = new Clock();
   scene.add(Clock.threegroup);
   calculateCollisionPoints(clock);
 }
 
 function createCan(){
-  can = new Can();
+  Can = new Can();
   scene.add(Can.threegroup);
 }
 
 function createCoffee(){
-  coffee = new Coffee();
+  Coffee = new Coffee();
   scene.add(Coffee.threegroup);
 }
 
 function createDeer(){
-  deer = new Deer();
-  scene.add(deer.threegroup);
+  Deer = new Deer();
+  scene.add(Deer.threegroup);
 }
 
 function createStudent(){
-  student = new Student();
-  scene.add(student.threegroup);
+  Student = new Student();
+  scene.add(Student.threegroup);
 }
 
 function createSign(){
-  sign = new Sign();
-  scene.add( sign.threegroup );
+  Sign = new Sign();
+  scene.add( Sign.threegroup );
 }
 
 //animations
+Deer.prototype.walk = function(){
+  this.runningCycle += delta * globalSpeedRate * 3;
+  this.runningCycle = this.runningCycle % (Math.PI*2);
+  var t = this.runningCycle;
+
+  this.leggroup1.rotation.z = Math.sin(t)*Math.PI/16;
+  this.leggroup2.rotation.z = -Math.sin(t)*Math.PI/16;
+  this.leggroup3.rotation.z = Math.sin(t)*Math.PI/16;
+  this.leggroup4.rotation.z = -Math.sin(t)*Math.PI/16;
+
+  this.tailgroup.rotation.x = Math.sin(t)*Math.PI/16;
+}
+
+Deer.prototype.drunkWalk = function(){
+
+  this.runningCycle += delta * globalSpeedRate * 3;
+  this.runningCycle = this.runningCycle % (Math.PI*2);
+  var t = this.runningCycle;
+
+  this.leggroup1.rotation.z = Math.sin(t)*Math.PI/16;
+  this.leggroup2.rotation.z = -Math.sin(t)*Math.PI/16;
+  this.leggroup3.rotation.z = Math.sin(t)*Math.PI/16;
+  this.leggroup4.rotation.z = -Math.sin(t)*Math.PI/16;
+
+  this.tailgroup.rotation.x = Math.sin(t)*Math.PI/16;
+
+  if(this.status = "drunk"){
+    Bubbles.pop();
+  }
+}
+
+Deer.prototype.drunkIdle = function(){
+
+  if(this.status = "drunk"){
+    Bubbles.pop();
+  }
+
+}
+
+Deer.prototype.stunned = function(){
+  this.stunStars.rotateOnAxis(this.stunRotVector,Math.PI/96);
+  this.stunStars.position.x = 2;
+}
+
 Goose.prototype.walk = function() {
 
   this.wingAngle += this.wingSpeed/globalSpeedRate;
@@ -749,6 +910,27 @@ Goose.prototype.walk = function() {
 
 }
 
+Student.prototype.walk = function(){
+
+  this.runningCycle += delta * globalSpeedRate * 3;
+  this.runningCycle = this.runningCycle % (Math.PI*2);
+  var t = this.runningCycle;
+
+  this.armAngle += this.armSpeed/globalSpeedRate;
+
+  this.arm1.rotation.x = Math.PI / 64 + Math.cos(this.armAngle);
+  this.arm2.rotation.x = Math.PI / 64 - Math.cos(this.armAngle);
+
+  this.eyeL.scale.y = this.eyeR.scale.y = Math.sin(t)*Math.PI/4;
+
+  this.legL.rotation.x = Math.sin(t)*Math.PI/14;
+  this.legR.rotation.x = -Math.sin(t)*Math.PI/14;
+
+  this.arm1.position.y = 170;
+  this.arm2.position.y = 170;
+
+}
+
 Clock.prototype.spin = function(){
   Clock.threegroup.rotateOnAxis(this.clockRotVector,Math.PI/96);
 }
@@ -759,6 +941,41 @@ Can.prototype.spin = function(){
 
 Coffee.prototype.spin = function(){
   Coffee.threegroup.rotateOnAxis(this.coffeeRotVector, Math.PI/96);
+}
+
+Bubbles.prototype.pop = function(){
+
+  this.runningCycle += delta * globalSpeedRate * 3;
+  this.runningCycle = this.runningCycle % (Math.PI*2);
+  var t = this.runningCycle;
+
+  this.bubblegroup1.rotation.z = -Math.sin(t)*Math.PI/32;
+  this.bubblegroup1.rotation.y = -Math.cos(t)*Math.PI/16;
+
+  this.bubblegroup2.rotation.z = -Math.sin(t)*Math.PI/64;
+  this.bubblegroup2.rotation.y = -Math.cos(t)*Math.PI/12;
+
+  this.bubblegroup3.rotation.z = -Math.sin(t)*Math.PI/8;
+  this.bubblegroup3.rotation.y = -Math.cos(t)*Math.PI/32;
+
+  if(this.bubblegroup1.scale.x > 0){
+    this.bubblegroup1.scale.x = this.bubblegroup1.scale.y = this.bubblegroup1.scale.z -= .01;
+  }
+  else{
+    this.bubblegroup1.scale.x = this.bubblegroup1.scale.y = this.bubblegroup1.scale.z = 1;
+  }
+  if(this.bubblegroup2.scale.x > 0){
+    this.bubblegroup2.scale.x = this.bubblegroup2.scale.y = this.bubblegroup2.scale.z -= .008;
+  }
+  else{
+    this.bubblegroup2.scale.x = this.bubblegroup2.scale.y = this.bubblegroup2.scale.z = 1;
+  }
+  if(this.bubblegroup3.scale.x > 0){
+    this.bubblegroup3.scale.x = this.bubblegroup3.scale.y = this.bubblegroup3.scale.z -= .005;
+  }
+  else{
+    this.bubblegroup3.scale.x = this.bubblegroup3.scale.y = this.bubblegroup3.scale.z = 1;
+  }
 }
 
 function loop(){
