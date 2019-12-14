@@ -6,3 +6,10 @@
   height:100%;
   overflow:hidden;
 }
+
+#timer {
+  background: black;
+  color:white;
+  position: relative;
+  width: 100px;
+}

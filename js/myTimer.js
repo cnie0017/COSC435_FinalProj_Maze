@@ -1,4 +1,4 @@
-var timer = new Timer();
+var timer = new easytimer.Timer();
 timer.start({countdown: true, startValues: {seconds: 30}});
 $('#timer .values').html(timer.getTimeValues().toString());
 timer.addEventListener('secondsUpdated', function (e) {
