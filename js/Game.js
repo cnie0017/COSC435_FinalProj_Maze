@@ -31,8 +31,8 @@ var bbox;
 var helper;
 //maze generation
 
-var size = 11;
-// var size = game.level.maze.size;
+// var size = 13;
+var size = game.level.maze.size;
 var maze, mazeMesh;
 var distance = 100,
    entranceXidx = 1,
@@ -101,11 +101,11 @@ function createScene(){
 
   // Move the camera away from the center of the scene.
   camera.position.z = -600;
-  camera.position.y = 300;
+  camera.position.y = 500;
   camera.position.x = 400;
   // camera.rotation.x = radians(45);
   // console.log(camera.rotation.x);
-  scene.add( camera );
+  // scene.add( camera );
 
 
 
@@ -130,21 +130,15 @@ function createScene(){
 
   // Build the controls.
   controls = new THREE.OrbitControls( camera, element );
-  // controls.enablePan = true;
-  // controls.screenSpacePanning = true;
-  controls.enableZoom = true;
+  controls.enablePan = false;
+  controls.screenSpacePanning = false;
+  controls.enableZoom = false;
   // controls.autoRotate = true;
   controls.maxDistance = 1000; // Set our max zoom out distance (mouse scroll)
   controls.minDistance = 60; // Set our min zoom in distance (mouse scroll)
   // controls.target.copy( new THREE.Vector3( 0, 0, 0 ) );
   controls.target.copy( box.threegroup.position );
-
-  controls.keys = {
-      LEFT: 37, //left arrow
-      UP: 38, // up arrow
-      RIGHT: 39, // right arrow
-      BOTTOM: 40 // down arrow
-  };
+  controls.update();
 
   document.onkeydown = handleKeyDown;
 
@@ -174,25 +168,35 @@ function createLights(){
 function init() {
   createScene();
   createLights();
+  setTimer(40);
   // initParticles();
 }
 
 var keys = {
   right: function(){
+    camera.position.x - playerSpeed;
     movements.push(new THREE.Vector3(box.threegroup.position.x - playerSpeed, box.threegroup.position.y, box.threegroup.position.z));
     box.threegroup.rotation.y = radians(180);
+    controls.target.copy(box.threegroup.position);
+    controls.update();
   },
   left: function(){
     movements.push(new THREE.Vector3(box.threegroup.position.x + playerSpeed, box.threegroup.position.y, box.threegroup.position.z));
     box.threegroup.rotation.y = radians(0);
+    controls.target.copy(box.threegroup.position);
+    controls.update();
   },
   down: function(){
     movements.push(new THREE.Vector3(box.threegroup.position.x, box.threegroup.position.y, box.threegroup.position.z - playerSpeed));
     box.threegroup.rotation.y = radians(90);
+    controls.target.copy(box.threegroup.position);
+    controls.update();
   },
   up: function(){
     movements.push(new THREE.Vector3(box.threegroup.position.x, box.threegroup.position.y, box.threegroup.position.z  + playerSpeed));
     box.threegroup.rotation.y = radians(270);
+    controls.target.copy(box.threegroup.position);
+    controls.update();
   }
 }
 
@@ -316,16 +320,6 @@ function render() {
     }
   };
 
-  // if ( snowEnabled ){
-  //   console.log('enabled');
-  //   engine = new ParticleEngine();
-  //   engine.setValues( Examples.snow );
-  //   engine.initialize();
-  // }
-
-
-  // controls.update();
-
 }
 
 /**
@@ -406,40 +400,41 @@ var pclock, coffee, goose, can, student;
 // TODO: modify so that iterations of powerups can be placed
 // perhaps create an array or dictionary of the powerups and pass in index to calculateCollisionPoints
 
-function placePowerUps(){
+
+function placePowerUps(iterations=1){
   // POWER UPS
+  for (let i = 0; i < iterations; i++){
+    //clock
+    pclock = new Clock();
+    pclock.threegroup.scale.set(0.35,0.35,0.35);
+    pclock.threegroup.position.y = 40;
+    placePowerUp(pclock, "clock");
 
-  //clock
-  pclock = new Clock();
-  pclock.threegroup.scale.set(0.35,0.35,0.35);
-  pclock.threegroup.position.y = 40;
-  placePowerUp(pclock, "clock");
+    //coffee
+    coffee = new Coffee();
+    coffee.threegroup.scale.set(0.4,0.4,0.4);
+    coffee.threegroup.position.y = 10;
+    placePowerUp(coffee, "coffee");
 
-  //coffee
-  coffee = new Coffee();
-  coffee.threegroup.scale.set(0.3,0.3,0.3);
-  coffee.threegroup.position.y = 10;
-  placePowerUp(coffee, "coffee");
+    // POWER DOWNS
 
-  // POWER DOWNS
+    //goose
+    goose = new Goose();
+    goose.threegroup.scale.set(0.3,0.3,0.3);
+    goose.threegroup.position.y = 10;
+    placePowerUp(goose, "goose");
 
-  //goose
-  goose = new Goose();
-  goose.threegroup.scale.set(0.3,0.3,0.3);
-  goose.threegroup.position.y = 10;
-  placePowerUp(goose, "goose");
+    //can
+    can = new Can();
+    can.threegroup.scale.set(0.4,0.4,0.4);
+    can.threegroup.position.y = 10;
+    placePowerUp(can, "can");
 
-  //can
-  can = new Can();
-  can.threegroup.scale.set(0.3,0.3,0.3);
-  can.threegroup.position.y = 10;
-  placePowerUp(can, "can");
-
-  //student
-  student = new Student();
-  student.threegroup.scale.set(0.3,0.3,0.3);
-  placePowerUp(student, "student");
-
+    //student
+    student = new Student();
+    student.threegroup.scale.set(0.3,0.3,0.3);
+    placePowerUp(student, "student");
+  }
 }
 
 function getDeerLocation() {
@@ -474,62 +469,65 @@ function placePowerUp(powerup, type){
       placed = true;
     }
   }
-  calculateCollisionPoints(powerup.threegroup, powerup.threegroup.scale, true, type);
+  calculateCollisionPoints(powerup.threegroup, powerup.threegroup.scale, type, powerup);
 }
 
 // TODO: object pool or dispose of objects rather than changing position
 
 var stunned, reverse;
 // powerup actions
-function clockPower(){
+function clockPower(obj){
   // give extra time
-  pclock.threegroup.position.set(0,-1000,0);
+  obj.threegroup.position.set(0,-1000,0);
+  timer.pause();
+  setTimeout(function(){ timer.start(); }, 5000);
 }
 
-function coffeePower(){
+function coffeePower(obj){
   // increase character speed
+  obj.threegroup.position.set(0,-1000,0);
   playerSpeed += 10;
   setTimeout(function(){ playerSpeed -=10; }, 5000);
-  coffee.threegroup.position.set(0,-1000,0);
 }
 
 // powerdown actions
-function goosePower(){
+function goosePower(obj){
   // stun character
-  goose.threegroup.position.set(0,-1000,0);
+  obj.threegroup.position.set(0,-1000,0);
   stunned = true;
   controls.enablePan = false;
   setTimeout(function(){ stunned = false; controls.enablePan = true; }, 5000);
 }
 
-function canPower(){
+function canPower(obj){
   // reverse keys temporarily
-  can.threegroup.position.set(0,-1000,0);
+  obj.threegroup.position.set(0,-1000,0);
   reverse = true;
-  controls.keys = {
-      LEFT: 39, //right arrow
-      UP: 40, // down arrow
-      RIGHT: 37, // left arrow
-      BOTTOM: 38 // up arrow
-  };
+  // controls.keys = {
+  //     LEFT: 39, //right arrow
+  //     UP: 40, // down arrow
+  //     RIGHT: 37, // left arrow
+  //     BOTTOM: 38 // up arrow
+  // };
   setTimeout(function(){ reverse = false;
-      controls.keys = {
-      LEFT: 37, //left arrow
-      UP: 38, // up arrow
-      RIGHT: 39, // right arrow
-      BOTTOM: 40 // down arrow
-  };
+  //     controls.keys = {
+  //     LEFT: 37, //left arrow
+  //     UP: 38, // up arrow
+  //     RIGHT: 39, // right arrow
+  //     BOTTOM: 40 // down arrow
+  // };
   }, 5000);
 }
 
-function studentPower(){
+function studentPower(obj){
   // randomly relocate character OR send back to start
-  student.threegroup.position.set(0,-1000,0);
+  obj.threegroup.position.set(0,-1000,0);
   box.threegroup.position.y = characterSize * 2.5; //TODO: feet are sticking through floor
   box.threegroup.position.x = entranceX-100;
   box.threegroup.position.z = entranceZ - characterSize/2;
 
   controls.target.copy( box.threegroup.position );
+  controls.update();
 }
 
 
@@ -590,7 +588,7 @@ function createTree( posX, posZ, treeColor, type = "tree" ) {
     calculateCollisionPoints( treeTop );
   }
   else if (type == "exit") {
-    calculateCollisionPoints(treeTop, treeTop.scale, false, "exit" );
+    calculateCollisionPoints(treeTop, treeTop.scale, "exit" );
   }
 }
 

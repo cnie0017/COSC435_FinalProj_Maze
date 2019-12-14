@@ -442,7 +442,7 @@ Coffee = function(){
 }
 
 Deer = function() {
-	
+
   this.status = "normal";
 
   this.stunRotVector = new THREE.Vector3( 0, 1, 0);
@@ -519,7 +519,7 @@ Deer = function() {
 // TODO: hierarchical modeling for head/neck etc to move with arrow keys?
 // ----------- HEAD PIECES -----------
   this.headgroup = new THREE.Group();
-	
+
    let neck = new THREE.Mesh(
      new THREE.BoxBufferGeometry(0.8,1.5,0.8),
      darkBrownMat
@@ -600,7 +600,7 @@ Deer = function() {
    let antler2 = antler1.clone();
    antler2.position.z = -antler2.position.z;
    this.headgroup.add(antler2);
-	
+
    this.threegroup.add(this.headgroup);
 // ----------- END HEAD PIECES -----------
 // ---------- STUNNED STARS --------------
@@ -653,11 +653,11 @@ Deer = function() {
 }
 
 Student = function() {
-	
+
   this.armAngle = 0;
   this.armSpeed = 0.05;
   this.runningCycle = 0;
-	
+
   this.threegroup = new THREE.Group();
 
   let bodyGeom = new THREE.BoxBufferGeometry(160,130,100);
@@ -815,13 +815,11 @@ function createFloor(){
 function createGoose(){
   Goose = new Goose();
   scene.add(Goose.threegroup);
-  calculateCollisionPoints(goose);
 }
 
 function createClock(){
   Clock = new Clock();
   scene.add(Clock.threegroup);
-  calculateCollisionPoints(clock);
 }
 
 function createCan(){

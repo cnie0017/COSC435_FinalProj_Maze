@@ -85,10 +85,4 @@ function initParticles(style='snow') {
     particleGroup.addEmitter( emitter );
     scene.add( particleGroup.mesh );
 
-    // document.querySelector('.numParticles').textContent =
-    //     'Total particles: ' + emitter.particleCount;
-    //
-    // document.querySelector( '.alive-value' ).addEventListener( 'change', function( e ) {
-    //     emitter.activeMultiplier = +this.value;
-    // }, false );
 }

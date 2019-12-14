@@ -1,20 +1,19 @@
 //http://www.bryanjones.us/article/basic-threejs-game-tutorial-part-5-collision-detection
 
-var clz = {};
 var collisions = [];
-// var isPowerUpMesh = [];
+var isPowerUpObjs = {};
 
 /**
  * Calculates collision detection parameters.
  */
-function calculateCollisionPoints( mesh, scale, isPowerUp = false, type = 'collision' ) {
+function calculateCollisionPoints( mesh, scale, type = 'collision', powerUpObj ) {
   // Compute the bounding box after scale, translation, etc.
 
   var bbox = new THREE.Box3().setFromObject(mesh);
 
   var bounds = {
     type: type,
-    isPowerUp: isPowerUp,
+    isPowerUp: type == 'collision',
     xMin: bbox.min.x,
     xMax: bbox.max.x,
     yMin: bbox.min.y,
@@ -24,7 +23,7 @@ function calculateCollisionPoints( mesh, scale, isPowerUp = false, type = 'colli
   };
 
   collisions.push( bounds );
-  // isPowerUpMesh.push(isPowerUp);
+  if (powerUpObj){ isPowerUpObjs[collisions.length-1] = powerUpObj; }
 }
 
 /**
@@ -96,11 +95,11 @@ function detectCollisions() {
               console.log("Hit a powerup!");
               //do powerup things
               // clock coffee goose can student
-              if (collisions[ index ].type == 'clock'){ clockPower(); collisions[ index ] = {}; }
-              if (collisions[ index ].type == 'coffee'){ coffeePower(); collisions[ index ] = {}; }
-              if (collisions[ index ].type == 'goose'){ goosePower(); collisions[ index ] = {}; }
-              if (collisions[ index ].type == 'can'){ canPower(); collisions[ index ] = {}; }
-              if (collisions[ index ].type == 'student'){ studentPower(); collisions[ index ] = {}; }
+              if (collisions[ index ].type == 'clock'){ clockPower(isPowerUpObjs[ index ]); collisions[ index ] = {}; }
+              if (collisions[ index ].type == 'coffee'){ coffeePower(isPowerUpObjs[ index ]); collisions[ index ] = {}; }
+              if (collisions[ index ].type == 'goose'){ goosePower(isPowerUpObjs[ index ]); collisions[ index ] = {}; }
+              if (collisions[ index ].type == 'can'){ canPower(isPowerUpObjs[ index ]); collisions[ index ] = {}; }
+              if (collisions[ index ].type == 'student'){ studentPower(isPowerUpObjs[ index ]); collisions[ index ] = {}; }
       }
     }
   }
