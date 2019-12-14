@@ -1,4 +1,9 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:800);
+
+body {
+    overflow:hidden;
+}
+
 #world {
   background: #95f8fb;
   position:absolute;
@@ -12,4 +17,37 @@
   color:white;
   position: relative;
   width: 100px;
+}
+
+#mapdiv {
+  position: relative;
+  /* bottom: 0; */
+  float: right;
+}
+
+#bottom {
+  bottom: 0;
+  height: 500px;
+}
+
+td {
+  width: 20px;
+  height:20px;
+}
+
+table {
+  border-spacing: 0px;
+}
+
+.tree {
+
+  background: green;
+}
+
+.empty {
+  background: white;
+}
+
+.visited {
+  background: brown;
 }

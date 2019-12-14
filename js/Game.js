@@ -25,6 +25,7 @@ var mouse = new THREE.Vector2();
 
 // Store movements.
 var movements = [];
+var visited;
 var playerSpeed = 15;
 var bbox;
 var helper;
@@ -57,7 +58,6 @@ var distance = 100,
  var particleGroup, emitter;
  var snowEnabled = false;
  var leavesEnabled = false;
-
 
 //tree
 var green = 0x44aa44;
@@ -112,8 +112,10 @@ function createScene(){
   createCharacter();
   createFloor();
   createMaze();
+  drawTable(size);
   placePowerUps();
 
+  visited = maze.slice();
 
   // Flags to determine which direction the player is moving
   clock = new THREE.Clock();
@@ -128,8 +130,8 @@ function createScene(){
 
   // Build the controls.
   controls = new THREE.OrbitControls( camera, element );
-  controls.enablePan = true;
-  controls.screenSpacePanning = true;
+  // controls.enablePan = true;
+  // controls.screenSpacePanning = true;
   controls.enableZoom = true;
   // controls.autoRotate = true;
   controls.maxDistance = 1000; // Set our max zoom out distance (mouse scroll)
@@ -198,7 +200,6 @@ var keys = {
 function handleKeyDown(keyEvent){
 //https://javascript.info/keyboard-events
 
-
   if (keyEvent.key == "ArrowRight") {
     if (!reverse & !stunned){ keys.right.call(); }
     else if (reverse){ keys.left.call(); }
@@ -218,91 +219,6 @@ function handleKeyDown(keyEvent){
   }
 
 }
-
-// function listenForPlayerMovement() {
-//
-//     // A key has been pressed
-//     var onKeyDown = function(event) {
-//
-//     switch (event.keyCode) {
-//
-//       case 38: // up
-//       case 87: // w
-//         moveForward = true;
-//         break;
-//
-//       case 37: // left
-//       case 65: // a
-//         moveLeft = true;
-//         break;
-//
-//       case 40: // down
-//       case 83: // s
-//         moveBackward = true;
-//         break;
-//
-//       case 39: // right
-//       case 68: // d
-//         moveRight = true;
-//         break;
-//     }
-//   };
-
-//   // A key has been released
-//     var onKeyUp = function(event) {
-//
-//     switch (event.keyCode) {
-//
-//       case 38: // up
-//       case 87: // w
-//         moveForward = false;
-//         break;
-//
-//       case 37: // left
-//       case 65: // a
-//         moveLeft = false;
-//         break;
-//
-//       case 40: // down
-//       case 83: // s
-//         moveBackward = false;
-//         break;
-//
-//       case 39: // right
-//       case 68: // d
-//         moveRight = false;
-//         break;
-//     }
-//   };
-//
-//   // Add event listeners for when movement keys are pressed and released
-//   document.addEventListener('keydown', onKeyDown, false);
-//   document.addEventListener('keyup', onKeyUp, false);
-// }
-
-/**
- * Event that fires upon mouse down.
- */
-// function onDocumentMouseDown( event, bypass = false ) {
-//   event.preventDefault();
-//
-//   // Detect which mouse button was clicked.
-//   if ( event.which == 3 ) {
-//     stopMovement();
-//     // Grab the coordinates.
-//     mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
-//     mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
-//
-//     // Use the raycaster to detect intersections.
-//     raycaster.setFromCamera( mouse, camera );
-//
-//     // Grab all objects that can be intersected.
-//     var intersects = raycaster.intersectObjects( objects );
-//     if ( intersects.length > 0 ) {
-//       movements.push(intersects[ 0 ].point);
-//     }
-//   }
-// }
 
 /**
  * Stop character movement.
@@ -375,6 +291,7 @@ function update() {
 
   }
  camera.updateProjectionMatrix();
+ // drawTable(size);
 }
 
 /**
@@ -388,7 +305,6 @@ function render() {
   if ( movements.length > 0 ) {
     move( box, movements[ 0 ] );
   }
-
 
   if ( collisions.length > 0 && enableCollisions) {
     detectCollisions(box);
@@ -526,6 +442,19 @@ function placePowerUps(){
 
 }
 
+function getDeerLocation() {
+  var locX = box.threegroup.position.x;
+  var locZ = box.threegroup.position.z;
+  //entrance = (  0, 0)
+  //need to use Math.floor
+  var row = Math.floor((locZ - entranceZ)/distance);
+  var col = Math.floor((locX - entranceX)/distance);
+
+  if (!visited[row][col]) {
+    visited[row][col] = true;
+  }
+}
+
 function placePowerUp(powerup, type){
   let placed = false;
   while (!placed){
@@ -618,6 +547,7 @@ function createCharacter() {
   box.threegroup.position.y = characterSize * 2.5; //TODO: feet are sticking through floor
   box.threegroup.position.x = entranceX-100;
   box.threegroup.position.z = entranceZ - characterSize/2;
+  box.threegroup.rotation.y = radians(180);
 
   rotationPoint.add( box.threegroup );
   // box.threegroup.add( camera );
@@ -643,8 +573,6 @@ function createFloor() {
  */
 function createTree( posX, posZ, treeColor, type = "tree" ) {
   // Set some random values so our trees look different.
-  // var randomScale = ( Math.random() * 3 ) + 0.8;
-  var randomScale = 1; //I don't want the scale to be random right now
   var randomRotateY = Math.PI/( Math.floor(( Math.random() * 32) + 1 ));
 
   // Create the tree top.
@@ -653,7 +581,7 @@ function createTree( posX, posZ, treeColor, type = "tree" ) {
   var treeTop = new THREE.Mesh( geometry, material );
 
   treeTop.position.set(posX, characterSize/2, posZ);
-  treeTop.scale.x = treeTop.scale.y = treeTop.scale.z = randomScale;
+  treeTop.scale.x = treeTop.scale.y = treeTop.scale.z = 1;
   treeTop.rotation.y = randomRotateY;
   scene.add( treeTop );
 
