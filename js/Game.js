@@ -403,6 +403,8 @@ function animate() {
 
   var delta = clock.getDelta();
   animatePlayer(delta);
+  animateDeer(delta);
+  animatePowerups(delta);
   // box.updateMatrixWorld( true );
   // bbox.copy( box.geometry.boundingBox ).applyMatrix4( box.matrixWorld)
 }
@@ -433,6 +435,46 @@ function animatePlayer(delta) {
   // controls.getObject().translateZ(playerVelocity.z * delta);
   controls.object.translateX(playerVelocity.x * delta);
   controls.object.translateZ(playerVelocity.z * delta);
+}
+function animatePowerups(delta){
+  goose.walk(delta);
+  student.walk(delta);
+  can.spin();
+  pclock.spin();
+  coffee.spin();
+}
+function animateDeer(delta){
+  if(heldKeys.right){
+    if (!stunned){ box.walk(delta); }
+  }
+  if(heldKeys.left){
+    if (!stunned){ box.walk(delta); }
+  }
+  if(heldKeys.up){
+    if (!reverse & !stunned){ box.walk(delta); }
+  }
+  if(heldKeys.down){
+    if (!stunned){  box.walk(delta); }
+  }
+  if(stunned == true){
+    box.status = "stunned";
+    if(box.status == "stunned"){
+      box.starMat.opacity = 1.0;
+      box.stunned();
+    }
+  }
+  else if(reverse == true){
+    box.status = "drunk";
+    if(box.status == "drunk"){
+      box.bubbleMat.opacity = 1.0;
+      box.drunk(delta);
+    }
+  }
+  else{
+    box.status == "normal";
+    box.bubbleMat.opacity = 0.0;
+    box.starMat.opacity = 0.0;
+  }
 }
 
 function CreateMazeMesh(maze) {
@@ -477,14 +519,14 @@ function placePowerUps(iterations=1){
   // POWER UPS
   for (let i = 0; i < iterations; i++){
     //clock
-    let pclock = new Clock();
+    pclock = new Clock();
     pclock.threegroup.scale.set(0.35,0.35,0.35);
     pclock.threegroup.position.y = 40;
     powerUps.push(pclock);
     placePowerUp(pclock, "clock");
 
     //coffee
-    let coffee = new Coffee();
+    coffee = new Coffee();
     coffee.threegroup.scale.set(0.4,0.4,0.4);
     coffee.threegroup.position.y = 10;
     powerUps.push(coffee);
@@ -493,21 +535,21 @@ function placePowerUps(iterations=1){
     // POWER DOWNS
 
     //goose
-    let goose = new Goose();
+    goose = new Goose();
     goose.threegroup.scale.set(0.3,0.3,0.3);
     goose.threegroup.position.y = 10;
     powerUps.push(goose);
     placePowerUp(goose, "goose");
 
     //can
-    let can = new Can();
+    can = new Can();
     can.threegroup.scale.set(0.4,0.4,0.4);
     can.threegroup.position.y = 10;
     powerUps.push(can);
     placePowerUp(can, "can");
 
     //student
-    let student = new Student();
+    student = new Student();
     student.threegroup.scale.set(0.3,0.3,0.3);
     powerUps.push(student);
     placePowerUp(student, "student");
@@ -572,7 +614,7 @@ function goosePower(obj){
   // stun character
   obj.threegroup.position.set(0,-1000,0);
   stunned = true;
-  setTimeout(function(){ stunned = false; controls.enablePan = true; }, 5000);
+  setTimeout(function(){ stunned = false; }, 5000);
 }
 
 function canPower(obj){
