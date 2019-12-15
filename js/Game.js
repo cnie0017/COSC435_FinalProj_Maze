@@ -509,14 +509,14 @@ function placePowerUps(iterations=1){
   // POWER UPS
   for (let i = 0; i < iterations; i++){
     //clock
-    let pclock = new Clock();
+    pclock = new Clock();
     pclock.threegroup.scale.set(0.35,0.35,0.35);
     pclock.threegroup.position.y = 40;
     powerUps.push(pclock);
     placePowerUp(pclock, "clock");
 
     //coffee
-    let coffee = new Coffee();
+    coffee = new Coffee();
     coffee.threegroup.scale.set(0.4,0.4,0.4);
     coffee.threegroup.position.y = 10;
     powerUps.push(coffee);
@@ -525,21 +525,21 @@ function placePowerUps(iterations=1){
     // POWER DOWNS
 
     //goose
-    let goose = new Goose();
+    goose = new Goose();
     goose.threegroup.scale.set(0.3,0.3,0.3);
     goose.threegroup.position.y = 10;
     powerUps.push(goose);
     placePowerUp(goose, "goose");
 
     //can
-    let can = new Can();
+    can = new Can();
     can.threegroup.scale.set(0.4,0.4,0.4);
     can.threegroup.position.y = 10;
     powerUps.push(can);
     placePowerUp(can, "can");
 
     //student
-    let student = new Student();
+    student = new Student();
     student.threegroup.scale.set(0.3,0.3,0.3);
     powerUps.push(student);
     placePowerUp(student, "student");
