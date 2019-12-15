@@ -108,9 +108,7 @@ function createScene(){
   );
 
   // Move the camera away from the center of the scene.
-  camera.position.z = -600;
-  camera.position.y = 500;
-  camera.position.x = 400;
+
   // camera.rotation.x = radians(45);
   // console.log(camera.rotation.x);
   // scene.add( camera );
@@ -122,6 +120,10 @@ function createScene(){
   createMaze();
   drawTable(size);
   placePowerUps();
+
+  camera.position.z = entranceZ-400;
+  camera.position.y = 500;
+  camera.position.x = entranceX-100;
 
   visited = maze.slice();
 
@@ -188,27 +190,31 @@ var keys = {
     // movements.push(new THREE.Vector3(box.threegroup.position.x - playerSpeed, box.threegroup.position.y, box.threegroup.position.z));
     box.threegroup.rotation.y = radians(180);
     controls.target.copy(box.threegroup.position);
+    if (movements != []){ camera.position.x -= playerSpeed; }
     controls.update();
   },
   left: function(){
-    box.threegroup.position.x += playerSpeed
+    box.threegroup.position.x += playerSpeed;
     // movements.push(new THREE.Vector3(box.threegroup.position.x + playerSpeed, box.threegroup.position.y, box.threegroup.position.z));
     box.threegroup.rotation.y = radians(0);
     controls.target.copy(box.threegroup.position);
+    camera.position.x += playerSpeed;
     controls.update();
   },
   down: function(){
-    box.threegroup.position.z -= playerSpeed
+    box.threegroup.position.z -= playerSpeed;
     // movements.push(new THREE.Vector3(box.threegroup.position.x, box.threegroup.position.y, box.threegroup.position.z - playerSpeed));
     box.threegroup.rotation.y = radians(90);
     controls.target.copy(box.threegroup.position);
+    camera.position.z -= playerSpeed;
     controls.update();
   },
   up: function(){
-    box.threegroup.position.z  += playerSpeed
+    box.threegroup.position.z  += playerSpeed;
     // movements.push(new THREE.Vector3(box.threegroup.position.x, box.threegroup.position.y, box.threegroup.position.z  + playerSpeed));
     box.threegroup.rotation.y = radians(270);
     controls.target.copy(box.threegroup.position);
+    camera.position.z += playerSpeed;
     controls.update();
   }
 }
@@ -584,6 +590,9 @@ function studentPower(obj){
   box.threegroup.position.z = entranceZ - characterSize/2;
 
   controls.target.copy( box.threegroup.position );
+  camera.position.z = entranceZ-400;
+  camera.position.y = 500;
+  camera.position.x = entranceX-100;
   controls.update();
 }
 
