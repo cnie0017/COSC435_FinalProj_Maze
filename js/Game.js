@@ -36,15 +36,16 @@ var bbox;
 var helper;
 //maze generation
 
-// var size = 13;
-var size = game.level.maze.size;
+
+var size = game.size;
+//console.log(size);
 var maze, mazeMesh;
 var distance = 100,
    entranceXidx = 1,
-   entranceZidx = size-1;
-   exitXidx = size-2, //fixed exit
+   entranceZidx = game.size-1;
+   exitXidx = game.size-2, //fixed exit
    exitZidx = 0,
-   entranceX = -300+(size-1)*100,
+   entranceX = -300+(game.size-1)*100,
    entranceZ = -200;
 
  var moveForward = false;
@@ -78,7 +79,15 @@ var blue = 0x2194ce;
 init();
 animate();
 
-
+function resetLevel(){
+  //size +=2;
+  //size = game.size;//update size
+  console.log("In reset");
+  console.log("game.size is",game.size);
+  console.log("size is",size);
+  createMaze(size);
+  createCharacter();
+}
 
 
 function createScene(){
@@ -117,7 +126,7 @@ function createScene(){
 
   createCharacter();
   createFloor();
-  createMaze();
+  createMaze(size);
   drawTable(size);
   placePowerUps();
 
@@ -348,10 +357,10 @@ function radians( degrees ) {
  * Updates to apply to the scene while running.
  */
 function update() {
-  if(game.levelSwitch){
-    game.goToLevel(game.targetLevel);
+  // if(game.levelSwitch){
+  //   game.goToLevel(game.targetLevel);
 
-  }
+  // }
 
   updateMovement();
  camera.updateProjectionMatrix();
@@ -435,7 +444,9 @@ function CreateMazeMesh(maze) {
 			  var mazeObj = maze[i][j];
 				if (mazeObj) {
            if (i == entranceXidx && j==entranceZidx){//entrance
-              createTree(entranceX,entranceZ,blue);
+            //entranceX = -300+(size-1)*100,
+            //entranceZ = -200;
+              createTree(-300+(maze.size-1)*100,entranceZ,blue);
               maze[i][j-1] = true;
            }
            else if (i == exitXidx && j == exitZidx){//exit
@@ -451,8 +462,9 @@ function CreateMazeMesh(maze) {
 }
 
 
-function createMaze() {
-  maze = game.level.maze;
+function createMaze(n) {
+  console.log(n);
+  maze = generateMaze(n);
   mazeMesh = CreateMazeMesh(maze);
 }
 
