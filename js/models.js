@@ -165,16 +165,6 @@ var signMat = new THREE.MeshLambertMaterial ({
   color: 0xb37152,
   shading:THREE.FlatShading
 });
-var starMat = new THREE.MeshLambertMaterial ({
-  color: 0xffff99,
-  shading:THREE.FlatShading
-});
-var bubbleMat = new THREE.MeshLambertMaterial ({
-  color: 0x7df9ff,
-  shading: THREE.FlatShading,
-  opacity: THREE.opacity = .5,
-  transparency: THREE.transparency = false
-});
 
 //Goose
 Goose = function(){
@@ -442,6 +432,25 @@ Coffee = function(){
 }
 
 Deer = function() {
+	
+  this.starMat = new THREE.MeshLambertMaterial ({
+    color: 0xffff99,
+    shading:THREE.FlatShading,
+    opacity: THREE.opacity = 0,
+    transparent: THREE.transparent = true
+  });
+  this.bubbleMat = new THREE.MeshLambertMaterial ({
+    color: 0x7df9ff,
+    shading: THREE.FlatShading,
+    opacity: THREE.opacity = 0,
+    transparent: THREE.transparent = true
+  });
+  this.tearMat = new THREE.MeshLambertMaterial ({
+    color: 0x00c5ff,
+    shading: THREE.FlatShading,
+    opacity: THREE.opacity = 0,
+    transparent: THREE.transparent = true
+  });
 
   this.status = "normal";
 
@@ -604,8 +613,6 @@ Deer = function() {
    this.threegroup.add(this.headgroup);
 // ----------- END HEAD PIECES -----------
 // ---------- STUNNED STARS --------------
-  if(this.status == "stunned"){
-
     this.stunStars = new THREE.Group();
 
     let star1 = new THREE.Mesh(
@@ -640,14 +647,62 @@ Deer = function() {
     this.stunStars.add(star4);
 
     this.threegroup.add(this.stunStars);
-  }
-  if(this.status == "drunk"){
-    Bubbles = new Bubbles();
-    Bubbles.threegroup.position.y = 225;
-    Bubbles.threegroup.position.x = 80;
-    scene.add( Bubbles.threegroup );
-  }
+//------------Bubbles---------------------
+    this.bubblegroup1 = new THREE.Group();
+    this.bubblegroup2 = new THREE.Group();
+    this.bubblegroup3 = new THREE.Group();
 
+    let bubble1 = new THREE.Mesh(
+      new THREE.SphereBufferGeometry( .25 ),
+      this.bubbleMat
+    );
+
+    bubble1.position.y = 1;
+    this.bubblegroup1.add(bubble1);
+
+    let bubble2 = this.bubblegroup1.clone();
+    bubble2.position.x = -.5;
+    bubble2.position.z = -.5;
+
+    let bubble3 = this.bubblegroup1.clone();
+    bubble3.position.x = -.5;
+    bubble3.position.z = .5;
+
+    let bubble4 = this.bubblegroup1.clone();
+    bubble4.position.x = .5;
+    bubble4.position.z = .5;
+
+    let bubble5 = this.bubblegroup1.clone();
+    bubble5.position.x = .5;
+    bubble5.position.z = -.5;
+
+    this.bubblegroup2.add(bubble2);
+    this.bubblegroup3.add(bubble3);
+    this.bubblegroup2.add(bubble4);
+    this.bubblegroup3.add(bubble5);
+
+    this.threegroup.add(this.bubblegroup1);
+    this.threegroup.add(this.bubblegroup2);
+    this.threegroup.add(this.bubblegroup3);
+    //--------------Tears-----------------
+    this.teargroup = new THREE.Group();
+
+    let tear1 = new THREE.Mesh(
+      new THREE.SphereBufferGeometry( .1 ),
+      this.tearMat
+    );
+
+    tear1.position.y = 1;
+    tear1.position.z = -.3;
+    tear1.position.x = 3;
+    this.teargroup.add(tear1);
+
+    let tear2 = this.teargroup.clone();
+    tear2.position.z = .5;
+    this.teargroup.add(tear2);
+
+    this.threegroup.add(this.teargroup);
+  
   this.threegroup.position.y = 100;
   this.threegroup.scale.set(40,40,40);
 }
@@ -681,7 +736,7 @@ Student = function() {
   let handGeom = new THREE.BoxBufferGeometry(40,20,40);
   this.handL = new THREE.Mesh( handGeom, lightBrownMat );
   this.handL.position.x = -90;
-  //this.handL.position.y = 115;
+  this.handL.position.y = -55;
   this.arm1.add(this.handL);
 
   this.handR = this.handL.clone();
@@ -759,50 +814,6 @@ Sign = function() {
   this.threegroup.position.y = 75;
 }
 
-Bubbles = function(){
-
-  this.runningCycle = 0;
-
-  this.threegroup = new THREE.Group();
-  this.bubblegroup1 = new THREE.Group();
-  this.bubblegroup2 = new THREE.Group();
-  this.bubblegroup3 = new THREE.Group();
-
-  let bubble1 = new THREE.Mesh(
-    new THREE.SphereBufferGeometry( 10 ),
-    bubbleMat
-  );
-
-  bubble1.position.y = 25;
-  this.bubblegroup1.add(bubble1);
-
-  let bubble2 = this.bubblegroup1.clone();
-  bubble2.position.x = -20;
-  bubble2.position.z = -20;
-
-  let bubble3 = this.bubblegroup1.clone();
-  bubble3.position.x = -20;
-  bubble3.position.z = 20;
-
-  let bubble4 = this.bubblegroup1.clone();
-  bubble4.position.x = 20;
-  bubble4.position.z = 20;
-
-  let bubble5 = this.bubblegroup1.clone();
-  bubble5.position.x = 20;
-  bubble5.position.z = -20;
-
-  this.bubblegroup2.add(bubble2);
-  this.bubblegroup3.add(bubble3);
-  this.bubblegroup2.add(bubble4);
-  this.bubblegroup3.add(bubble5);
-
-  this.threegroup.add(this.bubblegroup1);
-  this.threegroup.add(this.bubblegroup2);
-  this.threegroup.add(this.bubblegroup3);
-
-}
-
 function createFloor(){
   floor = new THREE.Mesh(new THREE.PlaneBufferGeometry(1000,1000), new THREE.MeshBasicMaterial({color: 0xa5f9aa}));
   floor.rotation.x = -Math.PI/2;
@@ -848,7 +859,7 @@ function createSign(){
 }
 
 //animations
-Deer.prototype.walk = function(){
+Deer.prototype.walk = function(delta){
   this.runningCycle += delta * globalSpeedRate * 3;
   this.runningCycle = this.runningCycle % (Math.PI*2);
   var t = this.runningCycle;
@@ -861,30 +872,48 @@ Deer.prototype.walk = function(){
   this.tailgroup.rotation.x = Math.sin(t)*Math.PI/16;
 }
 
-Deer.prototype.drunkWalk = function(){
+Deer.prototype.drunk = function(delta){
 
   this.runningCycle += delta * globalSpeedRate * 3;
   this.runningCycle = this.runningCycle % (Math.PI*2);
   var t = this.runningCycle;
 
-  this.leggroup1.rotation.z = Math.sin(t)*Math.PI/16;
-  this.leggroup2.rotation.z = -Math.sin(t)*Math.PI/16;
-  this.leggroup3.rotation.z = Math.sin(t)*Math.PI/16;
-  this.leggroup4.rotation.z = -Math.sin(t)*Math.PI/16;
-
-  this.tailgroup.rotation.x = Math.sin(t)*Math.PI/16;
-
   if(this.status = "drunk"){
-    Bubbles.pop();
+    this.bubblegroup1.position.y = 3;
+    this.bubblegroup1.position.x = 2;
+    this.bubblegroup2.position.y = 3;
+    this.bubblegroup2.position.x = 2;
+    this.bubblegroup3.position.y = 3;
+    this.bubblegroup3.position.x = 2;
+
+    this.bubblegroup1.rotation.z = -Math.sin(t)*Math.PI/32;
+    this.bubblegroup1.rotation.y = -Math.cos(t)*Math.PI/16;
+
+    this.bubblegroup2.rotation.z = -Math.sin(t)*Math.PI/64;
+    this.bubblegroup2.rotation.y = -Math.cos(t)*Math.PI/12;
+
+    this.bubblegroup3.rotation.z = -Math.sin(t)*Math.PI/8;
+    this.bubblegroup3.rotation.y = -Math.cos(t)*Math.PI/32;
+
+    if(this.bubblegroup1.scale.x > 0){
+      this.bubblegroup1.scale.x = this.bubblegroup1.scale.y = this.bubblegroup1.scale.z -= .01;
+    }
+    else{
+      this.bubblegroup1.scale.x = this.bubblegroup1.scale.y = this.bubblegroup1.scale.z = 1.2;
+    }
+    if(this.bubblegroup2.scale.x > 0){
+      this.bubblegroup2.scale.x = this.bubblegroup2.scale.y = this.bubblegroup2.scale.z -= .008;
+    }
+    else{
+      this.bubblegroup2.scale.x = this.bubblegroup2.scale.y = this.bubblegroup2.scale.z = 1;
+    }
+    if(this.bubblegroup3.scale.x > 0){
+      this.bubblegroup3.scale.x = this.bubblegroup3.scale.y = this.bubblegroup3.scale.z -= .005;
+    }
+    else{
+      this.bubblegroup3.scale.x = this.bubblegroup3.scale.y = this.bubblegroup3.scale.z = 1.25;
+    }
   }
-}
-
-Deer.prototype.drunkIdle = function(){
-
-  if(this.status = "drunk"){
-    Bubbles.pop();
-  }
-
 }
 
 Deer.prototype.stunned = function(){
@@ -892,7 +921,25 @@ Deer.prototype.stunned = function(){
   this.stunStars.position.x = 2;
 }
 
-Goose.prototype.walk = function() {
+Deer.prototype.lose = function(){
+
+  this.runningCycle += delta * globalSpeedRate * 3;
+  this.runningCycle = this.runningCycle % (Math.PI*2);
+  var t = this.runningCycle;
+
+  this.headgroup.rotation.y = Math.sin(t)*Math.PI/32;
+  this.headgroup.rotation.z = -Math.PI/8;
+  this.headgroup.position.x = .15;
+
+  if(this.teargroup.position.y > -4){
+    this.teargroup.position.y -= .25;
+  }
+  else{
+    this.teargroup.position.y = .5;
+  }
+}
+
+Goose.prototype.walk = function(delta) {
 
   this.wingAngle += this.wingSpeed/globalSpeedRate;
 
@@ -908,7 +955,7 @@ Goose.prototype.walk = function() {
 
 }
 
-Student.prototype.walk = function(){
+Student.prototype.walk = function(delta){
 
   this.runningCycle += delta * globalSpeedRate * 3;
   this.runningCycle = this.runningCycle % (Math.PI*2);
@@ -930,50 +977,15 @@ Student.prototype.walk = function(){
 }
 
 Clock.prototype.spin = function(){
-  Clock.threegroup.rotateOnAxis(this.clockRotVector,Math.PI/96);
+  this.threegroup.rotateOnAxis(this.clockRotVector,Math.PI/96);
 }
 
 Can.prototype.spin = function(){
-  Can.threegroup.rotateOnAxis(this.canRotVector, Math.PI/96);
+  this.threegroup.rotateOnAxis(this.canRotVector, Math.PI/96);
 }
 
 Coffee.prototype.spin = function(){
-  Coffee.threegroup.rotateOnAxis(this.coffeeRotVector, Math.PI/96);
-}
-
-Bubbles.prototype.pop = function(){
-
-  this.runningCycle += delta * globalSpeedRate * 3;
-  this.runningCycle = this.runningCycle % (Math.PI*2);
-  var t = this.runningCycle;
-
-  this.bubblegroup1.rotation.z = -Math.sin(t)*Math.PI/32;
-  this.bubblegroup1.rotation.y = -Math.cos(t)*Math.PI/16;
-
-  this.bubblegroup2.rotation.z = -Math.sin(t)*Math.PI/64;
-  this.bubblegroup2.rotation.y = -Math.cos(t)*Math.PI/12;
-
-  this.bubblegroup3.rotation.z = -Math.sin(t)*Math.PI/8;
-  this.bubblegroup3.rotation.y = -Math.cos(t)*Math.PI/32;
-
-  if(this.bubblegroup1.scale.x > 0){
-    this.bubblegroup1.scale.x = this.bubblegroup1.scale.y = this.bubblegroup1.scale.z -= .01;
-  }
-  else{
-    this.bubblegroup1.scale.x = this.bubblegroup1.scale.y = this.bubblegroup1.scale.z = 1;
-  }
-  if(this.bubblegroup2.scale.x > 0){
-    this.bubblegroup2.scale.x = this.bubblegroup2.scale.y = this.bubblegroup2.scale.z -= .008;
-  }
-  else{
-    this.bubblegroup2.scale.x = this.bubblegroup2.scale.y = this.bubblegroup2.scale.z = 1;
-  }
-  if(this.bubblegroup3.scale.x > 0){
-    this.bubblegroup3.scale.x = this.bubblegroup3.scale.y = this.bubblegroup3.scale.z -= .005;
-  }
-  else{
-    this.bubblegroup3.scale.x = this.bubblegroup3.scale.y = this.bubblegroup3.scale.z = 1;
-  }
+  this.threegroup.rotateOnAxis(this.coffeeRotVector, Math.PI/96);
 }
 
 function loop(){
