@@ -43,7 +43,6 @@ It is your responsibility to not change the git after the deadline for a couple 
   * squarefeet on GitHub had a later version of a particle engine; I borrowed the `initParticles()` function from its `activeMultiplier.html` code and adapted this such that the values corresponded to the values that I had assigned in the previous particle engine, but on a larger scale for our game.
 
 **POST-IMPLEMENTATION OBJECTIVES LIST**
-*
 
 **REFERENCES/CREDITS**
 * Online sources:
