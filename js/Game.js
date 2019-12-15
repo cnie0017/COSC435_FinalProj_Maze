@@ -444,8 +444,18 @@ function animatePowerups(delta){
   coffee.spin();
 }
 function animateDeer(delta){
-  box.walk(delta);
-
+  if(heldKeys.right){
+    if (!stunned){ box.walk(delta); }
+  }
+  if(heldKeys.left){
+    if (!stunned){ box.walk(delta); }
+  }
+  if(heldKeys.up){
+    if (!reverse & !stunned){ box.walk(delta); }
+  }
+  if(heldKeys.down){
+    if (!stunned){  box.walk(delta); }
+  }
   if(stunned == true){
     box.status = "stunned";
     if(box.status == "stunned"){
