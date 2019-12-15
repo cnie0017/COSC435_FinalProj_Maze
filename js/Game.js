@@ -180,26 +180,26 @@ var keys = {
     camera.position.x - playerSpeed;
     movements.push(new THREE.Vector3(box.threegroup.position.x - playerSpeed, box.threegroup.position.y, box.threegroup.position.z));
     box.threegroup.rotation.y = radians(180);
-    controls.target.copy(box.threegroup.position);
-    controls.update();
+    // controls.target.copy(box.threegroup.position);
+    // controls.update();
   },
   left: function(){
     movements.push(new THREE.Vector3(box.threegroup.position.x + playerSpeed, box.threegroup.position.y, box.threegroup.position.z));
     box.threegroup.rotation.y = radians(0);
-    controls.target.copy(box.threegroup.position);
-    controls.update();
+    // controls.target.copy(box.threegroup.position);
+    // controls.update();
   },
   down: function(){
     movements.push(new THREE.Vector3(box.threegroup.position.x, box.threegroup.position.y, box.threegroup.position.z - playerSpeed));
     box.threegroup.rotation.y = radians(90);
-    controls.target.copy(box.threegroup.position);
-    controls.update();
+    // controls.target.copy(box.threegroup.position);
+    // controls.update();
   },
   up: function(){
     movements.push(new THREE.Vector3(box.threegroup.position.x, box.threegroup.position.y, box.threegroup.position.z  + playerSpeed));
     box.threegroup.rotation.y = radians(270);
-    controls.target.copy(box.threegroup.position);
-    controls.update();
+    // controls.target.copy(box.threegroup.position);
+    // controls.update();
   }
 }
 
@@ -277,6 +277,8 @@ function move( location, destination, speed = playerSpeed ) {
       stopMovement();
       // Maybe move should return a boolean. True if completed, false if not.
     }
+    controls.target.copy(box.threegroup.position);
+    controls.update();
 }
 
 window.onresize = function () {
@@ -534,8 +536,8 @@ function studentPower(obj){
   box.threegroup.position.x = entranceX-100;
   box.threegroup.position.z = entranceZ - characterSize/2;
 
-  controls.target.copy( box.threegroup.position );
-  controls.update();
+  // controls.target.copy( box.threegroup.position );
+  // controls.update();
 }
 
 
