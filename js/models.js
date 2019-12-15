@@ -617,7 +617,7 @@ Deer = function() {
 
     let star1 = new THREE.Mesh(
       new THREE.OctahedronBufferGeometry( .2, 0 ),
-      starMat
+      this.starMat
     );
     let star1Half = star1.clone();
     star1.position.y = 3.5;
