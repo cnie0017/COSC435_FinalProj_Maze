@@ -143,6 +143,7 @@ var blueMat = new THREE.MeshLambertMaterial ({
 });
 var lightBrownMat = new THREE.MeshLambertMaterial ({
   color: 0xd2b48c,
+    // color: 0xcdb385,
   shading:THREE.FlatShading
 });
 var offWhiteMat = new THREE.MeshLambertMaterial ({
@@ -154,11 +155,12 @@ var lightGreyMat = new THREE.MeshLambertMaterial ({
   shading:THREE.FlatShading
 });
 var darkBrownMat = new THREE.MeshLambertMaterial ({
-  color: 0xa8551e,
+  // color: 0xa8551e,
+  color: 0x946c2b,
   shading:THREE.FlatShading
 });
 var maroonMat = new THREE.MeshLambertMaterial ({
-  color: 0x8f1b1b,
+  color: 0x821019,
   shading:THREE.FlatShading
 });
 var signMat = new THREE.MeshLambertMaterial ({
