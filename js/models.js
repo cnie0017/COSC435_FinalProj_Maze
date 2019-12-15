@@ -432,7 +432,7 @@ Coffee = function(){
 }
 
 Deer = function() {
-	
+
   this.starMat = new THREE.MeshLambertMaterial ({
     color: 0xffff99,
     shading:THREE.FlatShading,
@@ -702,7 +702,7 @@ Deer = function() {
     this.teargroup.add(tear2);
 
     this.threegroup.add(this.teargroup);
-  
+
   this.threegroup.position.y = 100;
   this.threegroup.scale.set(40,40,40);
 }
@@ -863,11 +863,13 @@ Deer.prototype.walk = function(delta){
   this.runningCycle += delta * globalSpeedRate * 3;
   this.runningCycle = this.runningCycle % (Math.PI*2);
   var t = this.runningCycle;
-
-  this.leggroup1.rotation.z = Math.sin(t)*Math.PI/16;
-  this.leggroup2.rotation.z = -Math.sin(t)*Math.PI/16;
-  this.leggroup3.rotation.z = Math.sin(t)*Math.PI/16;
-  this.leggroup4.rotation.z = -Math.sin(t)*Math.PI/16;
+  if (!stunned)
+  {
+    this.leggroup1.rotation.z = Math.sin(t)*Math.PI/16;
+    this.leggroup2.rotation.z = -Math.sin(t)*Math.PI/16;
+    this.leggroup3.rotation.z = Math.sin(t)*Math.PI/16;
+    this.leggroup4.rotation.z = -Math.sin(t)*Math.PI/16;
+  }
 
   this.tailgroup.rotation.x = Math.sin(t)*Math.PI/16;
 }

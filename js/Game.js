@@ -604,7 +604,7 @@ function goosePower(obj){
   // stun character
   obj.threegroup.position.set(0,-1000,0);
   stunned = true;
-  setTimeout(function(){ stunned = false; controls.enablePan = true; }, 5000);
+  setTimeout(function(){ stunned = false; }, 5000);
 }
 
 function canPower(obj){
