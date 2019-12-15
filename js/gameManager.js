@@ -39,9 +39,13 @@ var game = { //default
       size = this.size;
       //var selectedObject = scene.getObjectByName("tree");
       scene.remove(rotationPoint);
+      rotationPoint = new THREE.Object3D();
+      rotationPoint.position.set( 0, 0, 0 );
+      scene.add( rotationPoint );
+      scene.remove(maze);
       resetLevel();
    }
-}   
+}
 
    // exitLoc = (-300+exitZidx*distance, -300+exitXidx*distance)
    // if (deer collide with exitLoc){

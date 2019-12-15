@@ -1,4 +1,6 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:800);
+/* <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lobster" /> */
+@import url(https://fonts.googleapis.com/css?family=Lobster);
 
 body {
     overflow:hidden;
@@ -16,17 +18,25 @@ body {
   background: black;
   color:white;
   position: relative;
+  float: right;
   width: 100px;
+    text-align: center;
 }
 
+/* img {
+  position: absolute;
+} */
+
 #mapdiv {
-  position: relative;
-  /* bottom: 0; */
-  float: right;
+  position: absolute;
+  bottom: 0;
+  /* float: right; */
+  margin: 25px;
 }
 
 #bottom {
   bottom: 0;
+  right: 0;
   height: 500px;
 }
 
@@ -39,9 +49,23 @@ table {
   border-spacing: 0px;
 }
 
+#name {
+  /* background: green; */
+  margin-left: 36.25%;
+  margin-right: 36.25%;
+  color: white;
+  width: 25%;
+  position: relative;
+  /* float: left; */
+  font-family: Lobster;
+  font-size: 64px;
+  text-align: center;
+}
+
 .tree {
 
-  background: green;
+  /* background: green; */
+  background: #00471e;
 }
 
 .empty {
