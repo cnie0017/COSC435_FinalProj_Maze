@@ -560,7 +560,6 @@ function goosePower(obj){
   // stun character
   obj.threegroup.position.set(0,-1000,0);
   stunned = true;
-  controls.enablePan = false;
   setTimeout(function(){ stunned = false; controls.enablePan = true; }, 5000);
 }
 
@@ -568,20 +567,7 @@ function canPower(obj){
   // reverse keys temporarily
   obj.threegroup.position.set(0,-1000,0);
   reverse = true;
-  // controls.keys = {
-  //     LEFT: 39, //right arrow
-  //     UP: 40, // down arrow
-  //     RIGHT: 37, // left arrow
-  //     BOTTOM: 38 // up arrow
-  // };
-  setTimeout(function(){ reverse = false;
-  //     controls.keys = {
-  //     LEFT: 37, //left arrow
-  //     UP: 38, // up arrow
-  //     RIGHT: 39, // right arrow
-  //     BOTTOM: 40 // down arrow
-  // };
-  }, 5000);
+  setTimeout(function(){ reverse = false; }, 5000);
 }
 
 function studentPower(obj){
