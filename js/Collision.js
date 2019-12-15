@@ -2,6 +2,7 @@
 
 var collisions = [];
 var isPowerUpObjs = {};
+var stopped = false;
 
 /**
  * Calculates collision detection parameters.
@@ -30,6 +31,7 @@ function calculateCollisionPoints( mesh, scale, type = 'collision', powerUpObj )
  * Collision detection for every solid object.
  */
 function detectCollisions() {
+  stopped = false;
 
   var bounds = {
     xMin: box.threegroup.position.x - box.threegroup.scale.x / 2,
@@ -57,6 +59,8 @@ function detectCollisions() {
          ( bounds.zMin <= collisions[ index ].zMax && bounds.zMax >= collisions[ index ].zMin) ) {
         // We hit a solid object! Stop all movements.
         stopMovement();
+        stopped = true;
+        console.log(stopped);
 
         // Move the object in the clear. Detect the best direction to move.
         //TODO: stop jiggling/vibrating effect when

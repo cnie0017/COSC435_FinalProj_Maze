@@ -190,7 +190,7 @@ var keys = {
     // movements.push(new THREE.Vector3(box.threegroup.position.x - playerSpeed, box.threegroup.position.y, box.threegroup.position.z));
     box.threegroup.rotation.y = radians(180);
     controls.target.copy(box.threegroup.position);
-    if (movements != []){ camera.position.x -= playerSpeed; }
+    if (!stopped){ camera.position.x -= playerSpeed; }
     controls.update();
   },
   left: function(){
@@ -198,7 +198,7 @@ var keys = {
     // movements.push(new THREE.Vector3(box.threegroup.position.x + playerSpeed, box.threegroup.position.y, box.threegroup.position.z));
     box.threegroup.rotation.y = radians(0);
     controls.target.copy(box.threegroup.position);
-    camera.position.x += playerSpeed;
+    if (!stopped){ camera.position.x += playerSpeed; }
     controls.update();
   },
   down: function(){
@@ -206,7 +206,7 @@ var keys = {
     // movements.push(new THREE.Vector3(box.threegroup.position.x, box.threegroup.position.y, box.threegroup.position.z - playerSpeed));
     box.threegroup.rotation.y = radians(90);
     controls.target.copy(box.threegroup.position);
-    camera.position.z -= playerSpeed;
+    if (!stopped){ camera.position.z -= playerSpeed; }
     controls.update();
   },
   up: function(){
@@ -214,7 +214,7 @@ var keys = {
     // movements.push(new THREE.Vector3(box.threegroup.position.x, box.threegroup.position.y, box.threegroup.position.z  + playerSpeed));
     box.threegroup.rotation.y = radians(270);
     controls.target.copy(box.threegroup.position);
-    camera.position.z += playerSpeed;
+    if (!stopped){ camera.position.z += playerSpeed; }
     controls.update();
   }
 }
@@ -280,10 +280,12 @@ function updateMovement(){
   }
 }
 
+// var stopped = false;
 /**
  * Stop character movement.
  */
 function stopMovement() {
+  // stopped = true;
   movements = [];
 }
 
