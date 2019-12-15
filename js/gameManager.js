@@ -33,16 +33,18 @@ var game = { //default
       // this.levelSwitch = false;
       // this.level = new Level(n);
       console.log("IN GOTO");
-      this.levelSwitching = true;
+      this.levelSwitching = false;
       this.levelNum += 1;
       this.size += 4;
       size = this.size;
       //var selectedObject = scene.getObjectByName("tree");
+      //console.log("trees are",selectedObject);
       scene.remove(rotationPoint);
       rotationPoint = new THREE.Object3D();
       rotationPoint.position.set( 0, 0, 0 );
       scene.add( rotationPoint );
-      scene.remove(maze);
+      resetCollisions();
+      //scene.remove(selectedObject);
       resetLevel();
    }
 }

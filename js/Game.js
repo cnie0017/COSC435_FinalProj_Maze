@@ -40,12 +40,9 @@ var helper;
 var size = game.size;
 var maze, mazeMesh;
 var distance = 100,
-   entranceXidx = 1,
-   entranceZidx = game.size-1;
-   exitXidx = game.size-2, //fixed exit
-   exitZidx = 0,
-   entranceX = -300+(game.size-1)*100,
-   entranceZ = -200;
+    entranceZidx = 0,
+    entranceX = 100,
+    entranceZ = 0;
 
  var moveForward = false;
  var moveBackward = false;
@@ -86,6 +83,9 @@ function resetLevel(){
   console.log("size is",size);
   createMaze(size);
   createCharacter();
+  drawTable(size);
+  placePowerUps();
+
 }
 
 
@@ -456,23 +456,21 @@ function animateDeer(delta){
 }
 
 function CreateMazeMesh(maze) {
-	 console.log("size is",size);
+	 console.log("size is",maze.size);
 	 for (var i = 0; i < maze.size; i++) {
 		  for (var j = 0; j < maze.size; j++) {
 			  var mazeObj = maze[i][j];
 				if (mazeObj) {
-           if (i == entranceXidx && j==entranceZidx){//entrance
-            //entranceX = -300+(size-1)*100,
-            //entranceZ = -200;
-              createTree(-300+(maze.size-1)*100,entranceZ,blue);
+           if (i == maze.size-2 && j==0){//entrance
+              createTree(100,0,blue);
               maze[i][j-1] = true;
            }
-           else if (i == exitXidx && j == exitZidx){//exit
-             //exit location = (-300+exitZidx*distance, -300+exitXidx*distance)
-             createTree(-300+j*distance, -300+i*distance, yellow, "exit");
+           else if (i == 1 && j == maze.size-1){
+             //console.log("CREAING EXIT!");
+             createTree(100-j*distance, -100+(maze.size-1-i)*distance, yellow, "exit");
            }
            else{
-             createTree(-300+j*distance,-300+i*distance,green);
+             createTree(100-j*distance,-100+(maze.size-1-i)*distance,green);
            }
         }
       }
@@ -480,8 +478,9 @@ function CreateMazeMesh(maze) {
 }
 
 function createMaze(n) {
-  console.log(n);
+ // console.log(n);
   maze = generateMaze(n);
+  console.log(maze);
   mazeMesh = CreateMazeMesh(maze);
 }
 
@@ -540,13 +539,14 @@ function getDeerLocation() {
 function placePowerUp(powerup, type){
   let placed = false;
   while (!placed){
+    console.log("!!!!",size);
     let r1 = Math.floor(Math.random() * size);
     let r2 = Math.floor(Math.random() * size);
 
 
     if (!maze[r1][r2]){
-      powerup.threegroup.position.x = -300+r2*distance;
-      powerup.threegroup.position.z = -300+r1*distance;
+      powerup.threegroup.position.x = 100-r2*distance;
+      powerup.threegroup.position.z = -100+(size-1-r1)*distance;
 
       maze[r1][r2] = true;
 
@@ -615,8 +615,8 @@ function createCharacter() {
   box.threegroup.scale.z = characterSize;
   //box is always placed right next to entrance
   box.threegroup.position.y = characterSize * 2.5;
-  box.threegroup.position.x = entranceX-100;
-  box.threegroup.position.z = entranceZ - characterSize/2;
+  box.threegroup.position.x = 15;//entranceX-100;
+  box.threegroup.position.z = 0;//entranceZ - characterSize/2;
   box.threegroup.rotation.y = radians(180);
 
   rotationPoint.add( box.threegroup );
@@ -651,7 +651,8 @@ function createTree( posX, posZ, treeColor, type = "tree" ) {
   treeTop.position.set(posX, characterSize/2, posZ);
   treeTop.scale.x = treeTop.scale.y = treeTop.scale.z = 1;
   treeTop.rotation.y = randomRotateY;
-  scene.add( treeTop );
+  rotationPoint.add( treeTop );
+  //scene.add( treeTop );
 
 
   if (type == "tree") {

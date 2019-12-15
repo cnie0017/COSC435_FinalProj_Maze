@@ -27,6 +27,11 @@ function calculateCollisionPoints( mesh, scale, type = 'collision', powerUpObj )
   if (powerUpObj){ isPowerUpObjs[collisions.length-1] = powerUpObj; }
 }
 
+function resetCollisions(){
+  console.log("collisions resets to empty");
+  collisions = [];
+}
+
 /**
  * Collision detection for every solid object.
  */
