@@ -1,3 +1,4 @@
+
 /**
  * @file
  * The main scene.
@@ -18,6 +19,8 @@ var outlineSize = characterSize * 0.05;
 // Track all objects and collisions.
 var objects = [];
 
+var heldKeys = {right: false, up: false, down: false, left: false};
+
 // Track click intersects.
 // Set mouse and raycaster.
 var raycaster = new THREE.Raycaster();
@@ -26,7 +29,9 @@ var mouse = new THREE.Vector2();
 // Store movements.
 var movements = [];
 var visited;
-var playerSpeed = 15;
+// var playerSpeed = 15;
+var playerSpeed = 7;
+
 var bbox;
 var helper;
 //maze generation
@@ -144,6 +149,7 @@ function createScene(){
   controls.update();
 
   document.onkeydown = handleKeyDown;
+  document.onkeyup = handleKeyUp;
 
   // var axis = new THREE.AxesHelper(3000);
   // scene.add(axis);
@@ -178,53 +184,94 @@ function init() {
 var keys = {
   right: function(){
     camera.position.x - playerSpeed;
-    movements.push(new THREE.Vector3(box.threegroup.position.x - playerSpeed, box.threegroup.position.y, box.threegroup.position.z));
+    box.threegroup.position.x -= playerSpeed;
+    // movements.push(new THREE.Vector3(box.threegroup.position.x - playerSpeed, box.threegroup.position.y, box.threegroup.position.z));
     box.threegroup.rotation.y = radians(180);
-    // controls.target.copy(box.threegroup.position);
-    // controls.update();
+    controls.target.copy(box.threegroup.position);
+    controls.update();
   },
   left: function(){
-    movements.push(new THREE.Vector3(box.threegroup.position.x + playerSpeed, box.threegroup.position.y, box.threegroup.position.z));
+    box.threegroup.position.x += playerSpeed
+    // movements.push(new THREE.Vector3(box.threegroup.position.x + playerSpeed, box.threegroup.position.y, box.threegroup.position.z));
     box.threegroup.rotation.y = radians(0);
-    // controls.target.copy(box.threegroup.position);
-    // controls.update();
+    controls.target.copy(box.threegroup.position);
+    controls.update();
   },
   down: function(){
-    movements.push(new THREE.Vector3(box.threegroup.position.x, box.threegroup.position.y, box.threegroup.position.z - playerSpeed));
+    box.threegroup.position.z -= playerSpeed
+    // movements.push(new THREE.Vector3(box.threegroup.position.x, box.threegroup.position.y, box.threegroup.position.z - playerSpeed));
     box.threegroup.rotation.y = radians(90);
-    // controls.target.copy(box.threegroup.position);
-    // controls.update();
+    controls.target.copy(box.threegroup.position);
+    controls.update();
   },
   up: function(){
-    movements.push(new THREE.Vector3(box.threegroup.position.x, box.threegroup.position.y, box.threegroup.position.z  + playerSpeed));
+    box.threegroup.position.z  += playerSpeed
+    // movements.push(new THREE.Vector3(box.threegroup.position.x, box.threegroup.position.y, box.threegroup.position.z  + playerSpeed));
     box.threegroup.rotation.y = radians(270);
-    // controls.target.copy(box.threegroup.position);
-    // controls.update();
+    controls.target.copy(box.threegroup.position);
+    controls.update();
   }
 }
 
 
 function handleKeyDown(keyEvent){
 //https://javascript.info/keyboard-events
+if (keyEvent.key == "ArrowRight") {
+  heldKeys.right = true;
+}
+else if (keyEvent.key == "ArrowLeft") {
+  heldKeys.left = true;
+}
+
+if (keyEvent.key == "ArrowDown") {
+  heldKeys.down = true;
+}
+else if (keyEvent.key == "ArrowUp") {
+  heldKeys.up = true;
+}
+
+
+}
+
+//now it just notifies which keys are held
+function handleKeyUp(keyEvent){
+//https://javascript.info/keyboard-events
 
   if (keyEvent.key == "ArrowRight") {
-    if (!reverse & !stunned){ keys.right.call(); }
-    else if (reverse){ keys.left.call(); }
+    heldKeys.right = false;
   }
   else if (keyEvent.key == "ArrowLeft") {
-    if (!reverse & !stunned){ keys.left.call(); }
-    else if (reverse){ keys.right.call(); }
+    heldKeys.left = false;
   }
 
   if (keyEvent.key == "ArrowDown") {
-    if (!reverse & !stunned){ keys.down.call(); }
-    else if (reverse){ keys.up.call(); }
+    heldKeys.down = false;
   }
   else if (keyEvent.key == "ArrowUp") {
+    heldKeys.up = false;
+  }
+
+}
+
+//This checks each update frame what is held, allows for smooth starts
+//javascript just keydown and then move has a short lag.
+function updateMovement(){
+  if(heldKeys.right){
+    if (!reverse & !stunned){ keys.right.call(); }
+    else if (reverse){ keys.left.call(); }
+  }
+  if(heldKeys.left){
+    if (!reverse & !stunned){ keys.left.call(); }
+    else if (reverse){ keys.right.call(); }
+  }
+  if(heldKeys.up){
     if (!reverse & !stunned){ keys.up.call(); }
     else if (reverse){ keys.down.call(); }
   }
-
+  if(heldKeys.down){
+    if (!reverse & !stunned){ keys.down.call(); }
+    else if (reverse){ keys.up.call(); }
+  }
 }
 
 /**
@@ -277,8 +324,6 @@ function move( location, destination, speed = playerSpeed ) {
       stopMovement();
       // Maybe move should return a boolean. True if completed, false if not.
     }
-    controls.target.copy(box.threegroup.position);
-    controls.update();
 }
 
 window.onresize = function () {
@@ -299,6 +344,8 @@ function update() {
     game.goToLevel(game.targetLevel);
 
   }
+
+  updateMovement();
  camera.updateProjectionMatrix();
  // drawTable(size);
 }
@@ -536,8 +583,8 @@ function studentPower(obj){
   box.threegroup.position.x = entranceX-100;
   box.threegroup.position.z = entranceZ - characterSize/2;
 
-  // controls.target.copy( box.threegroup.position );
-  // controls.update();
+  controls.target.copy( box.threegroup.position );
+  controls.update();
 }
 
 
