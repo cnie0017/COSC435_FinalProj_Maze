@@ -403,6 +403,8 @@ function animate() {
 
   var delta = clock.getDelta();
   animatePlayer(delta);
+  animateDeer(delta);
+  animatePowerups(delta);
   // box.updateMatrixWorld( true );
   // bbox.copy( box.geometry.boundingBox ).applyMatrix4( box.matrixWorld)
 }
@@ -433,6 +435,36 @@ function animatePlayer(delta) {
   // controls.getObject().translateZ(playerVelocity.z * delta);
   controls.object.translateX(playerVelocity.x * delta);
   controls.object.translateZ(playerVelocity.z * delta);
+}
+function animatePowerups(delta){
+  goose.walk(delta);
+  student.walk(delta);
+  can.spin();
+  pclock.spin();
+  coffee.spin();
+}
+function animateDeer(delta){
+  box.walk(delta);
+
+  if(stunned == true){
+    box.status = "stunned";
+    if(box.status == "stunned"){
+      box.starMat.opacity = 1.0;
+      box.stunned();
+    }
+  }
+  else if(reverse == true){
+    box.status = "drunk";
+    if(box.status == "drunk"){
+      box.bubbleMat.opacity = 1.0;
+      box.drunk(delta);
+    }
+  }
+  else{
+    box.status == "normal";
+    box.bubbleMat.opacity = 0.0;
+    box.starMat.opacity = 0.0;
+  }
 }
 
 function CreateMazeMesh(maze) {
