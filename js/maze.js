@@ -1,5 +1,8 @@
-function generateMaze(levelNum) {
-    var size = 11+(levelNum -1)*4;
+function generateMaze(size) {
+    //var size = [11,15,19];
+    // console.log(levelNum-1);
+    // var size = sizes[levelNum-1];
+    // console.log("size is", size);
     function iterate(maze, x, y) {
         maze[x][y] = false;
         while(true) {
@@ -27,8 +30,10 @@ function generateMaze(levelNum) {
     console.log(size);
 
     // Initialize the maze.
+    console.log(size);
     var maze = new Array(size);
     maze.size = size;
+    console.log("maze size is", maze.size);
     for(var i = 0; i < size; i++) {
         maze[i] = new Array(size);
         for (var j = 0; j < size; j++) {

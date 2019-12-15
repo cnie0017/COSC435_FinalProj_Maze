@@ -49,7 +49,10 @@ function detectCollisions() {
          ( bounds.yMin <= collisions[ index ].yMax && bounds.yMax >= collisions[ index ].yMin) &&
          ( bounds.zMin <= collisions[ index ].zMax && bounds.zMax >= collisions[ index ].zMin) ) {
            console.log("Level up!");
-           game.levelSwitch = true;
+           if (!game.levelSwitching){
+            game.goToLevel(game.levelNum+1);
+           }
+           //game.levelSwitch = true;
          }
     }
     else if (collisions[ index ].type == 'collision' ) {

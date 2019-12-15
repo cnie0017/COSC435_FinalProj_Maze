@@ -1,11 +1,12 @@
 //An object to stores the information of the current game
 
 var game = { //default
-
-   level:new Level(1),
+   levelNum:1,
+   //level:new Level(this.levelNum),
+   size: 11,
    paused: false,
    started: false,
-   levelSwitch:false,
+   levelSwitching:false,
    //targetLevel:0,
    timeleft:100,
 
@@ -23,14 +24,22 @@ var game = { //default
    },
 
    goToLevel:function(n){
-      if (this.level > 2){//default: 3 levels in total
-         //game ends, show ending page
-      }
-      else{
-         //this.targetLevel = n
-      }
-      this.levelSwitch = false;
-      this.level = new Level(n);
+      // if (this.level > 2){//default: 3 levels in total
+      //    //game ends, show ending page
+      // }
+      // else{
+      //    //this.targetLevel = n
+      // }
+      // this.levelSwitch = false;
+      // this.level = new Level(n);
+      console.log("IN GOTO");
+      this.levelSwitching = true;
+      this.levelNum += 1;
+      this.size += 4;
+      size = this.size;
+      //var selectedObject = scene.getObjectByName("tree");
+      scene.remove(rotationPoint);
+      resetLevel();
    }
 }   
 
