@@ -43,7 +43,13 @@ It is your responsibility to not change the git after the deadline for a couple 
   * squarefeet on GitHub had a later version of a particle engine; I borrowed the `initParticles()` function from its `activeMultiplier.html` code and adapted this such that the values corresponded to the values that I had assigned in the previous particle engine, but on a larger scale for our game.
 
 **POST-IMPLEMENTATION OBJECTIVES LIST**
-* Clock power-up was changed to pause the timer rather than add time to it, as this made much more sense with the use of the `easytimer.js` library
+* Power-Ups
+  * Clock power-up was changed to pause the timer rather than add time to it, as this made much more sense with the use of the `easytimer.js` library and its built-in `pause()` function.
+  * Student enemy was changed to return player to the entrance of the map rather than randomly relocate, as we intended this to be an enemy and a random relocation may have helped the player get closer to the exit.
+* GUI Controls
+  * GUI controls to toggle particle effects, collisions, and OrbitControls were useful to us during the development and testing phase, but we decided not to include these in our final project.
+  * Particle effects are part of the difficulty of the level, so we wanted to keep these on.
+  * The GUI also cluttered the screen due to the presence of the map and timer.
 
 **REFERENCES/CREDITS**
 * Online sources:
