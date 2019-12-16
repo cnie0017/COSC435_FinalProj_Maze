@@ -21,7 +21,7 @@ var game = { //default
          //this.levelSwitching = false;
          this.levelNum += 1;
          this.size += 4;
-         this.timer += 10;
+         this.timer += 20;
          size = this.size;
          if (this.levelNum == 2) {
            fall();

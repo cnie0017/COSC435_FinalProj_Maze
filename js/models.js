@@ -740,7 +740,7 @@ function createSign(){
 Deer.prototype.walk = function(delta){
   this.runningCycle += delta * (globalSpeedRate + 6) * 3;
   this.runningCycle = this.runningCycle % (Math.PI*2);
-  var t = this.runningCycle + 500;
+  var t = this.runningCycle;
   if (!stunned)
   {
     this.leggroup1.rotation.z = Math.sin(t)*Math.PI/16;
