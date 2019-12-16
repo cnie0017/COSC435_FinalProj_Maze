@@ -54,9 +54,10 @@ It is your responsibility to not change the git after the deadline for a couple 
 **REFERENCES/CREDITS**
 * Online sources:
   * General three.js help (most heavily used source): https://threejs.org/docs/
-  * Particle Effects:
+  * Particle Effects - *(objective 4)*
     * https://github.com/squarefeet/ShaderParticleEngine
     * https://stemkoski.github.io/Three.js/Particle-Engine.html
-  * Power-Up Implementation (delay settings back to normal): https://www.w3schools.com/jsref/met_win_settimeout.asp
+  * Power-Up Implementation - *(objective 6)*
+    * https://www.w3schools.com/jsref/met_win_settimeout.asp (delay settings back to normal)
 * Fellow classmates:
   * Leo Ascenzi (help with camera)
