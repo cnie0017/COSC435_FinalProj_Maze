@@ -204,7 +204,6 @@ Goose = function(){
   this.frontBodyGoose.position.y = 79;
   this.frontBodyGoose.position.x = 50;
   this.frontBodyGoose.rotation.x = Math.PI/2;
-  //this.frontBodyGoose.rotation.y = ((4 * Math.PI)/6);
 
   this.threegroup.add(this.bodyGoose);
   this.threegroup.add(this.tailGoose);
@@ -393,8 +392,6 @@ Can = function(){
   let topGeom = new THREE.CylinderBufferGeometry(38, 38, 1, 32);
   this.top = new THREE.Mesh(topGeom, lightGreyMat);
   this.top.position.y = 180;
-
-  //add tab thingy
 
   this.base.add(this.middleBase);
   this.base.add(this.bottomBase);
@@ -941,6 +938,23 @@ Deer.prototype.lose = function(){
   else{
     this.teargroup.position.y = .5;
   }
+}
+
+Deer.prototype.win = function(){
+
+  this.runningCycle += delta * globalSpeedRate * 3;
+  this.runningCycle = this.runningCycle % (Math.PI*2);
+  var t = this.runningCycle;
+
+  this.threegroup.rotation.z = Math.sin(t)*Math.PI/16;
+  this.leggroup1.rotation.z = -Math.sin(t)*Math.PI/16;
+  this.leggroup2.rotation.z = -Math.sin(t)*Math.PI/16;
+  this.leggroup3.rotation.z = Math.sin(t)*Math.PI/12;
+  this.leggroup4.rotation.z = Math.sin(t)*Math.PI/12;
+  this.headgroup.rotation.z = Math.sin(t)*Math.PI/12;
+
+  this.tailgroup.rotation.x = Math.cos(t)*Math.PI/16;
+
 }
 
 Goose.prototype.walk = function(delta) {
