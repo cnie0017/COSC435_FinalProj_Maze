@@ -5,6 +5,7 @@
 
 body {
     overflow:hidden;
+    margin: 0px;
 }
 
 #world {
@@ -20,13 +21,15 @@ body {
   color:white;
   position: relative;
   float: right;
-  width: 100px;
+  /* width: 100px; */
   text-align: center;
   font-size: 50;
   font-family: Oswald;
-  height: 75px;
-  width: 150px;
+  /* height: 75px; */
+  /* width: 150px; */
   margin: 25px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .hidden {
@@ -36,6 +39,7 @@ body {
 /* img {
   position: absolute;
 } */
+
 
 #mapdiv {
   position: absolute;
@@ -59,10 +63,11 @@ table {
   border-spacing: 0px;
 }
 
-#name {
+#name, #author, #info, #replay {
   /* background: green; */
   margin-left: 36.25%;
   margin-right: 36.25%;
+  margin-top: -5%;
   color: white;
   width: 25%;
   position: relative;
@@ -71,6 +76,30 @@ table {
   font-size: 64px;
 
   text-align: center;
+}
+
+#win {
+  /* background: green; */
+  margin-left: 36.25%;
+  margin-right: 36.25%;
+  color: rgb(197, 31, 31);
+  width: 25%;
+  position: relative;
+  font-family: Lobster;
+  font-size: 76px;
+  text-align: center;
+}
+
+#level {
+  color: white;
+  background:  #00471e;
+  font-size: 30px;
+  position: relative;
+	display: inline-block;
+	padding: 0 1em;
+    margin: 25px;
+	vertical-align: top;
+  font-family: Oswald;
 }
 
 .tree {

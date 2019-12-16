@@ -3,24 +3,22 @@
 var game = { //default
    levelNum:1,
    size: 11,
-   paused: false,
-   started: false,
    levelSwitching:false,
-   timer:40,
+   timer:20,
 
 
    goToNextLevel:function(){
-      console.log(this.levelNum);
       if (this.levelNum > 2){//default: 3 levels in total
          //game ends, show ending page
-         console.log("END");
          clearScene(true);
          clearTable();
          hideTimer();
-         endGameDisplay();
+         //clearScene(true);
+         this.resetGame();
+         endGameDisplay(true);
       }
       else{// go to next level
-         this.levelSwitching = false;
+         //this.levelSwitching = false;
          this.levelNum += 1;
          this.size += 4;
          this.timer += 10;
@@ -34,6 +32,11 @@ var game = { //default
 
          resetLevel();
       }
-
+   },
+   resetGame:function(){
+      this.levelNum = 1;
+      this.size = 11;
+      this.levelSwitching = false;
+      this.timer = 20;
    }
 }

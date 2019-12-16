@@ -16,8 +16,7 @@ var camera, // We need a camera
 var characterSize = 25;
 var treeSize = 50;
 var outlineSize = characterSize * 0.05;
-// Track all objects and collisions.
-var objects = [];
+var light1, light2,light3;
 
 var heldKeys = {right: false, up: false, down: false, left: false};
 
@@ -39,7 +38,7 @@ var helper;
 
 var size = game.size;
 var maze, mazeMesh;
-var distance = 100,
+var distance = 80,
     entranceZidx = 0,
     entranceX = 100,
     entranceZ = 0;
@@ -153,17 +152,30 @@ function createScene(){
 
 function createLights(){
   // Ambient lights.
-  var ambient = new THREE.AmbientLight( 0xffffff );
-  scene.add( ambient );
+  light1 = new THREE.AmbientLight( 0xffffff );
+  scene.add( light1 );
+  // light1.intensity = .1;
+
 
   // var directional = new THREE.DirectionalLight('rgb(255,255,255)', 1);
   // directional.position.set(5, 3, 7);
   // directional.lookAt(scene.position);
   // scene.add( directional );
 
-  // Add hemisphere lighting.
-  var hemisphereLight = new THREE.HemisphereLight( 0xdddddd, 0x000000, 0.5 );
-  scene.add( hemisphereLight );
+  //Add hemisphere lighting.
+  light2 = new THREE.HemisphereLight( 0xdddddd, 0x000000, 0.5 );
+  scene.add( light2 );
+  // light3 = new THREE.PointLight(0xffffff, .7);
+  // light3.intensity = 1;
+  // light3.position.set(0,15,20);
+  // scene.add(light3);
+}
+
+function hideTexts(){
+  document.getElementById("win").style.display = "none";
+  document.getElementById("author").style.display = "none";
+  document.getElementById("info").style.display = "none";
+  document.getElementById("replay").style.display = "none";
 }
 
 function fall() {
@@ -176,9 +188,10 @@ function fall() {
 function winter() {
   treeColor = 0xa4ddea;
   floorColor = 0x71d1d1;
-  emitter.disable();
+  // emitter.disable();
+  scene.remove(particleGroup.mesh);
   leavesEnabled = false;
-  initParticles('snow');
+  // initParticles('snow');
   snowEnabled = true;
 }
 
@@ -187,6 +200,8 @@ function winter() {
  * Initializer function.
  */
 function init() {
+  document.getElementById("level").innerHTML = "Level: "+game.levelNum;
+  hideTexts();
   createScene();
   createLights();
   setTimer(game.timer);
@@ -352,9 +367,18 @@ function radians( degrees ) {
  * Updates to apply to the scene while running.
  */
 function update() {
+  // //update light3
+  // light3.position.set(box.position);
+  // if (game.levelSwitching){
+  //   while (light3.intensity != 1){
+  //     light3.intensity += 0.1;
+  //     //light2.intensity += 0.1;
+  //     // * (0.0 - light1.intensity);
+  //   }
+  // }
 
   updateMovement();
- camera.updateProjectionMatrix();
+  camera.updateProjectionMatrix();
  // drawTable(size);
 }
 
@@ -470,7 +494,6 @@ function animateDeer(delta){
 }
 
 function CreateMazeMesh(maze) {
-	 console.log("size is",maze.size);
 	 for (var i = 0; i < maze.size; i++) {
 		  for (var j = 0; j < maze.size; j++) {
 			  var mazeObj = maze[i][j];
@@ -480,7 +503,6 @@ function CreateMazeMesh(maze) {
               maze[i][j-1] = true;
            }
            else if (i == 1 && j == maze.size-1){
-             //console.log("CREAING EXIT!");
              createTree(100-j*distance, -100+(maze.size-1-i)*distance, yellow, "exit");
            }
            else{
@@ -492,9 +514,8 @@ function CreateMazeMesh(maze) {
 }
 
 function createMaze(n) {
- // console.log(n);
   maze = generateMaze(n);
-  console.log(maze);
+  //console.log(maze);
   mazeMesh = CreateMazeMesh(maze);
 }
 
@@ -641,7 +662,7 @@ function createFloor() {
   plane.rotation.x = -1 * Math.PI/2;
   plane.position.y = 0;
   scene.add( plane );
-  objects.push( plane );
+  //objects.push( plane );
 }
 
 
@@ -673,46 +694,6 @@ function createTree( posX, posZ, treeColor, type = "tree" ) {
 }
 
 
-gui = new dat.GUI();
-
-parameters =
-{
-	x: 0, y: 30, z: 0,
-	color:  "#7a6f50", // color (change "#" to "0x")
-	colorA: "#000000", // color (change "#" to "0x")
-	colorE: "#000033", // color (change "#" to "0x")
-	colorS: "#ffff00", // color (change "#" to "0x")
-			shininess: 30,
-	opacity: 1,
-	visible: true,
-	material: "Phong",
-  collisions: true,
-  snow: false,
-  leaves: false,
-  controls: true,
-	reset: function() { resetSphere() }
-};
-
-var collisionsDetected = gui.add(parameters, 'collisions').name('Collisions Enabled').listen();
-var toggleControls = gui.add(parameters, 'controls').name('OrbitControls Enabled').listen();
-var snow = gui.add(parameters, 'snow').name('Snow Enabled').listen();
-var leaves = gui.add(parameters, 'leaves').name('Leaves Enabled').listen();
-
-collisionsDetected.onChange(function(value)
-{   enableCollisions = !enableCollisions; });
-
-snow.onChange(function(value)
-{
-  snowEnabled = !snowEnabled;
-  initParticles('snow');
- });
-
-leaves.onChange(function(value)
-{
-  leavesEnabled = !leavesEnabled;
-  initParticles('leaves');
-})
-
 
 /**------------------------------------Level Switch----------------------- */
 function resetLevel(){
@@ -721,19 +702,27 @@ function resetLevel(){
   resetCollisions();
 
   //set new maze
+  document.getElementById("level").innerHTML = "Level: "+game.levelNum;
   clearTable();
   createFloor();
   createMaze(size);
   createCharacter();
   drawTable(size);
   placePowerUps();
+  resetCamera();
 
-  //reset control and camera
+
+  game.levelSwitching = false;
+}
+
+function resetCamera(){
+  // reset camera to player position
   controls.target.copy( box.threegroup.position );
   camera.position.z = entranceZ-400;
   camera.position.y = 500;
   camera.position.x = entranceX-100;
   controls.update();
+
 }
 
 function resetRotationPoint(){
@@ -744,6 +733,7 @@ function resetRotationPoint(){
 }
 
 
+
 function clearScene(endGame){
   if (endGame){
     while (scene.children.length != 0){
@@ -751,61 +741,32 @@ function clearScene(endGame){
     }
   }
   scene.remove(rotationPoint);
-
-
 }
 
 function endGameDisplay(win){
   if (win){
     //show texts
+
+    document.getElementById("win").style.display = "block";
+    document.getElementById("author").style.display = "block";
+    document.getElementById("info").style.display = "block";
+    var replay = document.getElementById("replay");
+    replay.style.display = "block";
+    replay.onclick = function(){
+      console.log("replay");
+      hideTexts();
+      resetLevel();
+    }
+    // if (replay.clicked == true){
+    //   console.log("replay");
+    //   return false;
+    //   init();
+    // }
   }
   else{
     //lose
+    //youLost.style.display="block";
   }
+  //replayMessage.style.display="block";
 
 }
-
-// gui = new dat.GUI();
-//
-// parameters =
-// {
-// 	x: 0, y: 30, z: 0,
-// 	color:  "#7a6f50", // color (change "#" to "0x")
-// 	colorA: "#000000", // color (change "#" to "0x")
-// 	colorE: "#000033", // color (change "#" to "0x")
-// 	colorS: "#ffff00", // color (change "#" to "0x")
-// 			shininess: 30,
-// 	opacity: 1,
-// 	visible: true,
-// 	material: "Phong",
-//   collisions: true,
-//   snow: false,
-//   leaves: false,
-//   controls: true,
-// 	reset: function() { resetSphere() }
-// };
-//
-// // var shapeColor = gui.addColor( parameters, 'color' ).name('Color (Diffuse)').listen();
-// var collisionsDetected = gui.add(parameters, 'collisions').name('Collisions Enabled').listen();
-// var toggleControls = gui.add(parameters, 'controls').name('OrbitControls Enabled').listen();
-// // shapeColor.onChange(function(value) // onFinishChange
-// // {   box.material.color.setHex( value.replace("#", "0x") );   });
-// var snow = gui.add(parameters, 'snow').name('Snow Enabled').listen();
-// var leaves = gui.add(parameters, 'leaves').name('Leaves Enabled').listen();
-//
-// collisionsDetected.onChange(function(value)
-// {   enableCollisions = !enableCollisions; });
-//
-// snow.onChange(function(value)
-// {
-//   snowEnabled = !snowEnabled;
-//   console.log(snowEnabled);
-//   initParticles('snow');
-//  });
-//
-// leaves.onChange(function(value)
-// {
-//   leavesEnabled = !leavesEnabled;
-//   console.log(leavesEnabled);
-//   initParticles('leaves');
-// })

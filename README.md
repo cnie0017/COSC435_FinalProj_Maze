@@ -42,6 +42,14 @@ It is your responsibility to not change the git after the deadline for a couple 
     * However, this version of particle effects was not compatible with the latest version of three.js
   * squarefeet on GitHub had a later version of a particle engine; I borrowed the `initParticles()` function from its `activeMultiplier.html` code and adapted this such that the values corresponded to the values that I had assigned in the previous particle engine, but on a larger scale for our game.
 
+*Bec*
+* Collisions
+  *Using the tutorial at http://www.bryanjones.us/article/basic-threejs-game-tutorial-part-5-collision-detection as a guide, I implemented collisions between the deer, the trees, and the powerups. For each obect other than the deer, its x and z bounds are encapsulated in an object which is pushed to a collisions array. Each time render is called, the deer's bounds are compared to each object in the collisions array. These objects also have a type: they are either a tree or a powerup. Based on which type an object is, if a deer collides with it, it is either pushed back to stay in bounds, or calls a powerup function.
+* User Interface (UI)
+  * I added both a timer and a maze to the UI. The timer uses EasyTimer.js to count down from a given time. The maze is an HTML table based off of Alex's maze. Each cell is filled with a different color based on whether or not there is a tree at that location. I also implemented color changes between levels to give the user an aesthetically pleasing experience.
+
+
+
 **POST-IMPLEMENTATION OBJECTIVES LIST**
 * Power-Ups
   * Clock power-up was changed to pause the timer rather than add time to it, as this made much more sense with the use of the `easytimer.js` library and its built-in `pause()` function.
@@ -59,5 +67,7 @@ It is your responsibility to not change the git after the deadline for a couple 
     * https://stemkoski.github.io/Three.js/Particle-Engine.html
   * Power-Up Implementation - *(objective 6)*
     * https://www.w3schools.com/jsref/met_win_settimeout.asp (delay settings back to normal)
+  * Collisions: http://www.bryanjones.us/article/basic-threejs-game-tutorial-part-5-collision-detection
+  * Timer: https://albert-gonzalez.github.io/easytimer.js/
 * Fellow classmates:
   * Leo Ascenzi (help with camera)
