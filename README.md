@@ -47,10 +47,10 @@
   * Created animations for the deer, goose, students, and powerups. I made walk animations for the deer, goose, and student, spin animations for the powerups, as well as animations for when the deer is stunned or drunk, and for when the player wins and loses.
   * All animation functions were created in cycles to be called in the loop to animate indefinitely.
   * Walking functions were created using rotations and trigonometric functions to allow geometries to rotate back and forth.
-   * Each walking animation is unique but using the same speed through the globalspeedrate variable.
+    * Each walking animation is unique but using the same speed through the globalspeedrate variable.
   * Spin functions for the powerups used Vector3 variables to allow the powerups to rotate on an axis.
   * Deer powerup functions created either stars above the Deer’s head which span in a circle, or bubbles above the Deer, which shrank and popped.
-   * The models for these animations (the stars and bubbles) are part of the deer model, but are transparent. When interacting with a powerup, these the opacity of these models are changed and the animation for each (spinning for the stars and rotating and decrease in scale for the bubbles) are called, thus allowing for animations when interacting with powerups.
+    * The models for these animations (the stars and bubbles) are part of the deer model, but are transparent. When interacting with a powerup, these the opacity of these models are changed and the animation for each (spinning for the stars and rotating and decrease in scale for the bubbles) are called, thus allowing for animations when interacting with powerups.
 
 **POST-IMPLEMENTATION OBJECTIVES LIST**
 * Power-Ups
