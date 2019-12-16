@@ -1,16 +1,5 @@
 # COSC435_FinalProj_Maze
 
-make sure to include:
-List of references updated: all the sources you used, working URL, with indication for which objective numbers you use the code from the tutorial, github source
-Post-implementation objectives list (keep the one we agreed on) but have another
-one if needed to highlight and explain another technique you used to solve the objective differently. Make clear how your initial choice fell short and why your alternate initiative
-may be satisfactory
-Also indicate
-which browser to use to run your project
-which keys activate which features, mouse motion activates object, camera, hits and so on
-where to download your entire code
-It is your responsibility to not change the git after the deadline for a couple of week. (Use another branch)
-
 **OUR GAME: Colgate Darwin Thinking Path Maze**
 * Code can be downloaded at https://github.com/zhua0017/COSC435_FinalProj_Maze
 * Chrome browser on a localhost was predominantly used to run this project
@@ -44,10 +33,9 @@ It is your responsibility to not change the git after the deadline for a couple 
 
 *Bec*
 * Collisions
-  *Using the tutorial at http://www.bryanjones.us/article/basic-threejs-game-tutorial-part-5-collision-detection as a guide, I implemented collisions between the deer, the trees, and the powerups. For each obect other than the deer, its x and z bounds are encapsulated in an object which is pushed to a collisions array. Each time render is called, the deer's bounds are compared to each object in the collisions array. These objects also have a type: they are either a tree or a powerup. Based on which type an object is, if a deer collides with it, it is either pushed back to stay in bounds, or calls a powerup function.
+  * Using the tutorial at http://www.bryanjones.us/article/basic-threejs-game-tutorial-part-5-collision-detection as a guide, I implemented collisions between the deer, the trees, and the powerups. For each obect other than the deer, its x and z bounds are encapsulated in an object which is pushed to a collisions array. Each time render is called, the deer's bounds are compared to each object in the collisions array. These objects also have a type: they are either a tree or a powerup. Based on which type an object is, if a deer collides with it, it is either pushed back to stay in bounds, or calls a powerup function.
 * User Interface (UI)
   * I added both a timer and a maze to the UI. The timer uses EasyTimer.js to count down from a given time. The maze is an HTML table based off of Alex's maze. Each cell is filled with a different color based on whether or not there is a tree at that location. I also implemented color changes between levels to give the user an aesthetically pleasing experience.
-
 
 
 **POST-IMPLEMENTATION OBJECTIVES LIST**
@@ -67,7 +55,9 @@ It is your responsibility to not change the git after the deadline for a couple 
     * https://stemkoski.github.io/Three.js/Particle-Engine.html
   * Power-Up Implementation - *(objective 6)*
     * https://www.w3schools.com/jsref/met_win_settimeout.asp (delay settings back to normal)
-  * Collisions: http://www.bryanjones.us/article/basic-threejs-game-tutorial-part-5-collision-detection
-  * Timer: https://albert-gonzalez.github.io/easytimer.js/
+  * Collisions - *(objective 5)*
+    * http://www.bryanjones.us/article/basic-threejs-game-tutorial-part-5-collision-detection
+  * Timer - *(objective 6)*
+    * https://albert-gonzalez.github.io/easytimer.js/
 * Fellow classmates:
   * Leo Ascenzi (help with camera)
