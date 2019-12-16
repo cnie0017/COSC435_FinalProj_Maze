@@ -75,32 +75,6 @@ var blue = 0x2194ce;
 init();
 animate();
 
-<<<<<<< HEAD
-
-=======
-function resetLevel(){
-  //size +=2;
-  //size = game.size;//update size
-  console.log("In reset");
-  console.log("game.size is",game.size);
-  console.log("size is",size);
-  createMaze(size);
-  createCharacter();
-  drawTable(size);
-  placePowerUps();
-  resetCamera();
-
-}
-
-function resetCamera(){
-  // reset camera to player position
-  controls.target.copy( box.threegroup.position );
-  camera.position.z = entranceZ-400;
-  camera.position.y = 500;
-  camera.position.x = entranceX-100;
-  controls.update();
-}
->>>>>>> b31109abe5ead5987109dbb43983556b9f413c3a
 
 function createScene(){
   // Build the container
