@@ -61,7 +61,8 @@ var distance = 100,
  var snowEnabled = false;
  var leavesEnabled = false;
 
- var powerUps = [];
+ var powerUpsWalk = [];
+ var powerUpsSpin = [];
  var numPowers = 1;
 
 //tree
@@ -453,11 +454,12 @@ function animatePlayer(delta) {
 }
 
 function animatePowerups(delta){
-  goose.walk(delta);
-  student.walk(delta);
-  can.spin();
-  pclock.spin();
-  coffee.spin();
+    for(i=0; i<powerUpsWalk.length; i++){
+      powerUpsWalk[i].walk(delta);
+    }
+    for(i=0; i<powerUpsSpin.length; i++){
+      powerUpsSpin[i].spin();
+    }
 }
 
 function animateDeer(delta){
@@ -527,14 +529,14 @@ function placePowerUps(iterations=1){
     pclock = new Clock();
     pclock.threegroup.scale.set(0.35,0.35,0.35);
     pclock.threegroup.position.y = 40;
-    powerUps.push(pclock);
+    powerUpsSpin.push(pclock);
     placePowerUp(pclock, "clock");
 
     //coffee
     coffee = new Coffee();
     coffee.threegroup.scale.set(0.4,0.4,0.4);
     coffee.threegroup.position.y = 10;
-    powerUps.push(coffee);
+    powerUpsSpin.push(coffee);
     placePowerUp(coffee, "coffee");
 
     // POWER DOWNS
@@ -543,20 +545,20 @@ function placePowerUps(iterations=1){
     goose = new Goose();
     goose.threegroup.scale.set(0.3,0.3,0.3);
     goose.threegroup.position.y = 10;
-    powerUps.push(goose);
+    powerUpsWalk.push(goose);
     placePowerUp(goose, "goose");
 
     //can
     can = new Can();
     can.threegroup.scale.set(0.4,0.4,0.4);
     can.threegroup.position.y = 10;
-    powerUps.push(can);
+    powerUpsSpin.push(can);
     placePowerUp(can, "can");
 
     //student
     student = new Student();
     student.threegroup.scale.set(0.3,0.3,0.3);
-    powerUps.push(student);
+    powerUpsWalk.push(student);
     placePowerUp(student, "student");
   }
 }
