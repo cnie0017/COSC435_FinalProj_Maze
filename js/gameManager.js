@@ -20,6 +20,13 @@ var game = { //default
          this.size += 4;
          this.timer += 10;
          size = this.size;
+         if (this.levelNum == 2) {
+           fall();
+         }
+         else if (this.levelNum == 3) {
+           winter();
+         }
+
          resetLevel();
       }
    },
@@ -30,4 +37,3 @@ var game = { //default
       this.timer = 20;
    }
 }
-

@@ -1,121 +1,5 @@
-//THREEJS RELATED VARIABLES
 
-var scene,
-    camera,
-    controls,
-    fieldOfView,
-    aspectRatio,
-    nearPlane,
-    farPlane,
-    shadowLight,
-    backLight,
-    light,
-    renderer,
-    container,
-    clock;
-
-//SCENE
-var floor, globalSpeedRate = 1;
-
-//SCREEN VARIABLES
-
-var HEIGHT,
-  	WIDTH,
-    windowHalfX,
-  	windowHalfY,
-    mousePos = {x:0,y:0};
-
-
-//INIT THREE JS, SCREEN AND MOUSE EVENTS
-
-function init(){
-  scene = new THREE.Scene();
-  HEIGHT = window.innerHeight;
-  WIDTH = window.innerWidth;
-  aspectRatio = WIDTH / HEIGHT;
-  fieldOfView = 60;
-  nearPlane = 1;
-  farPlane = 2000;
-  camera = new THREE.PerspectiveCamera(
-    fieldOfView,
-    aspectRatio,
-    nearPlane,
-    farPlane);
-  camera.position.x = -300;
-  camera.position.z = 1000;
-  camera.position.y = 300;
-  camera.lookAt(new THREE.Vector3(0,0,0));
-  renderer = new THREE.WebGLRenderer({alpha: true, antialias: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(WIDTH, HEIGHT);
-  renderer.shadowMapEnabled = true;
-
-  container = document.getElementById('world');
-  container.appendChild(renderer.domElement);
-
-  windowHalfX = WIDTH / 2;
-  windowHalfY = HEIGHT / 2;
-
-  window.addEventListener('resize', onWindowResize, false);
-  document.addEventListener('mousemove', handleMouseMove, false);
-  document.addEventListener('touchstart', handleTouchStart, false);
-	document.addEventListener('touchend', handleTouchEnd, false);
-	document.addEventListener('touchmove',handleTouchMove, false);
-
-  controls = new THREE.OrbitControls( camera, renderer.domElement);
-  clock = new THREE.Clock();
-
-}
-
-function onWindowResize() {
-  HEIGHT = window.innerHeight;
-  WIDTH = window.innerWidth;
-  windowHalfX = WIDTH / 2;
-  windowHalfY = HEIGHT / 2;
-  renderer.setSize(WIDTH, HEIGHT);
-  camera.aspect = WIDTH / HEIGHT;
-  camera.updateProjectionMatrix();
-}
-
-function handleMouseMove(event) {
-  mousePos = {x:event.clientX, y:event.clientY};
-}
-
-function handleTouchStart(event) {
-  if (event.touches.length > 1) {
-    event.preventDefault();
-		mousePos = {x:event.touches[0].pageX, y:event.touches[0].pageY};
-  }
-}
-
-function handleTouchEnd(event) {
-    mousePos = {x:windowHalfX, y:windowHalfY};
-}
-
-function handleTouchMove(event) {
-  if (event.touches.length == 1) {
-    event.preventDefault();
-		mousePos = {x:event.touches[0].pageX, y:event.touches[0].pageY};
-  }
-}
-
-function createLights() {
-  light = new THREE.HemisphereLight(0xffffff, 0xffffff, .5)
-
-  shadowLight = new THREE.DirectionalLight(0xffffff, .8);
-  shadowLight.position.set(200, 200, 200);
-  shadowLight.castShadow = true;
-  shadowLight.shadowDarkness = .2;
-
-  backLight = new THREE.DirectionalLight(0xffffff, .4);
-  backLight.position.set(-100, 200, 50);
-  backLight.shadowDarkness = .1;
-  backLight.castShadow = true;
-
-  scene.add(backLight);
-  scene.add(light);
-  scene.add(shadowLight);
-}
+var globalSpeedRate = 1;
 
 var greyMat = new THREE.MeshLambertMaterial ({
   color: 0x696969,
@@ -204,7 +88,6 @@ Goose = function(){
   this.frontBodyGoose.position.y = 79;
   this.frontBodyGoose.position.x = 50;
   this.frontBodyGoose.rotation.x = Math.PI/2;
-  //this.frontBodyGoose.rotation.y = ((4 * Math.PI)/6);
 
   this.threegroup.add(this.bodyGoose);
   this.threegroup.add(this.tailGoose);
@@ -394,8 +277,6 @@ Can = function(){
   this.top = new THREE.Mesh(topGeom, lightGreyMat);
   this.top.position.y = 180;
 
-  //add tab thingy
-
   this.base.add(this.middleBase);
   this.base.add(this.bottomBase);
   this.base.add(this.topBase);
@@ -526,9 +407,6 @@ Deer = function() {
    hoof4.position.x = -hoof1.position.x;
    this.leggroup4.add(hoof4);
 
-
-// TODO: hierarchical modeling for head/neck etc to move with arrow keys?
-// ----------- HEAD PIECES -----------
   this.headgroup = new THREE.Group();
 
    let neck = new THREE.Mesh(
@@ -577,7 +455,6 @@ Deer = function() {
    nose.position.y = 1.8;
    this.headgroup.add(nose);
 
-   // TODO: possibly change to be a cylinder but with 3 faces (aka a triangular prism)
    let ear1 = new THREE.Mesh(
      new THREE.BoxBufferGeometry(0.3,1,0.45),
      darkBrownMat
@@ -613,7 +490,6 @@ Deer = function() {
    this.headgroup.add(antler2);
 
    this.threegroup.add(this.headgroup);
-// ----------- END HEAD PIECES -----------
 // ---------- STUNNED STARS --------------
     this.stunStars = new THREE.Group();
 
@@ -862,9 +738,9 @@ function createSign(){
 
 //animations
 Deer.prototype.walk = function(delta){
-  this.runningCycle += delta * globalSpeedRate * 3;
+  this.runningCycle += delta * (globalSpeedRate + 6) * 3;
   this.runningCycle = this.runningCycle % (Math.PI*2);
-  var t = this.runningCycle;
+  var t = this.runningCycle + 500;
   if (!stunned)
   {
     this.leggroup1.rotation.z = Math.sin(t)*Math.PI/16;
@@ -943,6 +819,23 @@ Deer.prototype.lose = function(){
   }
 }
 
+Deer.prototype.win = function(){
+
+  this.runningCycle += delta * globalSpeedRate * 3;
+  this.runningCycle = this.runningCycle % (Math.PI*2);
+  var t = this.runningCycle;
+
+  this.threegroup.rotation.z = Math.sin(t)*Math.PI/16;
+  this.leggroup1.rotation.z = -Math.sin(t)*Math.PI/16;
+  this.leggroup2.rotation.z = -Math.sin(t)*Math.PI/16;
+  this.leggroup3.rotation.z = Math.sin(t)*Math.PI/12;
+  this.leggroup4.rotation.z = Math.sin(t)*Math.PI/12;
+  this.headgroup.rotation.z = Math.sin(t)*Math.PI/12;
+
+  this.tailgroup.rotation.x = Math.cos(t)*Math.PI/16;
+
+}
+
 Goose.prototype.walk = function(delta) {
 
   this.wingAngle += this.wingSpeed/globalSpeedRate;
@@ -1012,15 +905,3 @@ function render(){
   controls.update();
   renderer.render(scene, camera);
 }
-
- //init();
- //createLights();
- //createFloor();
- //createGoose();
- //createClock();
- //createCan();
- //createCoffee();
- //createDeer();
- //createStudent();
- //createSign();
- //loop();

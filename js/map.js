@@ -14,7 +14,8 @@
                 var cell = document.createElement("td");
 		// getRandom = Math.floor(Math.random() * (max - min + 1)) + min;
                 // var cellText = document.createTextNode(Math.floor(Math.random() * (max - min + 1)) + min);
-                if (maze[size - 1 - r][ size - 1- c] && !(r == entranceZidx - 1 && c == entranceXidx)) { //needs to be reversed
+                // if (maze[size - 1 - r][ size - 1- c] && !(r == entranceZidx - 1 && c == entranceXidx)) { //needs to be reversed
+                if (maze[r][c] && !(r == entranceZidx - 1 && c == entranceXidx)) {
                   cell.setAttribute('class', 'tree');
                 }
                 else {
@@ -26,13 +27,20 @@
 
 	tbl.appendChild(row); // add the row to the end of the table body
         }
-
+     tbl.setAttribute("id", "table");
      div1.appendChild(tbl); // appends <table> into <div1>
 }
 // window.onload=drawTable;
 
-// 
+//
 // function updateTable(size, row, col) {
 //   document.remove("table");
 //   drawTable(size);
 // }
+
+function clearTable() {
+  var table = document.getElementById('table');
+  table.remove();
+  console.log("Removed map");
+
+}

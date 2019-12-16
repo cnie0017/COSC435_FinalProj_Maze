@@ -64,7 +64,8 @@ var distance = 100,
  var powerUps = [];
 
 //tree
-var green = 0x00471e;
+var treeColor = 0x00471e;
+var floorColor = 0x0b6011;
 var yellow = 0xead516;
 var blue = 0x2194ce;
 
@@ -74,6 +75,15 @@ var blue = 0x2194ce;
 init();
 animate();
 
+
+function resetCamera(){
+  // reset camera to player position
+  controls.target.copy( box.threegroup.position );
+  camera.position.z = entranceZ-400;
+  camera.position.y = 500;
+  camera.position.x = entranceX-100;
+  controls.update();
+}
 
 function createScene(){
   // Build the container
@@ -166,6 +176,21 @@ function hideTexts(){
   document.getElementById("author").style.display = "none";
   document.getElementById("info").style.display = "none";
   document.getElementById("replay").style.display = "none";
+}
+
+function fall() {
+  treeColor = 0xdb932a;
+  floorColor = 0x847417;
+  leavesEnabled = true;
+  initParticles('leaves');
+}
+
+function winter() {
+  treeColor = 0xa4ddea;
+  floorColor = 0x71d1d1;
+  leavesEnabled = false;
+  initParticles('snow');
+  snowEnabled = true;
 }
 
 
@@ -363,6 +388,11 @@ function render() {
   // console.log(particleGroup);
 
   // If any movement was added, run it!
+
+  if (camera.position.y < 10) {
+    camera.position.y = 10;
+  }
+
   if ( movements.length > 0 ) {
     move( box, movements[ 0 ] );
   }
@@ -474,7 +504,7 @@ function CreateMazeMesh(maze) {
              createTree(100-j*distance, -100+(maze.size-1-i)*distance, yellow, "exit");
            }
            else{
-             createTree(100-j*distance,-100+(maze.size-1-i)*distance,green);
+             createTree(100-j*distance,-100+(maze.size-1-i)*distance,treeColor);
            }
         }
       }
@@ -625,7 +655,7 @@ function createCharacter() {
  */
 function createFloor() {
   var geometry = new THREE.PlaneBufferGeometry( 100000, 100000 );
-  var material = new THREE.MeshToonMaterial( {color: 0x0b6011} );
+  var material = new THREE.MeshToonMaterial( {color: floorColor} );
   var plane = new THREE.Mesh( geometry, material );
   plane.rotation.x = -1 * Math.PI/2;
   plane.position.y = 0;
@@ -710,7 +740,12 @@ function resetLevel(){
   resetCollisions();
 
   //set new maze
+<<<<<<< HEAD
   document.getElementById("level").innerHTML = "Level: "+game.levelNum;
+=======
+  clearTable();
+  createFloor();
+>>>>>>> edccc50a6210f84c71992d4e684a2e48ad2d1e4d
   createMaze(size);
   createCharacter();
   drawTable(size);
@@ -736,7 +771,7 @@ function resetRotationPoint(){
   rotationPoint = new THREE.Object3D();
   rotationPoint.position.set( 0, 0, 0 );
   scene.add( rotationPoint );
-}    
+}
 
 
 
