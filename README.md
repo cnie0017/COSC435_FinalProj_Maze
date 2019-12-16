@@ -51,6 +51,23 @@
   * Spin functions for the powerups used Vector3 variables to allow the powerups to rotate on an axis.
   * Deer powerup functions created either stars above the Deer’s head which span in a circle, or bubbles above the Deer, which shrank and popped.
     * The models for these animations (the stars and bubbles) are part of the deer model, but are transparent. When interacting with a powerup, these the opacity of these models are changed and the animation for each (spinning for the stars and rotating and decrease in scale for the bubbles) are called, thus allowing for animations when interacting with powerups.
+    
+*Alex*   
+* Maze Generation
+  * Using Hunt-and-Kill algorithm to produce codes that can randomly generate a maze. Also considered various other algorithms such as Prim's algorithm and Kruskal's algorithm, which generate maze with many short cul-de-sacs. For the difficulty of this game, adopted the Hunt-and-Kill algorithm, which is easier to implement, and creates mazes that are suitable for our design intention.
+  * Given a size, the algorithm generates a 2D array that contains boolean values indicating whether a tree or a blank should be placed within a maze. The trees composes the maze, and the blanks are the pathes that the characters can be placed on. Using this 2D array, Meshes of a treetop model are created and placed at corresponding locations in the scene. The exit and entrance of the maze are fixed at the bottom left and top right, respectively, due to the way that the maze is being generated.
+* Code Design and objects
+  * Created a variable game in gameManager that stores the information of the game at different stages. It contains fields like levelNum, which shows the level of difficulty of this current game, ranging from 1-3, mazesize and levelswitching, which represents whether to switch to a new level.
+* Level switching
+  * The game has 3 levels in total, each with different difficulty level, by changing the size and number of powerups in the maze. A new levels is being triggered by the main character colliding with the exit tree. 
+  * Upon collision, the levelswitching field of the game object is being set to true, then a function called goToNextLevel is being called to clear the current objects in the scene, create new objects and update the game information.
+  * Instead of using Buffer.Geometry and dispose(), I simply used scene.remove to remove the objects from the scene. Considering the size and complexity of this game, it is acceptable to use this method without worrying too much about memory usage issue.
+* CSS and Showing instrcutions
+  * When game ends, show texts to indicate whether the player wins or not. Give credit to the authors and ask if the player wants to play again. If yes, reset the game to start from level 1.  
+
+  
+    
+    
 
 **POST-IMPLEMENTATION OBJECTIVES LIST**
 * Power-Ups
@@ -75,6 +92,8 @@
     * https://albert-gonzalez.github.io/easytimer.js/
   * Animating a simple hero - *(objective 7)*
     * https://codepen.io/Yakudoo/#
+  * Maze generation algorithms
+    * https://weblog.jamisbuck.org/2011/1/10/maze-generation  
 
 * Fellow classmates:
   * Leo Ascenzi (help with camera)
