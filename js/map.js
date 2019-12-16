@@ -41,6 +41,6 @@
 function clearTable() {
   var table = document.getElementById('table');
   table.remove();
-
+  console.log("Removed map");
 
 }

@@ -82,9 +82,10 @@ function resetLevel(){
   console.log("In reset");
   console.log("game.size is",game.size);
   console.log("size is",size);
+  clearTable();
+  console.log("Hello?");
   createMaze(size);
   createCharacter();
-  clearTable();
   drawTable(size);
   placePowerUps();
   resetCamera();
