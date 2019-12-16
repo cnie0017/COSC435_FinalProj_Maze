@@ -62,6 +62,7 @@ var distance = 100,
  var leavesEnabled = false;
 
  var powerUps = [];
+ var numPowers = 1;
 
 //tree
 var treeColor = 0x00471e;
@@ -450,6 +451,7 @@ function animatePlayer(delta) {
   controls.object.translateX(playerVelocity.x * delta);
   controls.object.translateZ(playerVelocity.z * delta);
 }
+
 function animatePowerups(delta){
   goose.walk(delta);
   student.walk(delta);
@@ -457,6 +459,7 @@ function animatePowerups(delta){
   pclock.spin();
   coffee.spin();
 }
+
 function animateDeer(delta){
   if(heldKeys.right){
     if (!stunned){ box.walk(delta); }
@@ -692,45 +695,45 @@ function createTree( posX, posZ, treeColor, type = "tree" ) {
 }
 
 
-gui = new dat.GUI();
-
-parameters =
-{
-	x: 0, y: 30, z: 0,
-	color:  "#7a6f50", // color (change "#" to "0x")
-	colorA: "#000000", // color (change "#" to "0x")
-	colorE: "#000033", // color (change "#" to "0x")
-	colorS: "#ffff00", // color (change "#" to "0x")
-			shininess: 30,
-	opacity: 1,
-	visible: true,
-	material: "Phong",
-  collisions: true,
-  snow: false,
-  leaves: false,
-  controls: true,
-	reset: function() { resetSphere() }
-};
-
-var collisionsDetected = gui.add(parameters, 'collisions').name('Collisions Enabled').listen();
-var toggleControls = gui.add(parameters, 'controls').name('OrbitControls Enabled').listen();
-var snow = gui.add(parameters, 'snow').name('Snow Enabled').listen();
-var leaves = gui.add(parameters, 'leaves').name('Leaves Enabled').listen();
-
-collisionsDetected.onChange(function(value)
-{   enableCollisions = !enableCollisions; });
-
-snow.onChange(function(value)
-{
-  snowEnabled = !snowEnabled;
-  initParticles('snow');
- });
-
-leaves.onChange(function(value)
-{
-  leavesEnabled = !leavesEnabled;
-  initParticles('leaves');
-})
+// gui = new dat.GUI();
+//
+// parameters =
+// {
+// 	x: 0, y: 30, z: 0,
+// 	color:  "#7a6f50", // color (change "#" to "0x")
+// 	colorA: "#000000", // color (change "#" to "0x")
+// 	colorE: "#000033", // color (change "#" to "0x")
+// 	colorS: "#ffff00", // color (change "#" to "0x")
+// 			shininess: 30,
+// 	opacity: 1,
+// 	visible: true,
+// 	material: "Phong",
+//   collisions: true,
+//   snow: false,
+//   leaves: false,
+//   controls: true,
+// 	reset: function() { resetSphere() }
+// };
+//
+// var collisionsDetected = gui.add(parameters, 'collisions').name('Collisions Enabled').listen();
+// var toggleControls = gui.add(parameters, 'controls').name('OrbitControls Enabled').listen();
+// var snow = gui.add(parameters, 'snow').name('Snow Enabled').listen();
+// var leaves = gui.add(parameters, 'leaves').name('Leaves Enabled').listen();
+//
+// collisionsDetected.onChange(function(value)
+// {   enableCollisions = !enableCollisions; });
+//
+// snow.onChange(function(value)
+// {
+//   snowEnabled = !snowEnabled;
+//   initParticles('snow');
+//  });
+//
+// leaves.onChange(function(value)
+// {
+//   leavesEnabled = !leavesEnabled;
+//   initParticles('leaves');
+// })
 
 
 /**------------------------------------Level Switch----------------------- */
@@ -744,10 +747,10 @@ function resetLevel(){
   createMaze(size);
   createCharacter();
   drawTable(size);
-  placePowerUps();
+  placePowerUps(numPowers);
   resetCamera();
 
-  
+
   game.levelSwitching = false;
 }
 
