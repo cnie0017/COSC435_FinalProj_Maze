@@ -76,21 +76,6 @@ var blue = 0x2194ce;
 init();
 animate();
 
-function resetLevel(){
-  //size +=2;
-  //size = game.size;//update size
-  console.log("In reset");
-  console.log("game.size is",game.size);
-  console.log("size is",size);
-  clearTable();
-  console.log("Hello?");
-  createMaze(size);
-  createCharacter();
-  drawTable(size);
-  placePowerUps();
-  resetCamera();
-
-}
 
 function resetCamera(){
   // reset camera to player position
@@ -179,6 +164,21 @@ function createLights(){
   // Add hemisphere lighting.
   var hemisphereLight = new THREE.HemisphereLight( 0xdddddd, 0x000000, 0.5 );
   scene.add( hemisphereLight );
+}
+
+function fall() {
+  treeColor = 0xdb932a;
+  floorColor = 0x847417;
+  leavesEnabled = true;
+  initParticles('leaves');
+}
+
+function winter() {
+  treeColor = 0xa4ddea;
+  floorColor = 0x71d1d1;
+  leavesEnabled = false;
+  initParticles('snow');
+  snowEnabled = true;
 }
 
 
@@ -720,6 +720,8 @@ function resetLevel(){
   resetCollisions();
 
   //set new maze
+  clearTable();
+  createFloor();
   createMaze(size);
   createCharacter();
   drawTable(size);
