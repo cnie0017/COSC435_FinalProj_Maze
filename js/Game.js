@@ -740,12 +740,7 @@ function resetLevel(){
   resetCollisions();
 
   //set new maze
-<<<<<<< HEAD
   document.getElementById("level").innerHTML = "Level: "+game.levelNum;
-=======
-  clearTable();
-  createFloor();
->>>>>>> edccc50a6210f84c71992d4e684a2e48ad2d1e4d
   createMaze(size);
   createCharacter();
   drawTable(size);
@@ -787,28 +782,21 @@ function clearScene(endGame){
 function endGameDisplay(win){
   if (win){
     //show texts
-
     document.getElementById("win").style.display = "block";
     document.getElementById("author").style.display = "block";
     document.getElementById("info").style.display = "block";
     var replay = document.getElementById("replay");
     replay.style.display = "block";
     replay.onclick = function(){
-      console.log("replay");
       hideTexts();
       resetLevel();
     }
-    // if (replay.clicked == true){
-    //   console.log("replay");
-    //   return false;
-    //   init();
-    // }
+
   }
   else{
     //lose
-    //youLost.style.display="block";   
+
   }
-  //replayMessage.style.display="block";
 
 }
 
