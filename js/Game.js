@@ -86,6 +86,12 @@ function resetLevel(){
   drawTable(size);
   placePowerUps();
 
+  controls.target.copy( box.threegroup.position );
+  camera.position.z = entranceZ-400;
+  camera.position.y = 500;
+  camera.position.x = entranceX-100;
+  controls.update();
+
 }
 
 
