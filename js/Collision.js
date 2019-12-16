@@ -55,9 +55,8 @@ function detectCollisions() {
          ( bounds.zMin <= collisions[ index ].zMax && bounds.zMax >= collisions[ index ].zMin) ) {
            console.log("Level up!");
            if (!game.levelSwitching){
-            game.goToLevel(game.levelNum+1);
+            game.goToNextLevel();
            }
-           //game.levelSwitch = true;
          }
     }
     else if (collisions[ index ].type == 'collision' ) {

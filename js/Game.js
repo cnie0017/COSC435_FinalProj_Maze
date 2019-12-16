@@ -75,24 +75,7 @@ var blue = 0x2194ce;
 init();
 animate();
 
-function resetLevel(){
-  //size +=2;
-  //size = game.size;//update size
-  console.log("In reset");
-  console.log("game.size is",game.size);
-  console.log("size is",size);
-  createMaze(size);
-  createCharacter();
-  drawTable(size);
-  placePowerUps();
 
-  controls.target.copy( box.threegroup.position );
-  camera.position.z = entranceZ-400;
-  camera.position.y = 500;
-  camera.position.x = entranceX-100;
-  controls.update();
-
-}
 
 
 function createScene(){
@@ -182,7 +165,7 @@ function createLights(){
 function init() {
   createScene();
   createLights();
-  setTimer(40);
+  setTimer(game.timer);
 }
 
 var keys = {
@@ -345,10 +328,6 @@ function radians( degrees ) {
  * Updates to apply to the scene while running.
  */
 function update() {
-  // if(game.levelSwitch){
-  //   game.goToLevel(game.targetLevel);
-
-  // }
 
   updateMovement();
  camera.updateProjectionMatrix();
@@ -545,7 +524,6 @@ function getDeerLocation() {
 function placePowerUp(powerup, type){
   let placed = false;
   while (!placed){
-    console.log("!!!!",size);
     let r1 = Math.floor(Math.random() * size);
     let r2 = Math.floor(Math.random() * size);
 
@@ -709,6 +687,56 @@ leaves.onChange(function(value)
   leavesEnabled = !leavesEnabled;
   initParticles('leaves');
 })
+
+
+/**------------------------------------Level Switch----------------------- */
+function resetLevel(){
+  setTimer(game.timer);
+  resetRotationPoint();
+  resetCollisions();
+
+  //set new maze
+  createMaze(size);
+  createCharacter();
+  drawTable(size);
+  placePowerUps();
+
+  //reset control and camera
+  controls.target.copy( box.threegroup.position );
+  camera.position.z = entranceZ-400;
+  camera.position.y = 500;
+  camera.position.x = entranceX-100;
+  controls.update();
+}
+
+function resetRotationPoint(){
+  clearScene(false);
+  rotationPoint = new THREE.Object3D();
+  rotationPoint.position.set( 0, 0, 0 );
+  scene.add( rotationPoint );
+}    
+
+
+function clearScene(endGame){
+  if (endGame){
+    while (scene.children.length != 0){
+      scene.remove(scene.children[0]);
+    }
+  }
+  scene.remove(rotationPoint);
+
+
+}
+
+function endGameDisplay(win){
+  if (win){
+    //show texts
+  }
+  else{
+    //lose
+  }
+
+}
 
 // gui = new dat.GUI();
 //
