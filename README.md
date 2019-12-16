@@ -37,6 +37,20 @@
 * User Interface (UI)
   * I added both a timer and a maze to the UI. The timer uses EasyTimer.js to count down from a given time. The maze is an HTML table based off of Alex's maze. Each cell is filled with a different color based on whether or not there is a tree at that location. I also implemented color changes between levels to give the user an aesthetically pleasing experience.
 
+*Noah*
+ * Modelling
+  * Using various mesh and buffer geometries, I was able to create a goose, clock, coffee, and can, to serve as power ups and obstacles in our maze.
+   * By using mesh and buffer geometries, the performance of our game has improved as the data for the models is held in buffers, reducing the cost of passing the data to the GPU.
+  * Models had to be created with animations in mind, using proper positioning and Three groups for smooth, fluid animations later.
+  * Models were made using the clone.() function as well for efficiency
+ * Animations
+  * Created animations for the deer, goose, students, and powerups. I made walk animations for the deer, goose, and student, spin animations for the powerups, as well as animations for when the deer is stunned or drunk, and for when the player wins and loses.
+  * All animation functions were created in cycles to be called in the loop to animate indefinitely.
+  * Walking functions were created using rotations and trigonometric functions to allow geometries to rotate back and forth.
+   * Each walking animation is unique but using the same speed through the globalspeedrate variable.
+  * Spin functions for the powerups used Vector3 variables to allow the powerups to rotate on an axis.
+  * Deer powerup functions created either stars above the Deer’s head which span in a circle, or bubbles above the Deer, which shrank and popped.
+   * The models for these animations (the stars and bubbles) are part of the deer model, but are transparent. When interacting with a powerup, these the opacity of these models are changed and the animation for each (spinning for the stars and rotating and decrease in scale for the bubbles) are called, thus allowing for animations when interacting with powerups.
 
 **POST-IMPLEMENTATION OBJECTIVES LIST**
 * Power-Ups
@@ -59,5 +73,8 @@
     * http://www.bryanjones.us/article/basic-threejs-game-tutorial-part-5-collision-detection
   * Timer - *(objective 6)*
     * https://albert-gonzalez.github.io/easytimer.js/
+  * Animating a simple hero - *(objective 7)*
+    * https://codepen.io/Yakudoo/#
+
 * Fellow classmates:
   * Leo Ascenzi (help with camera)
