@@ -65,7 +65,8 @@ var distance = 100,
  var powerUps = [];
 
 //tree
-var green = 0x00471e;
+var treeColor = 0x00471e;
+var floorColor = 0x0b6011;
 var yellow = 0xead516;
 var blue = 0x2194ce;
 
@@ -83,6 +84,7 @@ function resetLevel(){
   console.log("size is",size);
   createMaze(size);
   createCharacter();
+  clearTable();
   drawTable(size);
   placePowerUps();
   resetCamera();
@@ -366,6 +368,11 @@ function render() {
   // console.log(particleGroup);
 
   // If any movement was added, run it!
+
+  if (camera.position.y < 10) {
+    camera.position.y = 10;
+  }
+
   if ( movements.length > 0 ) {
     move( box, movements[ 0 ] );
   }
@@ -479,7 +486,7 @@ function CreateMazeMesh(maze) {
              createTree(100-j*distance, -100+(maze.size-1-i)*distance, yellow, "exit");
            }
            else{
-             createTree(100-j*distance,-100+(maze.size-1-i)*distance,green);
+             createTree(100-j*distance,-100+(maze.size-1-i)*distance,treeColor);
            }
         }
       }
@@ -632,7 +639,7 @@ function createCharacter() {
  */
 function createFloor() {
   var geometry = new THREE.PlaneBufferGeometry( 100000, 100000 );
-  var material = new THREE.MeshToonMaterial( {color: 0x0b6011} );
+  var material = new THREE.MeshToonMaterial( {color: floorColor} );
   var plane = new THREE.Mesh( geometry, material );
   plane.rotation.x = -1 * Math.PI/2;
   plane.position.y = 0;
