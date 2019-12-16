@@ -29,7 +29,7 @@ var game = { //default
          else if (this.levelNum == 3) {
            winter();
          }
-
+         numPowers++;
          resetLevel();
       }
    },

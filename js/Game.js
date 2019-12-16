@@ -61,7 +61,9 @@ var distance = 80,
  var snowEnabled = false;
  var leavesEnabled = false;
 
- var powerUps = [];
+ var powerUpsWalk = [];
+ var powerUpsSpin = [];
+ var numPowers = 1;
 
 //tree
 var treeColor = 0x00471e;
@@ -452,13 +454,16 @@ function animatePlayer(delta) {
   controls.object.translateX(playerVelocity.x * delta);
   controls.object.translateZ(playerVelocity.z * delta);
 }
+
 function animatePowerups(delta){
-  goose.walk(delta);
-  student.walk(delta);
-  can.spin();
-  pclock.spin();
-  coffee.spin();
+    for(i=0; i<powerUpsWalk.length; i++){
+      powerUpsWalk[i].walk(delta);
+    }
+    for(i=0; i<powerUpsSpin.length; i++){
+      powerUpsSpin[i].spin();
+    }
 }
+
 function animateDeer(delta){
   if(heldKeys.right){
     if (!stunned){ box.walk(delta); }
@@ -526,14 +531,14 @@ function placePowerUps(iterations=1){
     pclock = new Clock();
     pclock.threegroup.scale.set(0.35,0.35,0.35);
     pclock.threegroup.position.y = 40;
-    powerUps.push(pclock);
+    powerUpsSpin.push(pclock);
     placePowerUp(pclock, "clock");
 
     //coffee
     coffee = new Coffee();
     coffee.threegroup.scale.set(0.4,0.4,0.4);
     coffee.threegroup.position.y = 10;
-    powerUps.push(coffee);
+    powerUpsSpin.push(coffee);
     placePowerUp(coffee, "coffee");
 
     // POWER DOWNS
@@ -542,20 +547,20 @@ function placePowerUps(iterations=1){
     goose = new Goose();
     goose.threegroup.scale.set(0.3,0.3,0.3);
     goose.threegroup.position.y = 10;
-    powerUps.push(goose);
+    powerUpsWalk.push(goose);
     placePowerUp(goose, "goose");
 
     //can
     can = new Can();
     can.threegroup.scale.set(0.4,0.4,0.4);
     can.threegroup.position.y = 10;
-    powerUps.push(can);
+    powerUpsSpin.push(can);
     placePowerUp(can, "can");
 
     //student
     student = new Student();
     student.threegroup.scale.set(0.3,0.3,0.3);
-    powerUps.push(student);
+    powerUpsWalk.push(student);
     placePowerUp(student, "student");
   }
 }
@@ -694,6 +699,46 @@ function createTree( posX, posZ, treeColor, type = "tree" ) {
 }
 
 
+// gui = new dat.GUI();
+//
+// parameters =
+// {
+// 	x: 0, y: 30, z: 0,
+// 	color:  "#7a6f50", // color (change "#" to "0x")
+// 	colorA: "#000000", // color (change "#" to "0x")
+// 	colorE: "#000033", // color (change "#" to "0x")
+// 	colorS: "#ffff00", // color (change "#" to "0x")
+// 			shininess: 30,
+// 	opacity: 1,
+// 	visible: true,
+// 	material: "Phong",
+//   collisions: true,
+//   snow: false,
+//   leaves: false,
+//   controls: true,
+// 	reset: function() { resetSphere() }
+// };
+//
+// var collisionsDetected = gui.add(parameters, 'collisions').name('Collisions Enabled').listen();
+// var toggleControls = gui.add(parameters, 'controls').name('OrbitControls Enabled').listen();
+// var snow = gui.add(parameters, 'snow').name('Snow Enabled').listen();
+// var leaves = gui.add(parameters, 'leaves').name('Leaves Enabled').listen();
+//
+// collisionsDetected.onChange(function(value)
+// {   enableCollisions = !enableCollisions; });
+//
+// snow.onChange(function(value)
+// {
+//   snowEnabled = !snowEnabled;
+//   initParticles('snow');
+//  });
+//
+// leaves.onChange(function(value)
+// {
+//   leavesEnabled = !leavesEnabled;
+//   initParticles('leaves');
+// })
+
 
 /**------------------------------------Level Switch----------------------- */
 function resetLevel(){
@@ -708,7 +753,7 @@ function resetLevel(){
   createMaze(size);
   createCharacter();
   drawTable(size);
-  placePowerUps();
+  placePowerUps(numPowers);
   resetCamera();
 
 
@@ -746,27 +791,20 @@ function clearScene(endGame){
 function endGameDisplay(win){
   if (win){
     //show texts
-
     document.getElementById("win").style.display = "block";
     document.getElementById("author").style.display = "block";
     document.getElementById("info").style.display = "block";
     var replay = document.getElementById("replay");
     replay.style.display = "block";
     replay.onclick = function(){
-      console.log("replay");
       hideTexts();
       resetLevel();
     }
-    // if (replay.clicked == true){
-    //   console.log("replay");
-    //   return false;
-    //   init();
-    // }
+
   }
   else{
     //lose
     //youLost.style.display="block";
   }
-  //replayMessage.style.display="block";
 
 }
