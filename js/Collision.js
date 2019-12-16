@@ -28,7 +28,6 @@ function calculateCollisionPoints( mesh, scale, type = 'collision', powerUpObj )
 }
 
 function resetCollisions(){
-  console.log("collisions resets to empty");
   collisions = [];
 }
 
@@ -53,7 +52,6 @@ function detectCollisions() {
       if ( ( bounds.xMin <= collisions[ index ].xMax && bounds.xMax >= collisions[ index ].xMin ) &&
          ( bounds.yMin <= collisions[ index ].yMax && bounds.yMax >= collisions[ index ].yMin) &&
          ( bounds.zMin <= collisions[ index ].zMax && bounds.zMax >= collisions[ index ].zMin) ) {
-           console.log("Level up!");
            if (!game.levelSwitching){
             game.goToNextLevel();
            }
