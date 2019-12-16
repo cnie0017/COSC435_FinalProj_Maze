@@ -168,7 +168,7 @@ function createLights(){
 
 function fall() {
   treeColor = 0xdb932a;
-  floorColor = 0x847417;
+  floorColor = 0x768413;
   leavesEnabled = true;
   initParticles('leaves');
 }
@@ -176,6 +176,7 @@ function fall() {
 function winter() {
   treeColor = 0xa4ddea;
   floorColor = 0x71d1d1;
+  emitter.disable();
   leavesEnabled = false;
   initParticles('snow');
   snowEnabled = true;

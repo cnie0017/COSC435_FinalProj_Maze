@@ -15,6 +15,8 @@ var game = { //default
          //game ends, show ending page
          console.log("END");
          clearScene(true);
+         clearTable();
+         hideTimer();
          endGameDisplay();
       }
       else{// go to next level

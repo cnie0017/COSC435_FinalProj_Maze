@@ -12,3 +12,8 @@ function setTimer(seconds=30){
     $('#timer .values').html('KABOOM!!');
   });
 }
+
+function hideTimer() {
+  var timer = document.getElementById("timer");
+  timer.setAttribute("class", "hidden");
+}

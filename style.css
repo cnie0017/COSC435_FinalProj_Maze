@@ -1,6 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:800);
 /* <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lobster" /> */
 @import url(https://fonts.googleapis.com/css?family=Lobster);
+@import url(https://fonts.googleapis.com/css?family=Oswald);
 
 body {
     overflow:hidden;
@@ -15,12 +16,21 @@ body {
 }
 
 #timer {
-  background: black;
+  background:  #00471e;
   color:white;
   position: relative;
   float: right;
   width: 100px;
-    text-align: center;
+  text-align: center;
+  font-size: 50;
+  font-family: Oswald;
+  height: 75px;
+  width: 150px;
+  margin: 25px;
+}
+
+.hidden {
+  visibility: hidden;
 }
 
 /* img {
@@ -59,6 +69,7 @@ table {
   /* float: left; */
   font-family: Lobster;
   font-size: 64px;
+
   text-align: center;
 }
 
