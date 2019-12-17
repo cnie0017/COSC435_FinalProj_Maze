@@ -55,7 +55,7 @@
 *Alex*   
 * Maze Generation
   * Using Hunt-and-Kill algorithm to produce codes that can randomly generate a maze. Also considered various other algorithms such as Prim's algorithm and Kruskal's algorithm, which generate maze with many short cul-de-sacs. For the difficulty of this game, adopted the Hunt-and-Kill algorithm, which is easier to implement, and creates mazes that are suitable for our design intention.
-  * Given a size, the algorithm generates a 2D array that contains boolean values indicating whether a tree or a blank should be placed within a maze. The trees composes the maze, and the blanks are the pathes that the characters can be placed on. Using this 2D array, Meshes of a treetop model are created and placed at corresponding locations in the scene. The exit and entrance of the maze are fixed at the bottom left and top right, respectively, due to the way that the maze is being generated.
+  * Given a size, the algorithm generates a 2D array that contains boolean values indicating whether a tree or a blank should be placed within a maze. The trees compose the maze, and the blanks are the paths that the characters can be placed on. Using this 2D array, Meshes of a treetop model are created and placed at corresponding locations in the scene. The exit and entrance of the maze are fixed at the bottom left and top right, respectively, due to the way that the maze is being generated.
 * Code Design and objects
   * Created a variable game in gameManager that stores the information of the game at different stages. It contains fields like levelNum, which shows the level of difficulty of this current game, ranging from 1-3, mazesize and levelswitching, which represents whether to switch to a new level.
 * Level switching
